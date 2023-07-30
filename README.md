@@ -35,6 +35,7 @@ q['where'](
 
 # build query into SqlContainer
 container: sc.SqlContainer = q()
+# get sql as string
 sql_text: str = str(container)
 ```
 ### Another portion of theory
@@ -73,9 +74,9 @@ import sql_constructor as sc
 
 
 def main():
-	prod_q: sc.SqlContainer = get_product_query()
+	container: sc.SqlContainer = get_product_query()
 	# set variables to existing container
-	prod_q.vars['product_name'] = 'Smart'
+	container.vars['product_name'] = 'Smart'
 
 
 def get_product_query() -> sc.SqlContainer:
@@ -147,29 +148,29 @@ from typing import List
 
 
 def main():
-	r = sc.SqlQuery()
-    r['select'](
+	q = sc.SqlQuery()
+    q['select'](
         'c.id',
         'c.name',
     )
-    r['from'](
+    q['from'](
         'catalog as c',
     )
-    r['left join lateral'](
+    q['left join lateral'](
         get_left_join_lateral(),
     )
-    r['where']('c.name = !product_name')(product_name='Smart')
+    q['where']('c.name = !product_name')(product_name='Smart')
 
 
 def get_left_join_lateral() -> sc.SqlContainer:
-    r = SqlQuery()
-    r['select'](
+    j = SqlQuery()
+    j['select'](
         'id',
         'expiration_date',
     )
-    r['from']('expiration as e')
-    r['where'](*get_filters())
-    r['limit'](100)
+    j['from']('expiration as e')
+    j['where'](*get_filters())
+    j['limit'](100)
     """
     You could get SqlContainer with wrapped subquery 
     in some different ways:
@@ -178,7 +179,7 @@ def get_left_join_lateral() -> sc.SqlContainer:
     # return r(wrap='AS exp ON TRUE')
     """
     # or more explicit
-    return r().wrap('AS exp ON TRUE')
+    return j().wrap('AS exp ON TRUE')
 
 
 def get_filters() -> List[str]:
@@ -196,9 +197,9 @@ import sql_constructor as sc
 
 
 def main():
-	r = sc.SqlQuery()
-	r += '-- some comment here'
-    r['select'](
+	q = sc.SqlQuery()
+	q += '-- some comment here'
+    q['select'](
         'c.id',
         'c.name',
     )
@@ -209,12 +210,12 @@ import sql_constructor as sc
 
 
 def main():
-	r = sc.SqlQuery()
-	r['select'](
+	q = sc.SqlQuery()
+	q['select'](
 	    'c.id',
         'c.name',
     )
-	r += get_from_statement()
+	q += get_from_statement()
 	...
 
 
@@ -265,23 +266,23 @@ def get_ctes() -> sc.SqlContainer:
     # ctes.reg('warehouse_cte', get_warehouse_cte())
 
 	# you could also get certain cte by name and append new SqlSection to it
-	q = ctes['warehouse_cte']
-	q['limit'](1)
+	a = ctes['warehouse_cte']
+	a['limit'](1)
     
     return ctes()
     
 def get_warehouse_cte() -> sc.SqlQuery:
-	q = sc.SqlQuery()
-    q['select'](
+	a = sc.SqlQuery()
+    a['select'](
         'id',
         'quantity',
     )
-    q['from']('warehouse')
-    q['where'](
+    a['from']('warehouse')
+    a['where'](
         'id = !id',
         'AND quantity > !quantity',
     )(id=11, quantity=10)
-	return q
+	return a
 ```
 
 #### Add ctes to query
@@ -290,9 +291,9 @@ It is so easy!
 import sql_constructor as sc
 
 def main():
-	r = sc.SqlQuery()
-    r += get_ctes()
-    r['select'](
+	q = sc.SqlQuery()
+    q += get_ctes()
+    q['select'](
 	    'id',
 	    'name'
     )
@@ -308,9 +309,9 @@ def get_ctes() -> sc.SqlContainer:
 If you would like to find your piece of code in editor by sql produced by sql_constructor then you could mark SqlQuery instances by 'sql_id' parameter before you produce ready sql:
 ```python
 def main():
-	r = sc.SqlQuery()
-    r += get_part_of_query()
-    r['select'](
+	q = sc.SqlQuery()
+    q += get_part_of_query()
+    q['select'](
 	    'id',
 	    'name'
     )
@@ -318,7 +319,7 @@ def main():
 
 
 def get_part_of_query() -> sc.SqlContainer:
-	q = SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
+	p = SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
 	...
 ```
 It add comment to produced sql as
