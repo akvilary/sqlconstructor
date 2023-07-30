@@ -74,25 +74,25 @@ import sql_constructor as sc
 
 
 def main():
-	container: sc.SqlContainer = get_product_query()
-	# set variables to existing container
-	container.vars['product_name'] = 'Smart'
+    container: sc.SqlContainer = get_product_query()
+    # set variables to existing container
+    container.vars['product_name'] = 'Smart'
 
 
 def get_product_query() -> sc.SqlContainer:
-	q = sc.SqlQuery()
-	q['select'](
-	    'id',
-	    'name',
-	)
-	q['from'](
-	    'catalog'
-	)
-	q['where'](
-	    'name = !product_name'
-	)
-	container: sc.SqlContainer = q()
-	return container
+    q = sc.SqlQuery()
+    q['select'](
+        'id',
+        'name',
+    )
+    q['from'](
+        'catalog'
+    )
+    q['where'](
+        'name = !product_name'
+    )
+    container: sc.SqlContainer = q()
+    return container
 ```
 
 ### You could cache SqlContainer and set/change variables later
@@ -101,12 +101,12 @@ import sql_constructor as sc
 from functools import cache
 
 def main():
-	container: sc.SqlContainer = get_product_query()
-	container.vars['product_name'] = 'Smart'
+    container: sc.SqlContainer = get_product_query()
+    container.vars['product_name'] = 'Smart'
 
 @cache
 def get_product_query() -> sc.SqlContainer:
-	...
+    ...
 ```
 
 ### Get sql where placeholders are replaced by variables
@@ -115,14 +115,14 @@ import sql_constructor as sc
 from functools import cache
 
 def main():
-	container: sc.SqlContainer = get_product_query()
-	container.vars['product_name'] = 'Smart'
-	# to replace placeholders by variables call 'dumps' method
-	sql_text: str = container.dumps()
+    container: sc.SqlContainer = get_product_query()
+    container.vars['product_name'] = 'Smart'
+    # to replace placeholders by variables call 'dumps' method
+    sql_text: str = container.dumps()
 
 @cache
 def get_product_query() -> sc.SqlContainer:
-	...
+    ...
 ```
 If you would like to get sql without replacing placeholders then call '\_\_str\_\_' method of SqlContainer instead of 'dumps':
 ```python
@@ -130,14 +130,14 @@ import sql_constructor as sc
 from functools import cache
 
 def main():
-	container: sc.SqlContainer = get_product_query()
-	container.vars['product_name'] = 'Smart'
-	# get sql without replacing placeholders by variables
-	sql_text: str = str(container)
+    container: sc.SqlContainer = get_product_query()
+    container.vars['product_name'] = 'Smart'
+    # get sql without replacing placeholders by variables
+    sql_text: str = str(container)
 
 @cache
 def get_product_query() -> sc.SqlContainer:
-	...
+    ...
 ```
 
 ### Build complicated and nested queries
@@ -148,7 +148,7 @@ from typing import List
 
 
 def main():
-	q = sc.SqlQuery()
+    q = sc.SqlQuery()
     q['select'](
         'c.id',
         'c.name',
@@ -197,8 +197,8 @@ import sql_constructor as sc
 
 
 def main():
-	q = sc.SqlQuery()
-	q += '-- some comment here'
+    q = sc.SqlQuery()
+    q += '-- some comment here'
     q['select'](
         'c.id',
         'c.name',
@@ -210,17 +210,17 @@ import sql_constructor as sc
 
 
 def main():
-	q = sc.SqlQuery()
-	q['select'](
-	    'c.id',
+    q = sc.SqlQuery()
+    q['select'](
+        'c.id',
         'c.name',
     )
-	q += get_from_statement()
-	...
+    q += get_from_statement()
+    ...
 
 
 def get_from_statement() -> sc.SqlContainer:
-	...
+    ...
 ```
 
 ### Easy ways to handle ctes
@@ -232,9 +232,9 @@ import sql_constructor as sc
 
 
 def get_ctes() -> sc.SqlContainer:
-	"""
-	Build ctes
-	"""
+    """
+    Build ctes
+    """
     ctes = sc.SqlCte()
     # regiter cte and fill it later
     a: sc.SqlQuery = ctes.reg('warehouse_cte')
@@ -257,32 +257,32 @@ import sql_constructor as sc
 
 
 def get_ctes() -> sc.SqlContainer:
-	"""
-	Build ctes
-	"""
+    """
+    Build ctes
+    """
     ctes = sc.SqlCte()
     ctes['warehouse_cte'] = get_warehouse_cte()
     # or
     # ctes.reg('warehouse_cte', get_warehouse_cte())
 
 	# you could also get certain cte by name and append new SqlSection to it
-	a = ctes['warehouse_cte']
-	a['limit'](1)
+    a = ctes['warehouse_cte']
+    a['limit'](1)
     
     return ctes()
     
 def get_warehouse_cte() -> sc.SqlQuery:
-	a = sc.SqlQuery()
+    a = sc.SqlQuery()
     a['select'](
         'id',
         'quantity',
     )
     a['from']('warehouse')
     a['where'](
-        'id = !id',
-        'AND quantity > !quantity',
+         'id = !id',
+         'AND quantity > !quantity',
     )(id=11, quantity=10)
-	return a
+    return a
 ```
 
 #### Add ctes to query
@@ -291,17 +291,17 @@ It is so easy!
 import sql_constructor as sc
 
 def main():
-	q = sc.SqlQuery()
+    q = sc.SqlQuery()
     q += get_ctes()
     q['select'](
-	    'id',
-	    'name'
+        'id',
+        'name',
     )
     ...
 
 
 def get_ctes() -> sc.SqlContainer:
-	...
+    ...
 ```
 ### Debugging
 
@@ -309,18 +309,18 @@ def get_ctes() -> sc.SqlContainer:
 If you would like to find your piece of code in editor by sql produced by sql_constructor then you could mark SqlQuery instances by 'sql_id' parameter before you produce ready sql:
 ```python
 def main():
-	q = sc.SqlQuery()
+    q = sc.SqlQuery()
     q += get_part_of_query()
     q['select'](
-	    'id',
-	    'name'
+        'id',
+        'name'
     )
     ...
 
 
 def get_part_of_query() -> sc.SqlContainer:
-	p = SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
-	...
+    p = SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
+    ...
 ```
 It add comment to produced sql as
 ```sql
