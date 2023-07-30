@@ -271,7 +271,7 @@ def get_ctes() -> sc.SqlContainer:
     # or
     # ctes.reg('warehouse_cte', get_warehouse_cte())
 
-	# you could also get certain cte by name and append new SqlSection to it
+    # you could also get certain cte by name and append new SqlSection to it
     a = ctes['warehouse_cte']
     a['limit'](1)
     
