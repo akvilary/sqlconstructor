@@ -37,7 +37,7 @@ You could add variable in query by adding **!variable_name** syntax.
 #### Set variable instantly
 ```python
 import sql_constructor as sc
-def get_select_product_query(product_name: str):
+def get_select_product_query(product_name: str) -> sc.SqlQuery:
     q = sc.SqlQuery()
     q['select'](
         'c.identifier as id',
