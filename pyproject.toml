@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sql_constructor"
-version = "1.0.4"
+version = "1.0.5"
 authors = [
   { name="Andrey Smirnov", email="abc-sm@yandex.ru" },
 ]
@@ -18,5 +18,5 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/akvilary/sql_constractor"
-"Bug Tracker" = "https://github.com/akvilary/sql_constractor/issues"
+"Homepage" = "https://github.com/akvilary/sql_constructor"
+"Bug Tracker" = "https://github.com/akvilary/sql_constructor/issues"
