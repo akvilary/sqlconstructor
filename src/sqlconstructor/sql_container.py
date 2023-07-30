@@ -46,7 +46,7 @@ class SqlContainer:
 
     def __call__(self, **kwargs) -> Self:
         """Let you pass keyword arguments for later use in replacement job"""
-        self.vars = kwargs
+        self.vars.update(kwargs)
         return self
 
     def __repr__(self) -> str:

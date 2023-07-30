@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sqlconstructor"
-version = "1.0.15"
+version = "1.0.16"
 authors = [
   { name="Andrey Smirnov", email="abc-sm@yandex.ru" },
 ]
