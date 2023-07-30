@@ -76,14 +76,16 @@ import sqlconstructor as sc
 def main():
     container: sc.SqlContainer = get_product_query()
     # set variable to existing container
-    container.vars['product_name'] = 'Smart'
-    # or
     container(product_name='Smart')
+    # or
+    container.vars['product_name'] = 'Smart'
+
+    # if you would like to rewrite all vars
+    new_vars = {'product_name': 'Smart'}
+    container.vars = new_vars
+
     # if you would like to remove all vars
     container.vars.clear()
-	# if you would like to rewrite all vars
-	vars = {'product_name': 'Smart'}
-	container.vars = vars
 
 
 def get_product_query() -> sc.SqlContainer:
@@ -111,7 +113,7 @@ from functools import cache
 def main():
     container: sc.SqlContainer = get_product_query()
     # set variable to existing container
-    container.vars['product_name'] = 'Smart'
+    container(product_name='Smart')
 
 
 @cache
