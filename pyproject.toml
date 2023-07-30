@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sql_constructor"
+version = "1.0.0"
+authors = [
+  { name="Andrey Smirnov", email="abc-sm@yandex.ru" },
+]
+description = "Let you build SQL requests in pythonic way. SQL blocks could be nested as you want it to be, constracted dynamically and looks pretty. You could also build request once and cache it (but still use variables to replace dinamically). Solid solution!"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/akvilary/sql_constractor"
+"Bug Tracker" = "https://github.com/akvilary/sql_constractor/issues"
