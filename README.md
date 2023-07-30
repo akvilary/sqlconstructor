@@ -13,7 +13,8 @@ $ python3 -m pip install sql-constructor
 import sql_constructor as sc
 # create SqlQuery instance
 q = sc.SqlQuery()
-# because of sql statements cannot be unique that's why it is possible only to add sql sections. We make it by __getitem__ (which create named sql section and add to query) and call sql section with arguments (to set values to sql section's body)
+# Because of sql headers (select, from and etc.) cannot be unique that's why it is possible only to add sql sections (not get created one by indexing). We make it by __getitem__ (which create named sql section and add to query) and call sql section with arguments (to set values to sql section's body).
+# It is possible to add sections with not unique header. Header can be any string! It will be written in query in order you set it.  
 q['select'](
     'c.identifier as id',
     'c.name',
@@ -127,11 +128,11 @@ def get_ctes() -> sc.SqlContainer:
     )(ids=[15, 16, 17], price=1.00)
     # or later (bot variants work)
     ctes.reg('pricelist', b)
-    # it is also possible to set as (commented code below)
+    # it is also possible to use __setitem__ (commented code below)
     # ctes['pricelist'] = b
-    # or get created query as cte (commented code below)
+    # or get created query by __getitem__ (commented code below)
     # b = ctes['pricelist']
-    # because of name of cte is unique we can get query by __getitem__ or set query as cte by __setitem__.
+    # because of name of cte is unique it is possible to use __setitem__, __getitem__.
 
     return ctes()
 
