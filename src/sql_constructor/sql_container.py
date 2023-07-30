@@ -33,7 +33,7 @@ class SqlContainer:
                 - set variables by calling instance of SqlContainer with any keyword arguments 
                 (which all will be added to self.vars) 
                 - and get SQL text where placeholders are replaced by self.vars 
-                if you call self.get() method.
+                if you call self.dumps() method.
     """
     def __init__(self, text: str, wrapper_text: Optional[str] = None):
         self.text: str = text
@@ -57,7 +57,7 @@ class SqlContainer:
         """Return SqlContainer as str"""
         return repr(self)
 
-    def get(self) -> str:
+    def dumps(self) -> str:
         """Get SqlContainer as str and do replace placeholders by self.vars 
         if the latter were set (you could set vars by __call__ method).
         Notice: self.get method do not replace in self.text attribute. 
