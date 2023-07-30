@@ -48,8 +48,8 @@ def get_select_product_query(product_name: str):
     )
     q['where'](
         'c.name = !product_name'
-    q['order by']('name DESC')
     )(product_name=product_name)
+    q['order by']('name DESC')
     return q
 ```
 
