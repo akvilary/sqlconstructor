@@ -12,7 +12,7 @@ from .sql_query import SqlQuery
 from .sql_container import SqlContainer
 
 
-class SqlCte:
+class SqlCte(dict):
     """
     SqlCte class is invented for better experience with filling cte queries.
     It is possible to register cte and fill it after.
@@ -21,29 +21,18 @@ class SqlCte:
     """
     def __init__(
         self,
-        *,
+        *args,
         sql_id: Optional[str | uuid.UUID] = '',
+        **kwargs,
     ):
-        self.ctes = {}
+        super().__init__(*args, **kwargs)
         self.sql_id = sql_id
-
-    def __bool__(self) -> bool:
-        return bool(self.ctes)
-
-    def __len__(self) -> int:
-        return len(self.ctes)
-
-    def __getitem__(self, cte_name: str) -> SqlQuery:
-        return self.ctes[cte_name]
-
-    def __setitem__(self, cte_name: str, query: SqlQuery):
-        self.ctes[cte_name] = query
 
     def __call__(self) -> SqlContainer:
         result = SqlQuery(sql_id=self.sql_id) if self.sql_id else SqlQuery()
         counter = 0
-        ctes_size = len(self.ctes)
-        for cte_name, cte_query in self.ctes.items():
+        ctes_size = len(self)
+        for cte_name, cte_query in self.items():
             if counter == 0:
                 result[f'with {cte_name} as'](
                     cte_query(',' if ctes_size > (counter + 1) else '')

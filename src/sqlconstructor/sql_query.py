@@ -51,8 +51,9 @@ class SqlQuery:
         """
         self.sections: List[Optional[SqlSection]] = []
 
-        if sql_id:
-            self.add(f"-- sql_id='{sql_id}'")
+        self.sql_id = sql_id or None
+        if self.sql_id:
+            self.add(f"-- sql_id='{self.sql_id}'")
 
         if query:
             for section, value in query.items():

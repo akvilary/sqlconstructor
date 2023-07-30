@@ -57,9 +57,6 @@ class SqlContainer:
         """Return SqlContainer as str"""
         return repr(self)
 
-    def __iter__(self):
-        return iter(str(self).splitlines())
-
     def dumps(self) -> str:
         """Get SqlContainer as str and do replace placeholders by self.vars 
         if the latter were set (you could set vars by __call__ method).

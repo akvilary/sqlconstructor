@@ -1,8 +1,5 @@
-# We have moved project 
-to https://pypi.org/project/sqlconstructor/ 
-
-# sql_constructor
-**sql_constructor** is simple, yet very flexible, sql building tool.
+# sqlconstructor
+**sqlconstructor** is simple, yet very flexible, sql building tool.
 
 ## How to install
 You could install from PyPi:
@@ -12,7 +9,7 @@ $ python3 -m pip install sqlconstructor
 ## Little bit of theory
 1) Each sql building starts with SqlQuery - class instance that helps us to register into it as many SqlSection instances as we would like to.
 2) SqlSection - it is part of SqlQuery. It process data and store it to SqlContainer.
-3) SqlContainer - hold result of processed data. SqlContainer contains sql text (as string), optional wrapper (usually required for nested subqueries), and optional variables (to be replaced with placeholders).
+3) SqlContainer holds result of processed data. SqlContainer contains sql text (as string), optional wrapper (usually required for nested subqueries), and optional variables (to be replaced with placeholders).
 4) When you build query (call \_\_call\_\_ method of SqlQuery) then you union all SqlContainer instances (of each SqlSection) into one SqlContainer which inherits variables of united instances.
 
 
@@ -106,7 +103,10 @@ from functools import cache
 
 def main():
     container: sc.SqlContainer = get_product_query()
+    # set single variable (and do not rewrite other variables)
     container.vars['product_name'] = 'Smart'
+    # or you could rewrite all vars by
+    container(product_name='Smart')
 
 
 @cache
@@ -202,7 +202,7 @@ def get_filters() -> List[str]:
 
 It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def main():
@@ -213,7 +213,7 @@ def main():
         'c.name',
     )
 ```
-### Append nested sql statements or subqueries to query
+### Append ready SqlContainer to query
 ```python
 import sqlconstructor as sc
 
@@ -317,7 +317,7 @@ def get_ctes() -> sc.SqlContainer:
 ### Debugging
 
 #### How to find piece of code by produced sql
-If you would like to find your piece of code in editor by sql produced by sql_constructor then you could mark SqlQuery instances by 'sql_id' parameter before you produce ready sql:
+If you would like to find your piece of code in editor by ready sql which is produced by sqlconstructor then you have to mark SqlQuery instances by 'sql_id' parameter in advance (before you have produced ready sql):
 ```python
 import sqlconstructor as sc
 
@@ -336,7 +336,7 @@ def get_part_of_query() -> sc.SqlContainer:
     p = sc.SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
     ...
 ```
-It add comment to produced sql as
+It adds comment to produced sql as
 ```sql
 -- sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b'
 ...
