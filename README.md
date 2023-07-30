@@ -163,7 +163,7 @@ def main():
 
 
 def get_left_join_lateral() -> sc.SqlContainer:
-    j = SqlQuery()
+    j = sc.SqlQuery()
     j['select'](
         'id',
         'expiration_date',
@@ -319,7 +319,7 @@ def main():
 
 
 def get_part_of_query() -> sc.SqlContainer:
-    p = SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
+    p = sc.SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
     ...
 ```
 It add comment to produced sql as
