@@ -45,7 +45,7 @@ sql_text: str = str(container)
 
 
 ### Build query with placeholders to be replaced by variables later
-You could add placeholder in query by adding **!variable_name** syntax.
+You could add placeholder in query by adding **$variable_name** syntax.
 #### Set variable instantly
 ```python
 import sql_constructor as sc
@@ -61,7 +61,7 @@ def get_product_query(prod_name: str) -> sc.SqlContainer:
         'catalog'
     )
     q['where'](
-        'name = !product_name'
+        'name = $product_name'
     )(product_name=prod_name)
     q['order by']('name DESC')
     container: sc.SqlContainer = q()
@@ -89,7 +89,7 @@ def get_product_query() -> sc.SqlContainer:
         'catalog'
     )
     q['where'](
-        'name = !product_name'
+        'name = $product_name'
     )
     container: sc.SqlContainer = q()
     return container
@@ -165,7 +165,7 @@ def main():
     q['left join lateral'](
         get_left_join_lateral(),
     )
-    q['where']('c.name = !product_name')(product_name='Smart')
+    q['where']('c.name = $product_name')(product_name='Smart')
 
 
 def get_left_join_lateral() -> sc.SqlContainer:
@@ -250,8 +250,8 @@ def get_ctes() -> sc.SqlContainer:
     )
     a['from']('warehouse')
     a['where'](
-        'id = !id',
-        'AND quantity > !quantity',
+        'id = $id',
+        'AND quantity > $quantity',
     )(id=11, quantity=10)
     
     return ctes()
@@ -286,8 +286,8 @@ def get_warehouse_cte() -> sc.SqlQuery:
     )
     a['from']('warehouse')
     a['where'](
-         'id = !id',
-         'AND quantity > !quantity',
+         'id = $id',
+         'AND quantity > $quantity',
     )(id=11, quantity=10)
     return a
 ```

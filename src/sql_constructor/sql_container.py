@@ -66,7 +66,7 @@ class SqlContainer:
         text = self.text
         if text and self.vars:
             for keyword, value in self.vars.items():
-                pattern = r'\!' + keyword + r'\b'
+                pattern = r'\$' + keyword + r'\b'
                 text = re.sub(
                     pattern,
                     convert_to_sql_repr(value),
