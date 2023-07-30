@@ -100,9 +100,11 @@ def get_product_query() -> sc.SqlContainer:
 import sql_constructor as sc
 from functools import cache
 
+
 def main():
     container: sc.SqlContainer = get_product_query()
     container.vars['product_name'] = 'Smart'
+
 
 @cache
 def get_product_query() -> sc.SqlContainer:
@@ -114,11 +116,13 @@ def get_product_query() -> sc.SqlContainer:
 import sql_constructor as sc
 from functools import cache
 
+
 def main():
     container: sc.SqlContainer = get_product_query()
     container.vars['product_name'] = 'Smart'
     # to replace placeholders by variables call 'dumps' method
     sql_text: str = container.dumps()
+
 
 @cache
 def get_product_query() -> sc.SqlContainer:
@@ -129,11 +133,13 @@ If you would like to get sql without replacing placeholders then call '\_\_str\_
 import sql_constructor as sc
 from functools import cache
 
+
 def main():
     container: sc.SqlContainer = get_product_query()
     container.vars['product_name'] = 'Smart'
     # get sql without replacing placeholders by variables
     sql_text: str = str(container)
+
 
 @cache
 def get_product_query() -> sc.SqlContainer:
@@ -270,7 +276,8 @@ def get_ctes() -> sc.SqlContainer:
     a['limit'](1)
     
     return ctes()
-    
+
+
 def get_warehouse_cte() -> sc.SqlQuery:
     a = sc.SqlQuery()
     a['select'](
@@ -290,6 +297,7 @@ It is so easy!
 ```python
 import sql_constructor as sc
 
+
 def main():
     q = sc.SqlQuery()
     q += get_ctes()
@@ -308,6 +316,9 @@ def get_ctes() -> sc.SqlContainer:
 #### How to find piece of code by produced sql
 If you would like to find your piece of code in editor by sql produced by sql_constructor then you could mark SqlQuery instances by 'sql_id' parameter before you produce ready sql:
 ```python
+import sql_constructor as sc
+
+
 def main():
     q = sc.SqlQuery()
     q += get_part_of_query()
