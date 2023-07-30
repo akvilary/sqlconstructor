@@ -1,4 +1,32 @@
-t to be ready to use
+# sql_constructor
+**sql_constructor** is simple, yet very flexible, sql building tool.
+
+## How to install
+You could install from PyPi:
+```console
+$ python3 -m pip install sql-constructor
+```
+
+## How to use
+### Build simple query
+```python
+import sql_constructor as sc
+# create SqlQuery instance
+q = sc.SqlQuery()
+q['select'](
+    'c.identifier as id',
+    'c.name',
+)
+q['from'](
+    'catalog as c'
+)
+q['where'](
+    "c.name = 'Smart'"
+)
+
+# get SqlContainer
+container: sc.SqlContainer = q()
+# get sql text to be ready to use
 sql_text: str = container.dumps()
 ```
 
