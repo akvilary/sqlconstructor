@@ -61,7 +61,7 @@ class SqlSection:
             sep
             if sep is not None
             else ','
-            if self.section_header.lower() in SECTIONS_WITH_COMMA_SEPARATOR
+            if self.section_header.upper() in SECTIONS_WITH_COMMA_SEPARATOR
             else ''
         )
         delimiter = sep + line_end

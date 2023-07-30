@@ -6,7 +6,7 @@ Module of SqlQuery class.
 __author__ = 'https://github.com/akvilary'
 
 import uuid
-from typing import List, Optional, Type, Tuple
+from typing import List, Optional, Type
 
 from . import helpers
 from .sql_section import SqlSection
@@ -50,6 +50,7 @@ class SqlQuery:
             source code after you encounter query in logs or in debuging tools.
         """
         self.sections: List[Optional[SqlSection]] = []
+
         if sql_id:
             self.add(f"-- sql_id='{sql_id}'")
 
@@ -110,6 +111,9 @@ class SqlQuery:
         }
         container.vars = vars_of_containers
         return container
+
+    def __iter__(self):
+        return iter(self.sections)
 
     def __add__(self, text: str | SqlContainer) -> Type:
         """Add text as sql section and return instance"""

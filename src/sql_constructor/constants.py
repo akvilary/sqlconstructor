@@ -5,14 +5,14 @@ __author__ = 'https://github.com/akvilary'
 
 # if you want statements be separated by comma by default then add section keyword here
 SECTIONS_WITH_COMMA_SEPARATOR = (
-    'select',
-    'from',
-    'set',
-    'values',
-    'order by',
-    'group by',
-    'json_object_agg',
-    'coalesce',
+    'SELECT',
+    'FROM',
+    'SET',
+    'VALUES',
+    'ORDER BY',
+    'GROUP BY',
+    'JSON_OBJECT_AGG',
+    'COALESCE',
 )
 
 # all SQLL keywords to make them uppercase in SQL text

@@ -1,10 +1,13 @@
+# We have moved project 
+to https://pypi.org/project/sqlconstructor/ 
+
 # sql_constructor
 **sql_constructor** is simple, yet very flexible, sql building tool.
 
 ## How to install
 You could install from PyPi:
 ```console
-$ python3 -m pip install sql-constructor
+$ python3 -m pip install sqlconstructor
 ```
 ## Little bit of theory
 1) Each sql building starts with SqlQuery - class instance that helps us to register into it as many SqlSection instances as we would like to.
@@ -16,7 +19,7 @@ $ python3 -m pip install sql-constructor
 ## How to use
 ### Build simple query
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 # create SqlQuery instance
@@ -48,7 +51,7 @@ sql_text: str = str(container)
 You could add placeholder in query by adding **$variable_name** syntax.
 #### Set variable instantly
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def get_product_query(prod_name: str) -> sc.SqlContainer:
@@ -70,7 +73,7 @@ def get_product_query(prod_name: str) -> sc.SqlContainer:
 
 #### or later in SqlContainer
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def main():
@@ -97,7 +100,7 @@ def get_product_query() -> sc.SqlContainer:
 
 ### You could cache SqlContainer and set/change variables later
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 from functools import cache
 
 
@@ -113,7 +116,7 @@ def get_product_query() -> sc.SqlContainer:
 
 ### Get sql where placeholders are replaced by variables
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 from functools import cache
 
 
@@ -130,7 +133,7 @@ def get_product_query() -> sc.SqlContainer:
 ```
 If you would like to get sql without replacing placeholders then call '\_\_str\_\_' method of SqlContainer instead of 'dumps':
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 from functools import cache
 
 
@@ -149,7 +152,7 @@ def get_product_query() -> sc.SqlContainer:
 ### Build complicated and nested queries
 You could make query as nested as you would like to.
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 from typing import List
 
 
@@ -212,7 +215,7 @@ def main():
 ```
 ### Append nested sql statements or subqueries to query
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def main():
@@ -234,7 +237,7 @@ def get_from_statement() -> sc.SqlContainer:
 #### Create ctes
 1) Create cte and fill it later
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def get_ctes() -> sc.SqlContainer:
@@ -259,7 +262,7 @@ def get_ctes() -> sc.SqlContainer:
 
 2) Or create SqlQuery instance and set it
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def get_ctes() -> sc.SqlContainer:
@@ -295,7 +298,7 @@ def get_warehouse_cte() -> sc.SqlQuery:
 #### Add ctes to query
 It is so easy!
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def main():
@@ -316,7 +319,7 @@ def get_ctes() -> sc.SqlContainer:
 #### How to find piece of code by produced sql
 If you would like to find your piece of code in editor by sql produced by sql_constructor then you could mark SqlQuery instances by 'sql_id' parameter before you produce ready sql:
 ```python
-import sql_constructor as sc
+import sqlconstructor as sc
 
 
 def main():
