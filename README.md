@@ -58,7 +58,7 @@ It does not upper in following cases:
 - JSON_OBJECT_AGG
 - COALESCE
 
-Output of sql_text is
+Output of sql_text is:
 ```sql
 SELECT
   id,
@@ -107,8 +107,10 @@ q = SqlQuery(
         H('select'): SqlVals('hello').inline(),
     }
 )
+container: sc.SqlContainer = q()
+sql_text: str = str(container)
 ```
-Output
+Output of sql_text is:
 ```sql
 SELECT
   'hello'
