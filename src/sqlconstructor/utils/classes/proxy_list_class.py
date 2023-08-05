@@ -86,8 +86,8 @@ class ProxyList:
     def copy(self, /):
         return NotImplemented
 
-    def count(self, value, /):
-        return self.list.count(value)
+    def count(self, *args, **kwargs):
+        return self.list.count(*args, **kwargs)
 
     def index(self, *args, **kwargs):
         return self.list.index(*args, **kwargs)

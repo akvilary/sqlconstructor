@@ -9,7 +9,7 @@ from typing import Optional
 
 from .constants import AND_MODE, OR_MODE
 from .sql_val import SqlVal
-from .abstracts.string_convertible import StringConvertible
+from .utils.classes.string_convertible import StringConvertible
 
 
 class SqlFilter(StringConvertible):
@@ -18,16 +18,15 @@ class SqlFilter(StringConvertible):
     """
 
     def __init__(self, __param: Optional[dict] | Optional[str] = None, /, **kwargs):
-        # take only last one
         key, value = (
-            __param.popitem()
+            __param.popitem() # take only last one
             if __param and isinstance(__param, dict)
             else (None, __param)
             if __param
             else kwargs.popitem()
         )
         if key:
-            self.converted = key + '=' + str(SqlVal(value))
+            self.converted = str(key) + '=' + str(SqlVal(value))
         else:
             self.converted = str(value)
 

@@ -8,7 +8,7 @@ __author__ = 'https://github.com/akvilary'
 import uuid
 from typing import List, Optional, Type
 
-from .helpers import indent_text
+from .utils import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
 

@@ -329,9 +329,7 @@ If you you would like to insert value after building query then:
 from sqlconstructor import SqlQuery, SqlFilter, SqlContainer
 
 
-def get_product_query(
-    product_quality: str, 
-) -> SqlContainer:
+def get_product_query() -> SqlContainer:
     q = SqlQuery()
     q['select'](
         'id',
@@ -339,17 +337,19 @@ def get_product_query(
     )
     q['from']('product')
     q['where'](
-        SqlFilter(quality=product_quality)  # value will be converted to sql string by SqlVal
-        &
-        SqlFilter({'rating': 'high'})  # each value of dict will be converted by SqlVal
-        &
         'id <> $identifier'  # add placeholder in string
-        &
+        &  # AND operator
         SqlFilter(
             brand_id=SqlPlaceholder('brand_id')  # add placeholder as value (you could insert SqlPlaceholder anywhere where value is expected)
         )  # will be converted to brand_id=$brand_id
         &
         SqlFilter('quantity > 0')  # string will not be converted by SqlVal and will be passed as is
+        &
+        SqlWrap(
+            SqlFilter(quality='Best')  # value will be converted to sql string by SqlVal
+            |  # OR operator
+            SqlFilter({'rating': 'high'})  # each value of dict will be converted by SqlVal
+        )
     )
     container: SqlContainer = q()
     container(identifier=2, brand_id=1) # set variables after building query for placeholders
@@ -363,15 +363,17 @@ SELECT
 FROM
   product
 WHERE
-  quality='Best' -- if python variable 'product_quality' has 'Best' value
-  AND
-  rating='high'
-  AND
   id <> $identifier
   AND
   brand_id=$brand_id
   AND
   quantity > 0
+  AND
+  (
+    quality='Best'
+    OR
+    rating='high'
+  )
 ```
 
 You could use SqlFilters if all filters require same operator
@@ -692,8 +694,10 @@ q['where'](
     f"quality = {SqlVal('Best')}",
     f"and brand_id = {SqlVal(1)}",
 )
-
 ```
+
+### SqlWrap
+It is possible wrap any str or string convertible by SqlWrap (in release >= 1.1.1).
 
 ### Debugging
 

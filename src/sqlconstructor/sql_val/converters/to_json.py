@@ -8,8 +8,8 @@ __author__ = 'https://github.com/akvilary'
 import uuid
 import json
 
-from sqlconstructor.abstracts.string_convertible import StringConvertible
-from sqlconstructor.abstracts.special_json_convertible import SpecialJsonConvertible
+from sqlconstructor.utils.classes.string_convertible import StringConvertible
+from sqlconstructor.utils.classes.special_json_convertible import SpecialJsonConvertible
 
 
 class SqlEncoder(json.JSONEncoder):

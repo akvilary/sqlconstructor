@@ -5,7 +5,7 @@ Module of SqlSection class.
 
 from typing import Optional, Any
 
-from .helpers import indent_text, upper_sql_keywords
+from .utils import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
 

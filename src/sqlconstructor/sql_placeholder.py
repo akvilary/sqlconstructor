@@ -5,7 +5,7 @@ Module of SqlPlaceholder class.
 
 __author__ = 'https://github.com/akvilary'
 
-from .abstracts.string_convertible import StringConvertible
+from .utils.classes.string_convertible import StringConvertible
 
 
 class SqlPlaceholder(StringConvertible):

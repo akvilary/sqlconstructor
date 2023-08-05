@@ -7,8 +7,8 @@ __author__ = 'https://github.com/akvilary'
 
 import uuid
 
-from sqlconstructor.abstracts.string_convertible import StringConvertible
-from sqlconstructor.abstracts.special_json_convertible import SpecialJsonConvertible
+from sqlconstructor.utils.classes.string_convertible import StringConvertible
+from sqlconstructor.utils.classes.special_json_convertible import SpecialJsonConvertible
 from . import to_sql_string
 from . import to_array
 from . import to_json

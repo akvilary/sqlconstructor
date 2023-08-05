@@ -5,7 +5,7 @@ Module of SpecialJsonConvertible class.
 
 __author__ = 'https://github.com/akvilary'
 
-from abc import ABC,abstractmethod
+from abc import ABC, abstractmethod
 
 
 class SpecialJsonConvertible(ABC):

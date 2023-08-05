@@ -10,8 +10,8 @@ from typing import Iterable
 from .sql_container import SqlContainer
 from .sql_enum import SqlEnum
 from .sql_val import SqlVal
-from .abstracts.string_convertible import StringConvertible
-from .abstracts.special_json_convertible import SpecialJsonConvertible
+from .utils.classes.string_convertible import StringConvertible
+from .utils.classes.special_json_convertible import SpecialJsonConvertible
 
 
 class SqlVals(SqlEnum, StringConvertible, SpecialJsonConvertible):
@@ -33,6 +33,9 @@ class SqlVals(SqlEnum, StringConvertible, SpecialJsonConvertible):
     def multiline(self) -> SqlContainer:
         """Get multiline representation"""
         return SqlContainer(',\n'.join(get_values(self)))
+
+    def copy(self, /):
+        return SqlVals(list(self.list))
 
 
 def get_values(iterable: Iterable):

@@ -5,7 +5,7 @@ Module of SqlCol class.
 
 __author__ = 'https://github.com/akvilary'
 
-from .abstracts.string_convertible import StringConvertible
+from .utils.classes.string_convertible import StringConvertible
 
 
 class SqlCol(StringConvertible):
@@ -17,9 +17,3 @@ class SqlCol(StringConvertible):
 
     def __str__(self):
         return '"' + str(self.name) + '"'
-
-    def __add__(self, other):
-        return str(self) + str(other)
-
-    def __radd__(self, other):
-        return str(other) + str(self)
