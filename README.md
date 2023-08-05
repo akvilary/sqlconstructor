@@ -412,10 +412,10 @@ VALUES
 **SqlVals** converts python objects to sql values (same mechanics used in '$value' replacement by 'dumps' method of **SqlContainer**).
 - any string will be added with single quotes;
 - uuid will be added as string with single quotes;
-- list, set, tuple will be converted to array (sql example: "ARRAY['xo', 'ox']");
+- list, set, tuple will be converted to array (sql example: ARRAY['xo', 'ox']);
 - dict will be converted to json (sql example: '{"id": 23, "names": ["xo", "ox"]}')
 
-If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** convert to strings as is (without extra processing), and do not add any extra characters.
+If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** converts to strings as is (without extra processing), and do not add any extra characters (no single quotes either).
 
 Any of this class (**SqlEnum, SqlVals, SqlCols**) has 'inline' and 'multiline' method (return **SqlContainer** which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.29.
 Example:
