@@ -11,6 +11,9 @@ from typing import List, Optional, Type
 from .helpers import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
+from .sql_cols import SqlCols
+from .sql_vals import SqlVals
+from .sql_enum import SqlEnum
 
 
 class SqlQuery:
@@ -57,7 +60,7 @@ class SqlQuery:
 
         if query:
             for section, value in query.items():
-                if isinstance(value, str):
+                if isinstance(value, (str, SqlContainer, SqlCols, SqlVals, SqlEnum)):
                     self[section](value)
                 elif isinstance(value, (list, tuple)):
                     self[section](*value)

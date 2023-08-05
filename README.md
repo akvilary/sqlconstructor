@@ -483,6 +483,31 @@ VALUES
   )
 ```
 
+### It is also possible to fill simple SqlQuery by dict
+But it has certain limitation:
+- It is not possible to create query with duplicate headers (because of dict nature)
+But it is possible to include SqlCols, SqlVals and SqlEnum instances (in release >= 1.0.39).
+```python
+from sqlconstructor import SqlQuery, SqlCols
+
+
+q = SqlQuery(
+    {
+        'select': (
+            'id',
+            'name',
+        ),
+        # or
+        # 'select': SqlEnum('id', 'name').multiline(),
+        'from': 'product',
+        'where': (
+            "quality = 'Best'",
+            'and brand_id = 1',
+        ),
+    }
+)
+```
+
 ### Debugging
 
 #### How to find piece of code by produced sql
