@@ -90,3 +90,176 @@ def test_add_container_with_negative_indentation():
     q.add(SqlContainer('  a'), ind=-4)
     container = q()
     assert str(container) == 'a'
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_simple_query_dict():
+    q = SqlQuery()
+    query_dict = {'select': 'a'}
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  a',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_query_dict_with_nested_dict():
+    q = SqlQuery()
+    query_dict = {
+        'select': {
+            'exists': '1',
+        },
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(('SELECT', '  EXISTS', '    1'))
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_query_dict_with_nested_subquery_dict():
+    q = SqlQuery()
+    query_dict = {
+        'select': {
+            'select exists': '1',
+            '__do_wrap__': True,
+        },
+    }
+    q.add(query_dict)
+
+    assert len(q) == 1
+
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  (',
+            '    SELECT EXISTS',
+            '      1',
+            '  )',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_query_dict_with_cte_dict():
+    q = SqlQuery()
+    query_dict = {
+        'best_products': {
+            '__is_cte__': True,
+            'select': 'id',
+            'from': 'product',
+            'where': "quality = 'Best'",
+        },
+        'select': 'id',
+        'from': 'best_products',
+    }
+    q.add(query_dict)
+
+    assert len(q) == 3
+    assert len(q.data) == 2
+    assert len(q.ctes) == 1
+
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'WITH best_products AS',
+            '  (',
+            '    SELECT',
+            '      id',
+            '    FROM',
+            '      product',
+            '    WHERE',
+            "      quality = 'Best'",
+            '  )',
+            'SELECT',
+            '  id',
+            'FROM',
+            '  best_products',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_query_dict_with_ctes_dict():
+    q = SqlQuery()
+    query_dict = {
+        '__ctes__': {
+            'best_products': {
+                'select': 'id',
+                'from': 'product',
+                'where': "quality = 'Best'",
+            },
+        },
+        'select': 'id',
+        'from': 'best_products',
+    }
+    q.add(query_dict)
+
+    assert len(q) == 3
+    assert len(q.data) == 2
+    assert len(q.ctes) == 1
+
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'WITH best_products AS',
+            '  (',
+            '    SELECT',
+            '      id',
+            '    FROM',
+            '      product',
+            '    WHERE',
+            "      quality = 'Best'",
+            '  )',
+            'SELECT',
+            '  id',
+            'FROM',
+            '  best_products',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_positive_indetation():
+    q = SqlQuery()
+    query_dict = {'select': 'a'}
+    q.add(query_dict, ind=2)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            '  SELECT',
+            '    a',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_negative_indetation():
+    q = SqlQuery()
+    query_dict = {'  select': '    a'}
+    q.add(query_dict, ind=-4)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  a',
+        )
+    )

@@ -125,16 +125,16 @@ Example of using SqlSectionHeader:
 from sqlconstructor import SqlQuery, SqlVal, SqlSectionHeader
 
 
-H = SqlSectionHeader
+h = SqlSectionHeader
 q = SqlQuery(
     {
-        H('select'): "'hello'",
+        h('select'): "'hello'",
         # it is possible to add sql section without body
-        H('union all'): None,
-        H('select'): SqlVal('hello'),
+        h('union all'): None,
+        h('select'): SqlVal('hello'),
         # or create sql section without header
-        H(): 'union all',
-        H('select'): "'hello'",
+        h(): 'union all',
+        h('select'): "'hello'",
     }
 )
 container: SqlContainer = q()
@@ -593,7 +593,6 @@ def get_filters() -> List[str]:
 ```
 
 #### Build nested queries by passing nested dict to main dict in SqlQuery construction time
-
 If you pass nested dict in main query dict then it will be subquery. 
 If you add ('\_\_do\_wrap\_\_': True) to nested dict then nested subquery will be wrapped by parenthesis.
 If you add ('\_\_wrapper\_text\_\_': any string) to nested dict then nested subquery will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (\_\_do\_wrap\_\_: True)).
@@ -627,6 +626,22 @@ q = SqlQuery(
 )
 ```
 
+### Add sections as dict to query by .add method
+In release >= 1.3.13
+```python
+from sqlconstructor import SqlQuery
+q = SqlQuery()
+q.add(
+    {
+        'select': (
+            'product_id',
+            'price'
+        ),
+        'from': 'prices',
+    }
+)
+```
+
 ### Easy ways to handle ctes
 
 #### Create ctes
@@ -656,7 +671,7 @@ def get_ctes() -> SqlContainer:
     return ctes()
 ```
 
-2) Or create SqlQuery (or SqlContainer in release >= 1.2.5) instance and set it to SqlCte instance
+2) Or create SqlQuery instance (or SqlContainer in release >= 1.2.5 or dict in release >= 1.3.13) and set it to SqlCte instance
 ```python
 from sqlconstructor import SqlQuery, SqlContainer, SqlCte
 
@@ -669,6 +684,8 @@ def get_ctes() -> SqlContainer:
     ctes['warehouse_cte'] = get_warehouse_cte()
     # or
     # ctes.reg('warehouse_cte', get_warehouse_cte())
+    # or by dict
+    # ctes.reg('warehouse_cte', {'select': ('id', 'quantity',) ...})
 
     # you could also get certain cte by name and append new SqlSection to it
     a = ctes['warehouse_cte']
@@ -711,7 +728,19 @@ def get_ctes() -> SqlContainer:
     ...
 ```
 
-### Build cte by dict in query construction
+or create and add cte to query in one step in release >= 1.3.13
+```python
+from sqlconstructor import SqlQuery, SqlContainer
+
+
+def main():
+    q = SqlQuery()
+    q.ctes['bestsellers'] = {'select': ('id', 'sold',) ...}
+    # or set by SqlContainer or SqlQuery
+    # q.ctes['bestsellers'] = get_warehouse_cte()
+    ...
+```
+### Build ctes by dict in query construction
 In release >= 1.2.5
 ```python
 from sqlconstructor import SqlQuery, SqlContainer
@@ -719,21 +748,69 @@ from sqlconstructor import SqlQuery, SqlContainer
 
 def main():
     q = SqlQuery(        
-        'products': {
-            '__is_cte__': True,
-            'select': 'product_id',
-            'from': 'warehouse',
-            'where': 'quantity > 0',
+        {
+            'products': {
+                '__is_cte__': True,
+                'select': 'product_id',
+                'from': 'warehouse',
+                'where': 'quantity > 0',
+            },
+            'select': (
+                'id',
+                'name',
+            ),
         },
-        'select': (
-            'id',
-            'name',
-        ),
         ...
     )
     ...
 ```
 
+In release >= 1.3.13 we add extra syntax
+```python
+from sqlconstructor import SqlQuery, SqlContainer
+
+
+def main():
+    q = SqlQuery(        
+        {
+            '__ctes__': {
+                'products': {
+                    'select': 'product_id',
+                    'from': 'warehouse',
+                    'where': 'quantity > 0',
+                },
+                'product_descriptions': {
+                    'select': 'description',
+                    ...
+                },
+            },
+            'select': (
+                'id',
+                'name',
+            ),
+        }
+        ...
+    )
+    ...
+```
+
+### Add ctes as dict to query by .add method
+In release >= 1.3.13
+```python
+from sqlconstructor import SqlQuery
+q = SqlQuery()
+q.add(
+    {
+        '__ctes__': {
+            'products': {
+                'select': 'product_id',
+                'from': 'warehouse',
+                'where': 'quantity > 0',
+            },
+        },
+    },
+)
+```
 ### Enumerate columns, values
 In release >= 1.0.29 you could enumerate columns and values a little bit easier:
 ```python

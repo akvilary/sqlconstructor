@@ -53,33 +53,14 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
             source code after you encounter query in logs or in debuging tools.
         """
         UserList.__init__(self)
+        self.ctes = SqlCte()
+
         self.sql_id = sql_id or None
         if self.sql_id:
             self.add(f"-- sql_id='{self.sql_id}'")
 
         if query:
-            ctes = SqlCte()
-            for section_header, value in query.items():
-                if isinstance(value, (list, tuple)):
-                    self[section_header](*value)
-                elif isinstance(value, dict):
-                    subquery_dict = dict(value)
-                    is_cte = subquery_dict.pop('__is_cte__', None)
-                    if section_header == '__ctes__':
-                        for cte_name, cte_dict in subquery_dict.items():
-                            container = form_container_by_dict(cte_dict)
-                            ctes[cte_name] = container
-                    else:
-                        container = form_container_by_dict(subquery_dict)
-                        if is_cte:
-                            ctes[section_header] = container
-                        else:
-                            self[section_header](container)
-                else:
-                    self[section_header](value)
-
-            if ctes:
-                add_ctes_to_query(self, ctes)
+            add_sections_by_dict(self, query)
 
     def __getitem__(self, item: str | int | slice) -> SqlSection | Self:
         """Add SQL section by name of.
@@ -115,13 +96,14 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
             - ind : int - you could set additional indentation for each line of query text.
             But it is rarely used because nested subelements automatically add 2 space indentation.
         """
-        container = SqlContainer(self.__text(ind=ind))
+        container = SqlContainer(self.__to_text(ind=ind))
         if wrap is not None:
             container.wrap(wrap)
 
         # inherit all vars of included containers
         for section in self:
             container.vars.update(section.container.vars)
+
         return container
 
     def __iadd__(self, text: str | SqlContainer) -> Type:
@@ -132,23 +114,21 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
     def __str__(self):
         return str(self())
 
-    def add(self, data: str | SqlContainer | dict, ind: int = 0):
+    def __len__(self):
+        return len(self.ctes) + len(self.data)
+
+    def add(
+        self,
+        data: str | SqlContainer | dict,
+        ind: int = 0,
+    ):
         """Add data as sql section"""
         if isinstance(data, dict):
-            container = form_container_by_dict(data)
-        elif isinstance(data, SqlContainer):
-            container = data
+            add_sections_by_dict(self, data, ind=ind)
         else:
-            container = SqlContainer(data)
+            self[''](data).indent(ind)
 
-        if ind:
-            container.indent(ind)
-
-        section = SqlSection()
-        section(container)
-        self.append(section)
-
-    def __text(
+    def __to_text(
         self,
         ind: int = 0,  # indentation
     ) -> str:
@@ -159,10 +139,78 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
         Params:
           - ind: int - add additional indentation for each line of SQL query.
         """
-        sections = [section.container for section in self if section]
+        sections = []
+        if self.ctes:
+            sections.append(self.ctes())
+
+        sections += [section.container for section in self if section]
         query_text = '\n'.join(str(x) for x in sections) if sections else ''
         query_text = indent_text.indent_lines(query_text, ind=ind)
         return query_text
+
+
+def add_sections_by_dict(
+    query: SqlQuery,
+    data: dict,
+    *,
+    ind: int = 0,
+):
+    """
+    Add SqlSections by dict to SqlQuery
+    """
+    for section_header, value in data.items():
+        if isinstance(value, (list, tuple)):
+            query[section_header](*value).indent(ind)
+        elif isinstance(value, dict):
+            add_section_by_dict(query, value, section_header, ind=ind)
+        else:
+            query[section_header](value).indent(ind)
+
+
+def add_section_by_dict(
+    query: SqlQuery,
+    data: dict,
+    section_header: str = '',
+    *,
+    ind: int = 0,
+):
+    """
+    Add SqlSection by dict to SqlQuery
+    """
+    subquery_dict = dict(data)
+    is_cte = subquery_dict.pop('__is_cte__', None)
+    if section_header == '__ctes__':
+        for cte_name, cte_dict in subquery_dict.items():
+            container = form_container_by_dict(cte_dict).indent(ind)
+            query.ctes[cte_name] = container
+    else:
+        container = form_container_by_dict(subquery_dict)
+        container.indent(ind)
+        if is_cte:
+            query.ctes[section_header] = container
+        else:
+            query[section_header](container)
+
+
+def form_container_by_dict(
+    subquery_dict: dict,
+) -> SqlContainer:
+    """
+    Form container by dict
+    """
+    do_wrap = subquery_dict.pop('__do_wrap__', None)
+    wrapper_text = subquery_dict.pop('__wrapper_text__', None)
+    sql_id = subquery_dict.pop('__sql_id__', None)
+
+    kwargs = {}
+    if sql_id:
+        kwargs['sql_id'] = sql_id
+    container = SqlQuery(subquery_dict, **kwargs)()
+
+    if do_wrap or isinstance(wrapper_text, str):
+        container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
+
+    return container
 
 
 ###################################################################################################
@@ -187,6 +235,11 @@ class SqlCte(UserDict, StringConvertible, ContainerConvertible):
         super().__init__(*args, **kwargs)
         self.sql_id = sql_id
 
+    def __setitem__(self, key, item):
+        if isinstance(item, dict):
+            item = copy_cte_dict(item)
+        UserDict.__setitem__(self, key, item)
+
     def __call__(self, **kwargs) -> SqlContainer:
         result = SqlQuery(sql_id=self.sql_id) if self.sql_id else SqlQuery()
         ctes_size = len(self)
@@ -210,7 +263,7 @@ class SqlCte(UserDict, StringConvertible, ContainerConvertible):
     def reg(
         self,
         cte_name: str,
-        sql_query: Optional[SqlQuery] = None,
+        sql_query: Optional[SqlQuery | SqlContainer | dict] = None,
         *,
         sql_id: Optional[str | uuid.UUID] = '',  # works only if sql_query parameter is not provided
     ) -> SqlQuery:
@@ -218,55 +271,46 @@ class SqlCte(UserDict, StringConvertible, ContainerConvertible):
         kwargs = {}
         if sql_id:
             kwargs['sql_id'] = sql_id
-        query = sql_query if isinstance(sql_query, SqlQuery) else SqlQuery(**kwargs)
+        if isinstance(sql_query, SqlQuery):
+            query = sql_query
+        elif isinstance(sql_query, dict):
+            sql_query = copy_cte_dict(sql_query)
+            query = SqlQuery(sql_query, **kwargs)
+        elif isinstance(sql_query, SqlContainer):
+            query = SqlQuery(**kwargs)
+            query[''](sql_query)
+        else:
+            query = SqlQuery(**kwargs)
         self[cte_name] = query
         return query
 
 
-def form_container_by_dict(
-    subquery_dict: dict,
-) -> SqlContainer:
-    """
-    Form container by dict
-    """
-    do_wrap = subquery_dict.pop('__do_wrap__', None)
-    wrapper_text = subquery_dict.pop('__wrapper_text__', None)
-    sql_id = subquery_dict.pop('__sql_id__', None)
-
-    kwargs = {}
-    if sql_id:
-        kwargs['sql_id'] = sql_id
-    container = SqlQuery(subquery_dict, **kwargs)()
-
-    if do_wrap or isinstance(wrapper_text, str):
-        container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
-
-    return container
-
-
 def add_cte_section(
     query: SqlQuery,
-    cte: SqlQuery | SqlContainer,
+    cte: SqlQuery | SqlContainer | dict,
     sql_section_header: str,
     wrapper_text: str,
 ):
     """Add cte as SqlSection in SqlQuery"""
     if isinstance(cte, SqlQuery):
         query[sql_section_header](cte(wrapper_text))
-    elif isinstance(cte, SqlContainer):
+    else:
+        if isinstance(cte, dict):
+            cte = form_container_by_dict(cte)
+
         cte.is_multiline_wrap_type = True
         cte.wrapper_text = wrapper_text
         query[sql_section_header](cte)
 
 
-def add_ctes_to_query(query: SqlQuery, ctes: SqlCte):
+def copy_cte_dict(dictionary: dict) -> dict:
     """
-    Add ctes to query
+    Copy dict and remove service fields
     """
-    ctes_section = SqlSection()
-    ctes_section(ctes())
-    # if we have other sections before ctes
-    if query:
-        query.insert(0, ctes_section)
-    else:
-        query.append(ctes_section)
+    if '__ctes__' in dictionary:
+        raise AttributeError('Unallowed attribute: __ctes__')
+
+    cte_dict_copy = dict(dictionary)
+    for field_name in ('__is_cte__',):
+        cte_dict_copy.pop(field_name, None)
+    return cte_dict_copy
