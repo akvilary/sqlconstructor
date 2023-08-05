@@ -7,7 +7,7 @@ __author__ = 'https://github.com/akvilary'
 
 from typing import Any
 
-from . import helpers
+from .sql_container import SqlContainer
 
 
 class SqlEnum(list):
@@ -22,8 +22,16 @@ class SqlEnum(list):
 
     def __repr__(self) -> str:
         """Convert SqlContainer instance to str"""
-        return '(\n' + helpers.indent_lines(',\n'.join(x for x in self), ind=2) + '\n)'
+        return str(self.multiline().wrap())
 
     def __str__(self) -> str:
         """Return SqlContainer as str"""
         return repr(self)
+
+    def inline(self) -> SqlContainer:
+        """Get inline representation"""
+        return SqlContainer(', '.join(self))
+
+    def multiline(self) -> SqlContainer:
+        """Get multiline representation"""
+        return SqlContainer(',\n'.join(self))

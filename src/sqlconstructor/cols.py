@@ -5,9 +5,10 @@ Module of Cols class.
 
 __author__ = 'https://github.com/akvilary'
 
+from typing import Iterable
 
-from . import helpers
 from .sql_enum import SqlEnum
+from .sql_container import SqlContainer
 
 
 class Cols(SqlEnum):
@@ -20,4 +21,17 @@ class Cols(SqlEnum):
 
     def __repr__(self) -> str:
         """Convert SqlContainer instance to str"""
-        return '(\n' + helpers.indent_lines(',\n'.join('"' + x + '"' for x in self), ind=2) + '\n)'
+        return str(self.multiline().wrap())
+
+    def inline(self) -> SqlContainer:
+        """Get inline representation"""
+        return SqlContainer(', '.join(get_columns(self)))
+
+    def multiline(self) -> SqlContainer:
+        """Get multiline representation"""
+        return SqlContainer(',\n'.join(get_columns(self)))
+
+
+def get_columns(iterable: Iterable):
+    """Get columns iterator"""
+    return ('"' + x + '"' for x in iterable)
