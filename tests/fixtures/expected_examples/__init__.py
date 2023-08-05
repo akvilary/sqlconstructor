@@ -8,12 +8,19 @@ def get_file_path(file_name):
     return os.path.join(CURRENT_DIR, file_name)
 
 
-@pytest.fixture
-def simple_query_sql():
-    file_path = get_file_path('simple_query.sql')
+def read_file_without_newline_at_the_end(file_name: str) -> str:
+    file_path = get_file_path(file_name)
     with open(file_path, encoding='utf-8', newline='') as file:
         sql_file = file.read()
         # skip added '\n' character by read method
-        return sql_file[:-1]
+        return sql_file.rstrip()
 
 
+@pytest.fixture
+def simple_query_sql():
+    return read_file_without_newline_at_the_end('simple_query.sql')
+
+
+@pytest.fixture
+def select_section_of_simple_query_sql():
+    return read_file_without_newline_at_the_end('select_section_of_simple_query.sql')
