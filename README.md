@@ -878,6 +878,7 @@ StringConvertible subclasses:
 - SqlCol
 - SqlCols
 - SqlContainer
+- SqlCte
 - SqlEnum
 - SqlFilter
 - SqlFilters
