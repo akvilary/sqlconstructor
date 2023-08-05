@@ -109,10 +109,9 @@ class SqlQuery:
             - ind : int - you could set additional indentation for each line of query text.
             But it is rarely used because nested subelements automatically add 2 space indentation.
         """
-        params = {'text': self.__text(ind=ind)}
+        container = SqlContainer(self.__text(ind=ind))
         if wrap is not None:
-            params['wrapper_text'] = wrap
-        container = SqlContainer(**params)
+            container.wrap(wrap)
 
         # inherit all vars of included containers
         for section in self.sections:

@@ -9,7 +9,6 @@ from .sql_container import SqlContainer
 from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
 from .utils.classes.container_convertible import ContainerConvertible
-from .utils.wrap_text import get_wrapped
 
 
 class SqlWrap(
@@ -31,15 +30,22 @@ class SqlWrap(
             - wrapper_text: str - string to be added after parentheses enclosing "text" argument.
         """
         self.text = text
-        self.wrapper_text = wrapper_text
+        self.wrapper_text = wrapper_text or ''
 
     def __str__(self):
-        return get_wrapped(self.text, self.wrapper_text)
+        return str(SqlContainer(self.text).wrap(self.wrapper_text))
+
+    def __call__(self, **kwargs):
+        container = self.multiline()
+        # add vars to container
+        if kwargs:
+            container(**kwargs)
+        return container
 
     def inline(self) -> SqlContainer:
         """Get container of wrapped sql text in inline"""
-        return SqlContainer(self.text, self.wrapper_text).wrap(multiline=False)
+        return SqlContainer(self.text).wrap(self.wrapper_text, multiline=False)
 
     def multiline(self) -> SqlContainer:
         """Get container of wrapped sql text in multiline"""
-        return SqlContainer(self.text, self.wrapper_text).wrap()
+        return SqlContainer(self.text).wrap(self.wrapper_text)

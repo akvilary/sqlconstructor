@@ -389,7 +389,7 @@ one = filters['a']
 if 'a' in filters:
     del filters['a']
 
-for key, value filters.items():
+for key, value in filters.items():
     ...
 ```
 

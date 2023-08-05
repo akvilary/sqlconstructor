@@ -20,5 +20,5 @@ def test_bool_false_expected():
 def test_bool_false_expected_even_has_wrapper_text():
     text = ''
     wrapper_text = 'as h on true'
-    container = SqlContainer(text, wrapper_text)
+    container = SqlContainer(text).wrap(wrapper_text)
     assert bool(container) is False

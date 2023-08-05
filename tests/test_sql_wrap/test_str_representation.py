@@ -15,6 +15,17 @@ def test_string_representation():
 
 
 @pytest.mark.SqlWrap
+def test_string_representation_fake_wrapper_text():
+    assert str(SqlWrap('a', None)) == '\n'.join(
+        (
+            '(',
+            '  a',
+            ')',
+        )
+    )
+
+
+@pytest.mark.SqlWrap
 @pytest.mark.SqlFilter
 def test_wrap_filters():
     first_filter = SqlFilter(a=1)

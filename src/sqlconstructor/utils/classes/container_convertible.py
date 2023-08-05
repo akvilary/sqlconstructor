@@ -15,6 +15,7 @@ class ContainerConvertible:
     """
     def __call__(self, **kwargs):
         container = sc.SqlContainer(str(self))
+        # add vars to container
         if kwargs:
             container(**kwargs)
         return container

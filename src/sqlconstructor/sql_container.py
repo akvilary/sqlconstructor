@@ -40,11 +40,10 @@ class SqlContainer(StringConvertible):
     def __init__(
         self,
         text: str,
-        wrapper_text: Optional[str] = None,
     ):
         self.text: str = str(text)
-        self.wrapper_text: Optional[str] = str(wrapper_text) if wrapper_text is not None else None
-        self.__is_multiline_wrap = True
+        self.wrapper_text: Optional[str] = None
+        self.__is_multiline_wrap: bool = True
         self.vars: dict = {}
 
     def __bool__(self):
