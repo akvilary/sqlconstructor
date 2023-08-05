@@ -1,20 +1,19 @@
 # coding=utf-8
 """
-Module of Values class.
+Module of Cols class.
 """
 
 __author__ = 'https://github.com/akvilary'
 
 from typing import Iterable
 
-from . import helpers
 from .sql_enum import SqlEnum
-from .sql_container import SqlContainer
+from ..sql_container import SqlContainer
 
 
-class SqlVals(SqlEnum):
+class SqlCols(SqlEnum):
     """
-    Values class is invented for better experience to enumerate values.
+    Cols class is invented for better experience to enumerate columns.
     It is possible to register cte and fill it after.
     Or you could add filled query as cte instantly.
     Now it is your choice!
@@ -26,13 +25,13 @@ class SqlVals(SqlEnum):
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""
-        return SqlContainer(', '.join(get_values(self)))
+        return SqlContainer(', '.join(get_columns(self)))
 
     def multiline(self) -> SqlContainer:
         """Get multiline representation"""
-        return SqlContainer(',\n'.join(get_values(self)))
+        return SqlContainer(',\n'.join(get_columns(self)))
 
 
-def get_values(iterable: Iterable):
-    """Get values iterator"""
-    return (helpers.convert_to_sql_repr(x) for x in iterable)
+def get_columns(iterable: Iterable):
+    """Get columns iterator"""
+    return ('"' + str(x) + '"' for x in iterable)

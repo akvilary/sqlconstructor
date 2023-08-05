@@ -8,7 +8,7 @@ __author__ = 'https://github.com/akvilary'
 import uuid
 from typing import List, Optional, Type
 
-from . import helpers
+from .helpers import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
 
@@ -138,5 +138,5 @@ class SqlQuery:
         """
         sections = [section.container for section in self.sections if section]
         query_text = '\n'.join(str(x) for x in sections) if sections else ''
-        query_text = helpers.indent_lines(query_text, ind=ind)
+        query_text = indent_text.indent_lines(query_text, ind=ind)
         return query_text

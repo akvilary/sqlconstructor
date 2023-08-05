@@ -9,7 +9,7 @@ from typing import Optional, Self
 
 import re
 
-from . import helpers
+from .helpers import  converters, wrap_text
 
 
 class SqlContainer:
@@ -68,7 +68,7 @@ class SqlContainer:
                 pattern = r'\$' + keyword + r'\b'
                 text = re.sub(
                     pattern,
-                    helpers.convert_to_sql_repr(value),
+                    converters.convert_any_to_sql(value),
                     text,
                 )
         return get_string_representation(text, self.wrapper_text)
@@ -87,5 +87,5 @@ class SqlContainer:
 def get_string_representation(text, wrapper_text) -> str:
     """Get text or wrap text by wrapper and return as string"""
     if wrapper_text is not None:
-        return helpers.get_text_wrapped(text, wrapper_text)
+        return wrap_text.get_text_wrapped(text, wrapper_text)
     return text

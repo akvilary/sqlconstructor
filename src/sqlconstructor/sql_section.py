@@ -5,12 +5,12 @@ Module of SqlSection class.
 
 from typing import Optional
 
-from . import helpers
+from .helpers import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
-from .sql_enum import SqlEnum
-from .sql_cols import SqlCols
-from .sql_vals import SqlVals
+from .sql_transmitters.sql_enum import SqlEnum
+from .sql_transmitters.sql_cols import SqlCols
+from .sql_transmitters.sql_vals import SqlVals
 
 
 class SqlSection:
@@ -75,7 +75,7 @@ class SqlSection:
 
         section_body = delimiter.join(
             # if self.section_name == '' then do not indent
-            helpers.indent_lines(str(x), ind=ind) if self.section_header else str(x)
+            indent_text.indent_lines(str(x), ind=ind) if self.section_header else str(x)
             for x in statements
             if x
         )
@@ -92,7 +92,7 @@ class SqlSection:
         sql_block += section_body + section_end
 
         if upper_keywords:
-            sql_block = helpers.upper_keywords(sql_block, keywords=SQL_KEYWORDS)
+            sql_block = upper_sql_keywords.upper_keywords(sql_block, keywords=SQL_KEYWORDS)
 
         self.container = SqlContainer(sql_block)
 

@@ -7,6 +7,6 @@ from .sql_query import SqlQuery
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
 from .sql_cte import SqlCte
-from .sql_enum import SqlEnum
-from .sql_cols import SqlCols
-from .sql_vals import SqlVals
+from .sql_transmitters.sql_enum import SqlEnum
+from .sql_transmitters.sql_cols import SqlCols
+from .sql_transmitters.sql_vals import SqlVals
