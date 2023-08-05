@@ -746,11 +746,15 @@ q['where'](
     f"and brand_id = {SqlVal(1)}",
 )
 ```
+### SqlContainer
+SqlContainer inherits all vars of another SqlContainer if it provided as argument in construction (in release >= 1.1.8).
+You could add inline wrap if you provide 'multiline=False' argument in 'wrap' method (in release >= 1.1.8). Multiline type of wrapping is default.
 
 ### SqlWrap
 It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1).
 SqlWrap also could operate & or | as SqlFilter (in release >= 1.1.4).
-SqlWrap is subclass of SqlContainer (in release >= 1.1.8). If you provide SqlContainer as 'text' argument then it inherits all vars.
+SqlWrap is subclass of SqlContainer (in release >= 1.1.8).
+SqlWrap has inline and multiline methods (in release >= 1.1.8). It only change type of wrapping and do not make whole text in one line (or in multi lines).
 ```python
 from sqlconstructor import SqlFilter, SqlWrap
 result = str(SqlWrap(SqlFilter(a=1) & SqlFilter(b=2)))
@@ -771,7 +775,8 @@ SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSect
 ### Debugging
 
 #### How to find piece of code by produced sql
-If you would like to find your piece of code in editor by ready sql which is produced by sqlconstructor then you have to mark SqlQuery instances by 'sql_id' parameter in advance (before you have produced ready sql):
+If you would like to find your piece of code in editor by ready sql which is produced by sqlconstructor 
+then you have to mark SqlQuery instances by 'sql_id' parameter in advance (before you have produced ready sql):
 ```python
 from sqlconstructor import SqlQuery, SqlContainer
 
@@ -791,7 +796,7 @@ def get_part_of_query() -> SqlContainer:
     p['select']('quantity')
     ...
 ```
-It adds comment to produced sql as
+Since you added sql_id, now the SqlQuery instance has such value in sql_id attribute and it will add comment to produced sql as:
 ```sql
 -- sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b'
 SELECT
