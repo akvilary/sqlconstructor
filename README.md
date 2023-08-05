@@ -608,7 +608,7 @@ def get_ctes() -> SqlContainer:
     return ctes()
 ```
 
-2) Or create SqlQuery instance and set it
+2) Or create SqlQuery (or SqlContainer in release >= 1.2.5) instance and set it to SqlCte instance
 ```python
 from sqlconstructor import SqlQuery, SqlContainer, SqlCte
 
@@ -629,7 +629,7 @@ def get_ctes() -> SqlContainer:
     return ctes()
 
 
-def get_warehouse_cte() -> SqlQuery:
+def get_warehouse_cte() -> SqlQuery: # or SqlContainer
     a = SqlQuery()
     a['select'](
         'id',
@@ -640,7 +640,7 @@ def get_warehouse_cte() -> SqlQuery:
          'id = $id',
          'AND quantity > $quantity',
     )(id=11, quantity=10)
-    return a
+    return a  # or a()
 ```
 
 #### Add ctes to query
