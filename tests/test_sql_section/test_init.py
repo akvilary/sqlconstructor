@@ -4,6 +4,12 @@ from sqlconstructor import SqlSection
 SECTION_HEADER = 'select'
 
 
+def test_init_with_no_header():
+    section = SqlSection()
+    assert section.section_header == ''
+    assert section.container is None
+
+
 @pytest.mark.SqlSection
 @pytest.mark.parametrize("args, kwargs", [
     ([SECTION_HEADER], {}),

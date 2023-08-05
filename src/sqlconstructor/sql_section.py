@@ -8,10 +8,13 @@ from typing import Optional
 from . import helpers
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
+from .sql_enum import SqlEnum
+from .cols import Cols
+from .vals import Vals
 
 
 class SqlSection:
-    """SqlSection is invented to build one SQL block of query and put the result of 
+    """SqlSection is invented to build one SQL block of query and put the result of
     this process to self.container which is SqlContainer instance.
     SQL block is build of:
         - section header provided of self.section_header
@@ -23,8 +26,8 @@ class SqlSection:
         """Constract SqlSection instance.
         Params:
             - section_header: str - could be any string (empty is also possible).
-            If it be an empty string then there will be no section header in SQL block, 
-            and section body will be added without indentation. Otherwise section header 
+            If it be an empty string then there will be no section header in SQL block,
+            and section body will be added without indentation. Otherwise section header
             will be added, and section body starts with new line with 2 space indentation.
         """
         self.section_header: str = section_header
@@ -36,7 +39,11 @@ class SqlSection:
 
     def __call__(
         self,
-        *statements: str | SqlContainer,  # or any objects with __str__ method
+        *statements: str
+        | SqlContainer
+        | SqlEnum
+        | Cols
+        | Vals,  # or any objects with __str__ method
         sep: Optional[str] = None,
         line_end: str = '\n',
         section_end: str = '',
@@ -46,16 +53,16 @@ class SqlSection:
         """Process building SQL block and put result to self.container and return latter.
         Params:
             - *statements: Iterable[str | SqlContainer] - statements which go to section body.
-            - sep: Optional[str] - separator for statements. By default is empty string 
+            - sep: Optional[str] - separator for statements. By default is empty string
             for majority of cases and is comma for special type of statements described in
             SECTIONS_WITH_COMMA_SEPARATOR constant.
             - line_end: str: end of each line. It is '\n' by default.
             - section_end: str - end of SQL block created. It is empty string by default.
             - ind: int - indentation of each line of section body. If section header is not empty
-            string then each line of section body will be indented for 2 spaces. 
+            string then each line of section body will be indented for 2 spaces.
             No indentation overwise.
-            - upper_keywords: bool - do upper SQL keywords in section header and section body 
-            or do not. All SQL keywords are registered in SQL_KEYWORDS constant. 
+            - upper_keywords: bool - do upper SQL keywords in section header and section body
+            or do not. All SQL keywords are registered in SQL_KEYWORDS constant.
         """
         sep = (
             sep

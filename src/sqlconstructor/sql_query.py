@@ -132,9 +132,9 @@ class SqlQuery:
         """
         Used in __call__ method.
         Description:
-            - Build SQL text by SQL sections and return string (not SqlContainer!).
+          - Build SQL text by SQL sections and return string (not SqlContainer!).
         Params:
-            - ind: int - add additional indentation for each line of SQL query.
+          - ind: int - add additional indentation for each line of SQL query.
         """
         sections = [section.container for section in self.sections if section]
         query_text = '\n'.join(str(x) for x in sections) if sections else ''
