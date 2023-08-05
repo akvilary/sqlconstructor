@@ -19,7 +19,7 @@ def convert_any_to_sql(value) -> str:
     if isinstance(value, (list, set, tuple)):
         return to_array.convert_to_sql_array(value)
     if isinstance(value, dict):
-        return to_json.convert_dict_to_sql_repr(value)
+        return to_json.convert_dict_to_sql_json(value)
     if isinstance(value, uuid.UUID):
         return to_sql_string.convert_python_str_to_sql_str(value)
     return str(value)

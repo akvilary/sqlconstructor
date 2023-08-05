@@ -22,6 +22,6 @@ class SqlEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-def convert_dict_to_sql_repr(dictionary: dict) -> str:
+def convert_dict_to_sql_json(dictionary: dict) -> str:
     """Convert python dictionary to sql representation"""
     return json.dumps(dictionary, cls=SqlEncoder)
