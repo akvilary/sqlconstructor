@@ -195,6 +195,30 @@ def get_from_statement() -> SqlContainer:
     ...
 ```
 
+### Append SqlQuery to query
+In release >= 1.2.4 it is possible to nest SqlQuery instance (it will be converted to SqlContainer automatically).
+```python
+from sqlconstructor import SqlQuery, SqlContainer
+
+
+def main():
+    q = SqlQuery()
+    q['select'](
+        'p.id',
+        'p.name',
+    )
+    q += get_from_statement()
+    q['where'] = get_where_filters()
+    ...
+
+
+def get_from_statement() -> SqlQuery:
+    ...
+
+def get_where_filters() -> SqlQuery:
+    ...
+```
+
 ### Build query with placeholders to be replaced by variables later
 You could add placeholder in query by adding **$variable_name** syntax.
 #### Set variable instantly
@@ -282,7 +306,9 @@ def get_product_query() -> SqlContainer:
 ```
 
 ### Get sql where placeholders are replaced by variables
-Use **'dumps'** method of SqlContainer:
+Use **'dumps'** method of SqlContainer.
+Notice that each value of variables will be conveted to sql by SqlVal class. 
+If you would like to insert value of variable 'as is' in sql string then save variable as SqlContainer.
 ```python
 from sqlconstructor import SqlContainer
 from functools import cache
@@ -290,7 +316,12 @@ from functools import cache
 
 def main():
     container: SqlContainer = get_product_query()
-    container.vars.update({'quality': 'Best', 'brand_id': 1})
+    container.vars.update(
+        {
+            'quality': 'Best',  # will be converted by SqlVal to 'Best' (with surrounding single quotes)
+            'avg': SqlContainer('price'),  # will be converted by 'str' method and not by SqlVal (because of SqlContainer)
+        }
+    )
     # to replace placeholders by variables call 'dumps' method
     sql_text: str = container.dumps()
 
@@ -322,8 +353,11 @@ You could use & or | operator **between filters** or **betweem filter and str (o
 Result of & or | operator is SqlContainer and SqlContainer (and SqlWrap) also can operate & and | (in release >= 1.2.0)
 
 SqlFilter and SqlFilters insert value in query instantly if you use string as value in keyword argument or dict.
+Each value of dict or keyword argument will be converted by SqlVal class. 
+If you would like insert value 'as is' in sql string then you put the value in SqlContainer 
+and pass that SqlContainer instance as dict or keyword argument value.
 
-If you you would like to insert value after building query then:
+If you you would like to set variable and replace it later (after building query) then:
   - use SqlPlaceholder instance as value in filter keyword argument or dict.
   - or add placeholder by syntax in string as whole value (neither in dict nor in keyword argument, because they will be converted to sql value)
 ```python

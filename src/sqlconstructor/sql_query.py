@@ -72,7 +72,7 @@ class SqlQuery:
                         container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
                     self[section](container)
                 else:
-                    self[str(section)](str(value))
+                    self[section](value)
 
 
     def __bool__(self) -> bool:
@@ -125,6 +125,9 @@ class SqlQuery:
         """Add text as sql section and return instance"""
         self.add(text)
         return self
+
+    def __str__(self):
+        return str(self())
 
     def add(self, text: str | SqlContainer):
         """Add text as sql section"""

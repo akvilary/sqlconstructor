@@ -5,6 +5,7 @@ Module of SqlSection class.
 
 from typing import Optional, Any
 
+import sqlconstructor.sql_query as s_q
 from .utils import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
@@ -27,7 +28,7 @@ class SqlSection:
             and section body will be added without indentation. Otherwise section header
             will be added, and section body starts with new line with 2 space indentation.
         """
-        self.header: str = header
+        self.header: str = str(header)
         self.container: Optional[SqlContainer] = None
 
     def __bool__(self) -> bool:
@@ -90,6 +91,8 @@ class SqlSection:
         self.container = SqlContainer(sql_block)
 
         for statement in statements:
+            if isinstance(statement, s_q.SqlQuery):
+                statement: SqlContainer = statement()
             if isinstance(statement, SqlContainer):
                 self.container.vars.update(statement.vars)
 
