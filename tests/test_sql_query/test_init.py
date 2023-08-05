@@ -13,7 +13,7 @@ def test_init_with_no_args():
 
 @pytest.mark.SqlQuery
 def test_init_with_sql_id():
-    sql_id = 'some'
+    sql_id = 'abc'
     q = SqlQuery(sql_id=sql_id)
     assert q.sql_id == sql_id
 

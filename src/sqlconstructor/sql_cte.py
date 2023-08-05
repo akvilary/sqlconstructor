@@ -53,6 +53,6 @@ class SqlCte(dict):
         kwargs = {}
         if sql_id:
             kwargs['sql_id'] = sql_id
-        query = sql_query or SqlQuery(**kwargs)
+        query = sql_query if isinstance(sql_query, SqlQuery) else SqlQuery(**kwargs)
         self[cte_name] = query
         return query
