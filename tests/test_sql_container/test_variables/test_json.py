@@ -21,7 +21,7 @@ def test_json_variable():
     }
     container = SqlContainer("SELECT $my_dict::json->'tuple' as names")(my_dict=my_dict)
     assert container.dumps() == (
-        'SELECT {'
+        "SELECT E'{"
         '"id": 23, '
         '"list": ["a", "b"], '
         '"tuple": ["a", "b"], '
@@ -30,5 +30,5 @@ def test_json_variable():
         '"container": "a", '
         '"val": "\'a\'", '
         '"col": "\\\"a\\\""'
-        "}::json->'tuple' as names"
+        "}'::json->'tuple' as names"
     )

@@ -10,7 +10,7 @@ def test_convert_none_to_null():
 
 @pytest.mark.SqlVal
 def test_convert_none_to_null_in_dict_value():
-    assert str(SqlVal({'a': None})) == '{"a": null}'
+    assert str(SqlVal({'a': None})) == """E'{"a": null}'"""
 
 
 @pytest.mark.SqlVal
@@ -22,4 +22,4 @@ def test_convert_uuid():
 @pytest.mark.SqlVal
 def test_convert_uuid_in_dict_value():
     _uuid = uuid.uuid4()
-    assert str(SqlVal({'a': _uuid})) == '{"a": ' + f'"{_uuid}"' + '}'
+    assert str(SqlVal({'a': _uuid})) == """E'{"a": """ + f'"{_uuid}"' + "}'"

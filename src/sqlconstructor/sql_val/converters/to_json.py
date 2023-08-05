@@ -37,4 +37,4 @@ class SqlEncoder(json.JSONEncoder):
 
 def convert_dict_to_sql_json(dictionary: dict) -> str:
     """Convert python dictionary to sql representation"""
-    return json.dumps(dictionary, cls=SqlEncoder)
+    return "E'" + json.dumps(dictionary, cls=SqlEncoder) + "'"
