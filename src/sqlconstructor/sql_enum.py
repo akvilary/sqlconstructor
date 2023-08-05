@@ -8,9 +8,11 @@ __author__ = 'https://github.com/akvilary'
 from typing import Any
 
 from .sql_container import SqlContainer
+from .abstracts.string_convertible import StringConvertible
+from .abstracts.inline_enum import InlineEnum
 
 
-class SqlEnum(list):
+class SqlEnum(list, StringConvertible, InlineEnum):
     """
     SqlEnum class is invented for better experience to enumerate.
     """
@@ -20,13 +22,9 @@ class SqlEnum(list):
     ):
         super().__init__(statements)
 
-    def __repr__(self) -> str:
-        """Convert SqlContainer instance to str"""
-        return str(self.multiline().wrap())
-
     def __str__(self) -> str:
-        """Return SqlContainer as str"""
-        return repr(self)
+        """Return SqlEnum as str"""
+        return str(self.multiline().wrap())
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""

@@ -7,7 +7,7 @@ __author__ = 'https://github.com/akvilary'
 
 from typing import Any
 
-from .helpers import converters
+from . import converters
 
 
 class SqlVal:
@@ -20,8 +20,11 @@ class SqlVal:
     ):
         self.converted = converters.convert_any_to_sql(statement)
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         return self.converted
 
-    def __str__(self) -> str:
-        return repr(self)
+    def __add__(self, other):
+        return str(self) + str(other)
+
+    def __radd__(self, other):
+        return str(other) + str(self)

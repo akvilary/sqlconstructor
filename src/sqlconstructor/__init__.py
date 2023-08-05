@@ -3,10 +3,13 @@
 
 __author__ = 'https://github.com/akvilary'
 
+# core classes
 from .sql_query import SqlQuery
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
 from .sql_cte import SqlCte
+
+# supplementary classes
 from .sql_enum import SqlEnum
 from .sql_col import SqlCol
 from .sql_cols import SqlCols

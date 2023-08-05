@@ -10,15 +10,17 @@ from typing import Iterable
 from .sql_enum import SqlEnum
 from .sql_col import SqlCol
 from .sql_container import SqlContainer
+from .abstracts.string_convertible import StringConvertible
+from .abstracts.inline_enum import InlineEnum
 
 
-class SqlCols(SqlEnum):
+class SqlCols(SqlEnum, StringConvertible, InlineEnum):
     """
     SqlCols class is invented for better experience to enumerate as sql columns.
     """
 
-    def __repr__(self) -> str:
-        """Convert SqlContainer instance to str"""
+    def __str__(self) -> str:
+        """Convert SqlCols instance to str"""
         return str(self.multiline().wrap())
 
     def inline(self) -> SqlContainer:

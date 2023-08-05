@@ -9,9 +9,10 @@ from typing import Optional
 
 from .constants import AND_MODE, OR_MODE
 from .sql_val import SqlVal
+from .abstracts.string_convertible import StringConvertible
 
 
-class SqlFilter:
+class SqlFilter(StringConvertible):
     """
     SqlFilter class is invented to build single sql keyword parameter faster.
     """

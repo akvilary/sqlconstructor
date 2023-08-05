@@ -5,8 +5,10 @@ Module of SqlPlaceholder class.
 
 __author__ = 'https://github.com/akvilary'
 
+from .abstracts.string_convertible import StringConvertible
 
-class SqlPlaceholder:
+
+class SqlPlaceholder(StringConvertible):
     """
     SqlPlaceholder class is invented for better experience to recieve placeholder.
     """
@@ -16,8 +18,5 @@ class SqlPlaceholder:
     ):
         self.converted = '$' + name
 
-    def __repr__(self) -> str:
-        return self.converted
-
     def __str__(self) -> str:
-        return repr(self)
+        return self.converted

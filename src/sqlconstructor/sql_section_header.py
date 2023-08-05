@@ -5,8 +5,10 @@ Module of SqlSectionHeader class.
 
 __author__ = 'https://github.com/akvilary'
 
+from .abstracts.string_convertible import StringConvertible
 
-class SqlSectionHeader:
+
+class SqlSectionHeader(StringConvertible):
     """Class to make sql section header unique in dict"""
     def __init__(self, header: str = ''):
         self.as_string = header

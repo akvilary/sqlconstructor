@@ -8,9 +8,10 @@ __author__ = 'https://github.com/akvilary'
 
 from .constants import AND_MODE, OR_MODE
 from .sql_filter import SqlFilter
+from .abstracts.string_convertible import StringConvertible
 
 
-class SqlFilters:
+class SqlFilters(StringConvertible):
     """
     SqlFilters class is invented to build sql filters faster.
     """

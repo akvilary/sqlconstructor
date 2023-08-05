@@ -94,8 +94,11 @@ But it has certain limitation:
 
 But it is possible: 
 - include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
-- include SqlCol, SqlVal, SqlFilter, SqlFilters in query dict (in release >= 1.0.44)
+- include SqlCol, SqlVal, SqlFilter, SqlFilters, SqlPlaceholder in query dict (in release >= 1.1.0)
 - create query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
+- insert nested subqueries (wrapped and with text after wrapper) as nested dict (in release >= 1.1.0). More on this later.
+
+Example of using SqlSectionHeader
 ```python
 from sqlconstructor import SqlQuery, SqlVal, SqlSectionHeader
 
@@ -104,11 +107,11 @@ H = SqlSectionHeader
 q = SqlQuery(
     {
         H('select'): "'hello'",
+        # create sql section without header by SqlSectionHeader instance constructed without arguments
+        H(): 'union all',
+        H('select'): SqlVal('hello'),
         # it is possible to add sql section without header if header is empty string
         '': 'union all',
-        H('select'): SqlVal('hello'),
-        # or create sql section without header by SqlSectionHeader instance constructed without arguments
-        H(): 'union all',
         H('select'): "'hello'",
     }
 )
@@ -153,69 +156,45 @@ for section in q:
 ...    
 ```
 
-### Use filters
-You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)**. 
-SqlFilter and SqlFilters insert values in query instantly if you use strings in keyword argument values.
-If you you would like to insert values after building query then use SqlPlaceholder instances as filter keyword argument values.
-More about placeholders later.
+### Append string to query
+It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
 ```python
-from sqlconstructor import SqlQuery, SqlFilter
+import sqlconstructor as sc
 
 
-def get_product_query(
-    product_quality: str, 
-) -> SqlContainer:
-    q = SqlQuery()
+def main():
+    q = sc.SqlQuery()
+    q += '-- some comment here'
+
+    with open('./some_file.sql', encoding='utf-8') as file:
+        sql_file = file.read().rstrip()
+    q += sql_file
+    
     q['select'](
-        'id',
-        'name',
+        'p.id',
+        'p.name',
     )
-    q['from']('product')
-    q['where'](
-        SqlFilter(quality=product_quality)
-        &
-        'id <> $identifier'  # add placeholder in string
-        &
-        SqlFilter(
-            brand_id=SqlPlaceholder('brand_id')  # add placeholder as value (you could insert SqlPlaceholder anywhere where value is expected)
-        )  # will be converted to brand_id=$brand_id
-        &
-        SqlFilter('quantity > 0')
-    )
-    container: SqlContainer = q()
-    container(identifier=2, brand_id=1) # set variables after building query for placeholders
-    return container
 ```
-You could use SqlFilters if all filters require same operator
+
+### Append SqlContainer to query
 ```python
-from sqlconstructor import SqlFilters
+import sqlconstructor as sc
 
-# AND mode is default
-SqlFilters(
-    {
-        'quality': product_quality, 
-        'brand_id': brand_identifier,
-    }
-)
 
-# explicit AND mode
-SqlFilters(
-    {
-        'quality': product_quality, 
-        'brand_id': brand_identifier,
-    },
-    mode='AND',
-)
+def main():
+    q = sc.SqlQuery()
+    q['select'](
+        'p.id',
+        'p.name',
+    )
+    q += get_from_statement()
+    ...
 
-# OR mode
-SqlFilters(
-    {
-        'quality': product_quality, 
-        'brand_id': brand_identifier,
-    },
-    mode='OR',
-)
+
+def get_from_statement() -> sc.SqlContainer:
+    ...
 ```
+
 ### Build query with placeholders to be replaced by variables later
 You could add placeholder in query by adding **$variable_name** syntax.
 #### Set variable instantly
@@ -290,10 +269,10 @@ from functools import cache
 
 def main():
     # you could set default values of variables inside of cached result
-    # and reset it later. 
+    # and reassign them later. 
     # Or do not set them in cached result at all and set them later. 
     container: sc.SqlContainer = get_product_query()
-    # set/reset variables to existing container
+    # set/reassign variables to existing container
     container(quality='Best', brand_id=1)
 
 
@@ -303,6 +282,7 @@ def get_product_query() -> sc.SqlContainer:
 ```
 
 ### Get sql where placeholders are replaced by variables
+Use **'dumps'** method of SqlContainer:
 ```python
 import sqlconstructor as sc
 from functools import cache
@@ -319,7 +299,7 @@ def main():
 def get_product_query() -> sc.SqlContainer:
     ...
 ```
-If you would like to get sql without replacing placeholders then call '\_\_str\_\_' method of SqlContainer instead of 'dumps':
+If you would like to get sql without replacing placeholders then call **'\_\_str\_\_'** method of SqlContainer instead of 'dumps':
 ```python
 import sqlconstructor as sc
 from functools import cache
@@ -337,6 +317,92 @@ def get_product_query() -> sc.SqlContainer:
     ...
 ```
 
+### Use filters
+You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)** (in release >= 1.1.0). 
+SqlFilter and SqlFilters insert value in query instantly if you use string as value in keyword argument or dict.
+If you you would like to insert value after building query then:
+  - use SqlPlaceholder instance as value in filter keyword argument or dict.
+  - or add placeholder by syntax in string as filter value (neither in dict nor in keyword argument, because they are converted to sql value)
+```python
+from sqlconstructor import SqlQuery, SqlFilter
+
+
+def get_product_query(
+    product_quality: str, 
+) -> SqlContainer:
+    q = SqlQuery()
+    q['select'](
+        'id',
+        'name',
+    )
+    q['from']('product')
+    q['where'](
+        SqlFilter(quality=product_quality)  # value will be converted to sql string by SqlVal
+        &
+        SqlFilter({'rating': 'high'})  # each value of dict will be converted by SqlVal
+        &
+        'id <> $identifier'  # add placeholder in string
+        &
+        SqlFilter(
+            brand_id=SqlPlaceholder('brand_id')  # add placeholder as value (you could insert SqlPlaceholder anywhere where value is expected)
+        )  # will be converted to brand_id=$brand_id
+        &
+        SqlFilter('quantity > 0')  # string will not be converted by SqlVal and will be passed as is
+    )
+    container: SqlContainer = q()
+    container(identifier=2, brand_id=1) # set variables after building query for placeholders
+    return container
+```
+Output of str(container)
+```sql
+SELECT
+  id,
+  name  
+FROM
+  product
+WHERE
+  quality='Best' -- if python variable 'product_quality' has 'Best' value
+  AND
+  rating='high'
+  AND
+  id <> $identifier
+  AND
+  brand_id=$brand_id
+  AND
+  quantity > 0
+```
+
+You could use SqlFilters if all filters require same operator
+```python
+from sqlconstructor import SqlFilters
+
+# AND mode is default
+SqlFilters(
+    {
+        'quality': product_quality, 
+        'brand_id': brand_identifier,
+    }
+)
+
+# explicit AND mode
+SqlFilters(
+    {
+        'quality': product_quality, 
+        'brand_id': brand_identifier,
+    },
+    mode='AND',
+)
+
+# OR mode
+SqlFilters(
+    {
+        'quality': product_quality, 
+        'brand_id': brand_identifier,
+    },
+    mode='OR',
+)
+```
+
 ### Build complicated and nested queries
 You could make query as nested as you would like to.
 #### Build by adding sections
@@ -350,6 +416,7 @@ def main():
     q['select'](
         'p.id',
         'p.name',
+        'exp.exp_date'
     )
     q['from'](
         'product as p',
@@ -367,7 +434,7 @@ def get_left_join_lateral() -> sc.SqlContainer:
     j = sc.SqlQuery()
     j['select'](
         'e.id',
-        'e.expiration_date',
+        'e.expiration_date as exp_date',
     )
     j['from']('expiration as e')
     j['where'](*get_filters())
@@ -391,23 +458,24 @@ def get_filters() -> List[str]:
     return where
 ```
 
-#### Build nested queries by passing nested dict to main dict in SqlQuery constuction time
+#### Build nested queries by passing nested dict to main dict in SqlQuery construction time
 
 If you pass nested dict in main query dict then it will be subquery. 
-If you add ('__do_wrap__': True) to nested dict then nested query will be wrapped by parenthesis.
-If you add ('__wrapper_text__': any string) to nested dict then nested query will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (__do_wrap__: True) pair).
+If you add ('__do_wrap__': True) to nested dict then nested subquery will be wrapped by parenthesis.
+If you add ('__wrapper_text__': any string) to nested dict then nested subquery will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (__do_wrap__: True)).
 ```python
     q = SqlQuery(
         {
             'select': (
                 'p.id',
                 'p.name',
+                'exp.exp_date'
             ),
             'from': 'product as p',
             'left join lateral': {
                 'select': (
                     'e.id',
-                    'e.expiration_date',
+                    'e.expiration_date as exp_date',
                 ),
                 'from': 'expiration as e',
                 'where': (
@@ -422,40 +490,6 @@ If you add ('__wrapper_text__': any string) to nested dict then nested query wil
             ),
         }
     )
-```
-
-### Append string to query
-
-It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
-```python
-import sqlconstructor as sc
-
-
-def main():
-    q = sc.SqlQuery()
-    q += '-- some comment here'
-    q['select'](
-        'p.id',
-        'p.name',
-    )
-```
-### Append SqlContainer to query
-```python
-import sqlconstructor as sc
-
-
-def main():
-    q = sc.SqlQuery()
-    q['select'](
-        'p.id',
-        'p.name',
-    )
-    q += get_from_statement()
-    ...
-
-
-def get_from_statement() -> sc.SqlContainer:
-    ...
 ```
 
 ### Easy ways to handle ctes
@@ -635,6 +669,27 @@ VALUES
   (
     1, 'phone', 'Best', '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
+```
+### SqlVal, SqlCol
+It is possible to insert single sql value and column by SqlVal and SqlCol class instance respectively (in release >= 1.1.0).
+```python
+from sqlconstructor import SqlQuery, SqlCol, SqlVal
+
+# create SqlQuery instance
+q = SqlQuery()
+# register as many SqlSection instances as you'd like
+q['select'](
+    SqlCol('id'),
+    SqlCol('name'),
+)
+q['from'](
+    'product'
+)
+q['where'](
+    f"quality = {SqlVal('Best')}",
+    f"and brand_id = {SqlVal(1)}",
+)
+
 ```
 
 ### Debugging

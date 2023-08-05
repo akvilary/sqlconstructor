@@ -10,14 +10,16 @@ from typing import Iterable
 from .sql_container import SqlContainer
 from .sql_enum import SqlEnum
 from .sql_val import SqlVal
+from .abstracts.string_convertible import StringConvertible
+from .abstracts.inline_enum import InlineEnum
 
 
-class SqlVals(SqlEnum):
+class SqlVals(SqlEnum, StringConvertible, InlineEnum):
     """
     SqlVals class is invented for better experience to convert python values to sql strings.
     """
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Convert SqlContainer instance to str"""
         return str(self.multiline().wrap())
 

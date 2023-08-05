@@ -9,10 +9,12 @@ from typing import Optional, Self
 
 import re
 
-from .helpers import  converters, wrap_text
+from .helpers import indent_text
+from .sql_val import SqlVal
+from .abstracts.string_convertible import StringConvertible
 
 
-class SqlContainer:
+class SqlContainer(StringConvertible):
     """SqlContainer is invented to store prepared SQL text and is an end result of 
     any SQL constracting manipulations (it is a product of SqlSection and SqlQuery instances).
 
@@ -48,13 +50,9 @@ class SqlContainer:
         self.vars.update(kwargs)
         return self
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         """Convert SqlContainer instance to str"""
         return get_string_representation(self.text, self.wrapper_text)
-
-    def __str__(self) -> str:
-        """Return SqlContainer as str"""
-        return repr(self)
 
     def dumps(self) -> str:
         """Get SqlContainer as str and do replace placeholders by self.vars 
@@ -68,7 +66,7 @@ class SqlContainer:
                 pattern = r'\$' + keyword + r'\b'
                 text = re.sub(
                     pattern,
-                    converters.convert_any_to_sql(value),
+                    str(SqlVal(value)),
                     text,
                 )
         return get_string_representation(text, self.wrapper_text)
@@ -87,5 +85,28 @@ class SqlContainer:
 def get_string_representation(text, wrapper_text) -> str:
     """Get text or wrap text by wrapper and return as string"""
     if wrapper_text is not None:
-        return wrap_text.get_text_wrapped(text, wrapper_text)
+        return get_text_wrapped(text, wrapper_text)
     return text
+
+
+def get_text_wrapped(text: str, wrapper_text: str) -> str:
+    """Wrap text by parentheses and add wrapper_text after them.
+    wrapper_text could be empty string (in that case you get text wrapped only by parentheses).
+    Params:
+        - text: str - text to be wrapped
+        - wrapper_text: str - string to be added after parentheses enclosing "text" argument.
+    """
+    return (
+        '('
+        + '\n'
+        + indent_text.indent_lines(text, ind=2)
+        + '\n'
+        + ')'
+        + (
+            wrapper_text
+            if wrapper_text == ','
+            else (' ' + wrapper_text)
+            if wrapper_text
+            else ''
+        )
+    )
