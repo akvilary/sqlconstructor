@@ -72,6 +72,8 @@ class SqlEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, uuid.UUID):
             return str(o)
+        if isinstance(o, set):
+            return tuple(o)
         return json.JSONEncoder.default(self, o)
 
 
