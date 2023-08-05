@@ -33,12 +33,6 @@ class SqlEnum(StringConvertible, SpecialConvertionRequier, ContainerConvertible,
     def __as_json__(self) -> list:
         return list(str(x) for x in self)
 
-    def __add__(self, other) -> str:
-        return self.__as_sql__() + str(other)
-
-    def __radd__(self, other) -> str:
-        return str(other) + self.__as_sql__()
-
     def inline(self) -> SqlContainer:
         """Get inline representation"""
         container = SqlContainer(', '.join(str(x) for x in self))
