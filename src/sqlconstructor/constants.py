@@ -151,6 +151,7 @@ SQL_KEYWORDS = (
     'UNIQUE',
     'UNNEST',
     'UNTIL',
+    'UPDATE',
     'USER',
     'USING',
     'VACUUM',
