@@ -106,3 +106,9 @@ def test_remove():
 def test_count():
     sql_cols = SqlCols('a', 'a')
     assert sql_cols.count('a') == 2
+
+
+@pytest.mark.SqlCols
+def test_copy():
+    sql_cols = SqlCols('a', 'b')
+    assert list(sql_cols.copy()) == ['a', 'b']
