@@ -43,7 +43,7 @@ class SqlContainer(StringConvertible):
         self.text: str = str(text)
 
         self.wrapper_text: Optional[str | StringConvertible] = None
-        self.is_multiline_wrap: bool = True
+        self.__is_multiline_wrap: bool = True
 
         self.vars: dict = {}
         if isinstance(text, SqlContainer):
@@ -60,7 +60,7 @@ class SqlContainer(StringConvertible):
 
     def __str__(self) -> str:
         """Convert SqlContainer instance to str"""
-        return get_string_representation(self.text, self.wrapper_text, self.is_multiline_wrap)
+        return get_string_representation(self.text, self.wrapper_text, self.__is_multiline_wrap)
 
     def dumps(self) -> str:
         """Get SqlContainer as str and do replace placeholders by self.vars
@@ -77,23 +77,23 @@ class SqlContainer(StringConvertible):
                     str(SqlVal(value)),
                     text,
                 )
-        return get_string_representation(text, self.wrapper_text, self.is_multiline_wrap)
+        return get_string_representation(text, self.wrapper_text, self.__is_multiline_wrap)
 
     def inline(self) -> Self:
         """Set inline option"""
-        self.is_multiline_wrap = False
+        self.__is_multiline_wrap = False
         return self
 
     def multiline(self) -> Self:
         """Set inline option"""
-        self.is_multiline_wrap = True
+        self.__is_multiline_wrap = True
         return self
 
     def wrap(self, wrapper_text: str | StringConvertible = '', multiline: bool = None) -> Self:
         """Set wrapper and text after it (optional)"""
         self.wrapper_text = wrapper_text or ''
         if multiline is not None:
-            self.is_multiline_wrap = multiline
+            self.__is_multiline_wrap = multiline
         return self
 
     def unwrap(self) -> Self:
