@@ -416,17 +416,8 @@ def get_product_query() -> SqlContainer:
 ```
 
 ### Use filters
-You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)** (in release >= 1.1.0).
+You could use & or | operator **between filters** or **betweem filter and str (or any object with __str__ method)** (in release >= 1.1.0).
 Result of & or | operator is SqlContainer and SqlContainer (and SqlWrap) also can operate & and | (in release >= 1.2.0)
-
-SqlFilter and SqlFilters insert value in query instantly if you use string as value in keyword argument or dict.
-Each value of dict or keyword argument will be converted by SqlVal class. 
-If you would like insert value 'as is' in sql string then you put the value in SqlContainer 
-and pass that SqlContainer instance as dict or keyword argument value.
-
-If you you would like to set variable and replace it later (after building query) then:
-  - use SqlPlaceholder instance as value in filter keyword argument or dict.
-  - or add placeholder by syntax in string as whole value (neither in dict nor in keyword argument, because they will be converted to sql value)
 ```python
 from sqlconstructor import SqlQuery, SqlFilter, SqlContainer, SqlWrap
 
@@ -441,16 +432,18 @@ def get_product_query() -> SqlContainer:
     q['where'](
         'id <> $identifier'  # add placeholder in string
         &  # AND operator
+        SqlContainer('price < 10')
+        &
         SqlFilter(
             brand_id=SqlPlaceholder('brand_id')  # add placeholder as value (you could insert SqlPlaceholder anywhere where value is expected)
-        )  # will be converted to brand_id=$brand_id
+        )  # will be converted by SqlVal to brand_id=$brand_id
         &
         SqlFilter('quantity > 0')  # string will not be converted by SqlVal and will be passed as is
         &
         SqlWrap(
-            SqlFilter(quality='Best')  # keyword argument value will be converted to sql string by SqlVal
+            SqlFilter(quality='Best')  # value of the keyword argument will be converted by SqlVal to sql string
             |  # OR operator
-            SqlFilter({'rating': 'high'})  # dict value will be converted to sql string by SqlVal
+            SqlFilter({'rating': 'high'})  # dict value will be converted by SqlVal to sql string
         )
     )
     container: SqlContainer = q()
@@ -466,6 +459,8 @@ FROM
   product
 WHERE
   id <> $identifier
+  AND
+  price < 10
   AND
   brand_id=$brand_id
   AND
@@ -737,6 +732,7 @@ def main():
         ...
     )
     ...
+```
 
 ### Enumerate columns, values
 In release >= 1.0.29 you could enumerate columns and values a little bit easier:
