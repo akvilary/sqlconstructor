@@ -20,4 +20,7 @@ def test_loads_postgres_to_list():
 
 
 def test_loads_postgres_from_column_list():
-    assert SqlJson.loads("""E'["\\"product\\"", "\\"quantity\\""]'""") == ['"product"', '"quantity"']
+    assert SqlJson.loads("""E'["\\"product\\"", "\\"quantity\\""]'""") == [
+        '"product"',
+        '"quantity"',
+    ]
