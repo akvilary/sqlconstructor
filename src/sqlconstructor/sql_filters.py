@@ -5,30 +5,32 @@ Module of SqlFilters class.
 
 __author__ = 'https://github.com/akvilary'
 
+from collections import UserDict
 from typing import Optional
-
 
 from .constants import AND_MODE, OR_MODE
 from .sql_filter import SqlFilter
 from .utils.classes.string_convertible import StringConvertible
 
 
-class SqlFilters(StringConvertible):
+class SqlFilters(StringConvertible, UserDict):
     """
     SqlFilters class is invented to build sql filters faster.
     """
 
     def __init__(self, filters: Optional[dict] = None, mode: str = AND_MODE, /, **kwargs):
-        self.filters = {}
+        united_filters = {}
         if filters:
-            self.filters.update(filters)
+            united_filters.update(filters)
         if kwargs:
-            self.filters.update(kwargs)
+            united_filters.update(kwargs)
+        UserDict.__init__(self, united_filters)
+
         self.mode = mode
 
     def __str__(self):
         converted = ''
-        if self.filters:
+        if self:
             method = (
                 '__rand__'
                 if self.mode.upper() == AND_MODE
@@ -37,7 +39,7 @@ class SqlFilters(StringConvertible):
                 else None
             )
             if method:
-                for key, value in self.filters.items():
+                for key, value in self.items():
                     current_filter = SqlFilter({key: value})
                     converted = getattr(current_filter, method)(converted)
         return converted

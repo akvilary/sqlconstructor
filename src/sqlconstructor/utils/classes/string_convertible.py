@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from .adder_class import Adder
 
 
-class StringConvertible(ABC, Adder):
+class StringConvertible(Adder, ABC):
     """
     StringConvertible class is invented to group all supplementary classes 
     which provide '__str__' method.

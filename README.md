@@ -376,6 +376,23 @@ WHERE
   )
 ```
 
+SqlFilters has dict behavior (in release >= 1.1.4). You could set, get, iterate SqlFilters as dict.
+```python
+from sqlconstructor import SqlFilters
+
+filters = SqlFilters()
+
+filters['a'] = 1
+filters['b'] = 2
+one = filters['a']
+
+if 'a' in filters:
+    del filters['a']
+
+for key, value filters.items():
+    ...
+```
+
 You could use SqlFilters if all filters require same operator
 ```python
 from sqlconstructor import SqlFilters
@@ -691,6 +708,24 @@ VALUES
     1, 'phone', 'Best', '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
+
+SqlEnum, SqlCols, SqlVals classes have list behavior (in release >= 1.1.4). You could set, get, iterate any of theses classes as list:
+```python
+from sqlconstructor import SqlEnum
+
+sql_enum = SqlEnum('a', 'b')
+
+sql_enum[0] = 'f'
+f_char = sql_enum[0]
+
+sql_enum.append('c')
+sql_enum.extend(['d', 'e'])
+sql_enum.pop()
+
+if 'd' in sql_enum:
+    sql_enum.remove('d')
+```
+
 ### SqlVal, SqlCol
 It is possible to insert single sql value and column by SqlVal and SqlCol class instance respectively (in release >= 1.1.0).
 ```python

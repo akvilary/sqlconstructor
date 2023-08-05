@@ -5,11 +5,15 @@ Module of SqlFilter class.
 
 __author__ = 'https://github.com/akvilary'
 
+from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
 from .utils import indent_text
 
 
-class SqlWrap(StringConvertible):
+class SqlWrap(
+    FilterOperatorManager,
+    StringConvertible,
+):
     def __init__(self, text: str | StringConvertible, wrapper_text: str | StringConvertible = ''):
         """Wrap text by parentheses and add wrapper_text after them.
         wrapper_text could be empty string (in that case you get text wrapped only by parentheses).
