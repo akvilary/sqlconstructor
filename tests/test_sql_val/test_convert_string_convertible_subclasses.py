@@ -89,8 +89,10 @@ def test_convert_sql_filter_as_dict():
 @pytest.mark.SqlVal
 @pytest.mark.SqlFilter
 def test_convert_sql_filter_as_dict_in_dict_value():
+    _filter = SqlFilter({'product_name': 'tv'})
+    val = SqlVal({'a': _filter})
     assert (
-        str(SqlVal({'a': SqlFilter({'product_name': 'tv'})}))
+        str(val)
         == """E'{"a": "product_name=\\\'tv\\\'"}'"""
     )
 

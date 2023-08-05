@@ -80,9 +80,10 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         if text and self.vars:
             for keyword, value in self.vars.items():
                 pattern = r'\$' + keyword + r'\b'
+                converted_value = lambda matchobj: str(SqlVal(value))
                 text = re.sub(
                     pattern,
-                    str(SqlVal(value)),
+                    converted_value,
                     text,
                 )
         return get_string_representation(

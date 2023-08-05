@@ -52,7 +52,7 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
             as comment in format "-- sql_id='your_string_here'". It makes possible to find your
             source code after you encounter query in logs or in debuging tools.
         """
-        super().__init__()
+        UserList.__init__(self)
         self.sql_id = sql_id or None
         if self.sql_id:
             self.add(f"-- sql_id='{self.sql_id}'")
