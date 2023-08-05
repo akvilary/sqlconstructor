@@ -545,7 +545,7 @@ def get_ctes() -> SqlContainer:
 
 
 def get_warehouse_cte() -> SqlQuery:
-    a = sc.SqlQuery()
+    a = SqlQuery()
     a['select'](
         'id',
         'quantity',
@@ -714,7 +714,7 @@ def main():
 
 
 def get_part_of_query() -> SqlContainer:
-    p = sc.SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
+    p = SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
     p['select']('quantity')
     ...
 ```
