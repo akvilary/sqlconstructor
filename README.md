@@ -871,6 +871,9 @@ result is:
 
 ### StringConvertible
 SqlQuery is StringConvertible (in release >= 1.3.0). Now it supports \_\_add\_\_ and \_\_radd\_\_ methods with another StringConvertible subclasses.
+
+\_\_add\_\_ and \_\_radd\_\_ returns SqlContainer and inherits vars of any SqlContainer instance arg.
+
 StringConvertible subclasses:
 - SqlCol
 - SqlCols

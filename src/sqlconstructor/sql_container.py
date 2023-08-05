@@ -5,7 +5,7 @@ Module of SqlContainer class.
 
 __author__ = 'https://github.com/akvilary'
 
-from typing import Optional, Self
+from typing import Optional, Self, Any
 
 import re
 
@@ -50,8 +50,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.rel_ind: int = 0  # relative indentation
 
         self.vars: dict = {}
-        if isinstance(text, SqlContainer):
-            self.vars.update(text.vars)
+        unite_container_vars(self, text)
 
     def __bool__(self):
         """True if self.text is True"""
@@ -137,3 +136,9 @@ def get_string_representation(
             rel_ind,
         )
     return indent_lines(str(text), rel_ind) if rel_ind else str(text)
+
+
+def unite_container_vars(container: SqlContainer, obj: Any):
+    """Unite container vars"""
+    if isinstance(obj, SqlContainer):
+        container.vars.update(obj.vars)
