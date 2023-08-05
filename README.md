@@ -161,6 +161,7 @@ It is possible to slice query (in release >= 1.2.10). When you slice you get new
 But it is not deep copied (you get new query but with same SqlSection instance elements).
 
 It is possible to get certain SqlSection instance by getitem with integer argument (in release >= 1.2.11).
+SqlQuery has list behavior (except \_\_init\_\_, \_\_iadd\_\_ and \_\_getitem\_\_ methods) in release >= 1.3.0.
 ```python
 from sqlconstructor import SqlQuery
 
@@ -612,6 +613,7 @@ q = SqlQuery(
 ### Easy ways to handle ctes
 
 #### Create ctes
+SqlCte is StringConvertible and ContainerConvertible (in release >= 1.3.0).
 1) Create cte and fill it later
 ```python
 from sqlconstructor import SqlQuery, SqlContainer, SqlCte
@@ -869,7 +871,7 @@ result is:
 
 ### ContainerConvertible
 You could convert each instance of classes below into SqlContainer and set sql variables in one step by \_\_call\_\_ method (in release >= 1.1.5):
-SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVals.
+SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVals, SqlCte (in release >= 1.3.0).
 
 ### SqlJson
 SqlJson (in release >= 1.2.9) has 'loads' and 'dumps' static methods similar to python 'json' library.
