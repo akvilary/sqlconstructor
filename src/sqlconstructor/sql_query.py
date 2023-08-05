@@ -7,13 +7,16 @@ __author__ = 'https://github.com/akvilary'
 
 import uuid
 from typing import List, Optional, Type, Self
+from collections import UserList, UserDict
 
 from .utils import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
+from .utils.classes.string_convertible import StringConvertible
+from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlQuery:
+class SqlQuery(StringConvertible, ContainerConvertible, UserList):
     """SqlQuery is a top-level class for constacting SQL query.
     When you start building query or subquery then you create SqlQuery instance first.
     Second you fill the query out by SQL sections.
@@ -49,8 +52,7 @@ class SqlQuery:
             as comment in format "-- sql_id='your_string_here'". It makes possible to find your
             source code after you encounter query in logs or in debuging tools.
         """
-        self.sections: List[Optional[SqlSection]] = []
-
+        super().__init__()
         self.sql_id = sql_id or None
         if self.sql_id:
             self.add(f"-- sql_id='{self.sql_id}'")
@@ -84,14 +86,9 @@ class SqlQuery:
 
             if ctes:
                 self.add(ctes())
-                ctes_section = self.sections.pop()
-                self.sections.insert(0, ctes_section)
+                ctes_section = self.pop()
+                self.insert(0, ctes_section)
 
-    def __bool__(self) -> bool:
-        return bool(self.sections)
-
-    def __len__(self) -> int:
-        return len(self.sections)
 
     def __getitem__(self, item: str | int | slice) -> SqlSection | Self:
         """Add SQL section by name of.
@@ -101,13 +98,13 @@ class SqlQuery:
             You could add as many SQL sections with same header as you like.
         """
         if isinstance(item, int):
-            return self.sections[item]
+            return self.data[item]
         if isinstance(item, slice):
             query = SqlQuery()
-            query.sections = self.sections[item]
+            query.data = self.data[item]
             return query
         section = SqlSection(item)
-        self.sections.append(section)
+        self.append(section)
         return section
 
     def __call__(
@@ -132,14 +129,11 @@ class SqlQuery:
             container.wrap(wrap)
 
         # inherit all vars of included containers
-        for section in self.sections:
+        for section in self:
             container.vars.update(section.container.vars)
         return container
 
-    def __iter__(self):
-        return iter(self.sections)
-
-    def __add__(self, text: str | SqlContainer) -> Type:
+    def __iadd__(self, text: str | SqlContainer) -> Type:
         """Add text as sql section and return instance"""
         self.add(text)
         return self
@@ -164,7 +158,7 @@ class SqlQuery:
         Params:
           - ind: int - add additional indentation for each line of SQL query.
         """
-        sections = [section.container for section in self.sections if section]
+        sections = [section.container for section in self if section]
         query_text = '\n'.join(str(x) for x in sections) if sections else ''
         query_text = indent_text.indent_lines(query_text, ind=ind)
         return query_text
@@ -175,7 +169,7 @@ class SqlQuery:
 ###################################################################################################
 
 
-class SqlCte(dict):
+class SqlCte(UserDict, StringConvertible, ContainerConvertible):
     """
     SqlCte class is invented for better experience with filling cte queries.
     It is possible to register cte and fill it after.
@@ -208,6 +202,9 @@ class SqlCte(dict):
         if kwargs:
             container(**kwargs)
         return container
+
+    def __str__(self):
+        return str(self())
 
     def reg(
         self,

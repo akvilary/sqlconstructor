@@ -12,7 +12,7 @@ def test_insert_and_get_sql_section():
         q['select'],
         SqlSection,
     )
-    assert len(q.sections) == 1
+    assert len(q) == 1
 
 
 @pytest.mark.SqlQuery
@@ -43,6 +43,6 @@ def test_building_query(simple_query_sql):
         "quality = 'Best'",
         'and brand_id = 1',
     )
-    assert len(q.sections) == 3
+    assert len(q) == 3
     container = q()
     assert str(container) == simple_query_sql

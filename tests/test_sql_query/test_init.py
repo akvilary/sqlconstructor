@@ -24,7 +24,7 @@ def test_init_with_sql_id():
 @pytest.mark.SqlContainer
 def test_init_query_by_dict(simple_query_dict, simple_query_sql):
     q = SqlQuery(simple_query_dict)
-    assert len(q.sections) == 3
+    assert len(q) == 3
     container = q()
     assert str(container) == simple_query_sql
 
@@ -43,7 +43,7 @@ def test_init_query_by_dict_and_sql_cols_instance(simple_query_sql):
             ),
         }
     )
-    assert len(q.sections) == 3
+    assert len(q) == 3
     container = q()
     assert str(container) == simple_query_sql
 
@@ -61,7 +61,7 @@ def test_init_query_by_dict_and_sql_section_header_with_duplicates():
             H('select'): True,
         }
     )
-    assert len(q.sections) == 3
+    assert len(q) == 3
     container = q()
     assert str(container) == '\n'.join(
         (
@@ -90,7 +90,7 @@ def test_init_query_by_dict_and_sql_section_header_with_duplicates_and_sql_vals(
             H('select'): f"'{hello}'",
         }
     )
-    assert len(q.sections) == 5
+    assert len(q) == 5
     container = q()
     assert str(container) == '\n'.join(
         (
@@ -135,7 +135,7 @@ def test_init_query_by_dict_and_nested_dict():
             ),
         }
     )
-    assert len(q.sections) == 4
+    assert len(q) == 4
     container = q()
     assert str(container) == '\n'.join(
         (

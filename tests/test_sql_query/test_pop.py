@@ -7,7 +7,7 @@ def test_pop_from_empty_query():
     q = SqlQuery()
     assert len(q) == 0
     with pytest.raises(IndexError):
-        q.sections.pop()
+        q.pop()
 
 
 @pytest.mark.SqlQuery
@@ -18,7 +18,7 @@ def test_pop_from_filled_query():
     header = 'SELECT'
     _section = q[header]
     assert len(q) == 1
-    section = q.sections.pop()
+    section = q.pop()
     assert section is _section
     assert len(q) == 0
     container = q()

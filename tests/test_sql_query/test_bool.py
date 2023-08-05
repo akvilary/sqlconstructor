@@ -25,5 +25,5 @@ def test_bool_false_expected_after_clear():
         'id',
         'name',
     )
-    q.sections.clear()
+    q.clear()
     assert bool(q) is False
