@@ -749,6 +749,7 @@ q['where'](
 
 ### SqlWrap
 It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1).
+SqlWrap also could operate & or | as SqlFilter (in release >= 1.1.4).
 ```python
 from sqlconstructor import SqlFilter, SqlWrap
 result = str(SqlWrap(SqlFilter(a=1) & SqlFilter(b=2)))
@@ -761,6 +762,10 @@ result is:
   b=2
 )
 ```
+
+### ContainerConvertible
+You could convert each instance of classes below into SqlContainer and set sql variables in one step by __call__ method (in release >= 1.1.5):
+SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVals, SqlWrap
 
 ### Debugging
 
