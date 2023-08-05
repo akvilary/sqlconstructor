@@ -17,3 +17,7 @@ def test_loads_to_list():
 
 def test_loads_postgres_to_list():
     assert SqlJson.loads("""E'["a", "b"]'""") == ['a', 'b']
+
+
+def test_loads_postgres_from_column_list():
+    assert SqlJson.loads("""["\\"product\\"", "\\"quantity\\""]""") == ['"product"', '"quantity"']
