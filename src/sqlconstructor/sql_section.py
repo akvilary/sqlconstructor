@@ -47,7 +47,7 @@ class SqlSection(StringConvertible, ContainerConvertible):
         sep: Optional[str] = None,
         line_end: str = '\n',
         section_end: str = '',
-        ind: int = DEFAULT_IND,  # indentation
+        ind: int = 0,  # indentation
         upper_keywords: bool = True,
     ) -> SqlContainer:
         """Process building SQL block and put result to self.container and return latter.
@@ -68,14 +68,14 @@ class SqlSection(StringConvertible, ContainerConvertible):
             sep
             if sep is not None
             else ','
-            if self.header.upper() in SECTIONS_WITH_COMMA_SEPARATOR
+            if self.header.strip().upper() in SECTIONS_WITH_COMMA_SEPARATOR
             else ''
         )
         delimiter = sep + line_end
 
         section_body = delimiter.join(
             # if self.section_name == '' then do not indent
-            indent_text.indent_lines(str(x), ind=ind) if self.header else str(x)
+            indent_text.indent_lines(str(x), ind=ind + DEFAULT_IND) if self.header else str(x)
             for x in statements
             if x
         )
@@ -88,7 +88,7 @@ class SqlSection(StringConvertible, ContainerConvertible):
 
         sql_block = ''
         if self.header:
-            sql_block += self.header
+            sql_block += indent_text.indent_lines(str(self.header), ind=ind)
             if section_body:
                 sql_block += '\n'
         sql_block += section_body + section_end

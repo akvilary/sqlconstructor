@@ -71,7 +71,7 @@ WHERE
 ```
 ### SqlSection \_\_call\_\_
 It is possible to give special keyword arguments in SqlSection \_\_call\_\_ method:
-- ind - indentation of sql body (default=2)
+- ind - relative indentation of section (can be positive or negative). Default=0.
 - sep - separator of statements. Default is ',' for comma separated sections else ''.
 - line_end - end of line of each statement (default='\\n')
 - section_end - end of sql section (default='')

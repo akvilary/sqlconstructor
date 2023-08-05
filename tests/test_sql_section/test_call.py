@@ -27,3 +27,43 @@ def test_inherit_vars_of_containers_in_section_call_method():
     query_container = q[''](subquery_container)
     assert query_container.vars == subquery_container.vars
     assert query_container.dumps() == "1\n'phone'"
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_call_section_with_positive_ind():
+    q = SqlQuery()
+    q['select'](
+        'id',
+        'name',
+        ind=2,
+    )
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            '  SELECT',
+            '    id,',
+            '    name',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_call_section_with_negative_ind():
+    q = SqlQuery()
+    q['  select'](
+        '    id',
+        '    name',
+        ind=-4,
+    )
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  id,',
+            '  name',
+        )
+    )
