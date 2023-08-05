@@ -10,10 +10,12 @@ from typing import Optional
 
 from .constants import AND_MODE, OR_MODE
 from .sql_filter import SqlFilter
+from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
+from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlFilters(StringConvertible, UserDict):
+class SqlFilters(FilterOperatorManager, StringConvertible, ContainerConvertible, UserDict):
     """
     SqlFilters class is invented to build sql filters faster.
     """

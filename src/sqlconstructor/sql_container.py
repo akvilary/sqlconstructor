@@ -9,9 +9,9 @@ from typing import Optional, Self
 
 import re
 
-from .sql_wrap import SqlWrap
 from .sql_val import SqlVal
 from .utils.classes.string_convertible import StringConvertible
+from .utils.wrap_text import get_wrapped
 
 
 class SqlContainer(StringConvertible):
@@ -85,5 +85,5 @@ class SqlContainer(StringConvertible):
 def get_string_representation(text, wrapper_text) -> str:
     """Get text or wrap text by wrapper and return as string"""
     if wrapper_text is not None:
-        return str(SqlWrap(text, wrapper_text))
-    return text
+        return get_wrapped(text, wrapper_text)
+    return str(text)

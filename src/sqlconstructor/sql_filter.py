@@ -8,18 +8,24 @@ __author__ = 'https://github.com/akvilary'
 from typing import Optional
 
 from .sql_val import SqlVal
+from .utils.classes.container_convertible import ContainerConvertible
 from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
 
 
-class SqlFilter(FilterOperatorManager, StringConvertible):
+class SqlFilter(FilterOperatorManager, StringConvertible, ContainerConvertible):
     """
     SqlFilter class is invented to build single sql keyword parameter faster.
     """
 
-    def __init__(self, param: Optional[dict] | Optional[str] = None, /, **kwargs):
+    def __init__(
+        self,
+        param: Optional[dict] | Optional[str | StringConvertible] = None,
+        /,
+        **kwargs,
+    ):
         key, value = (
-            param.popitem() # take only last one
+            param.popitem()  # take only last one
             if param and isinstance(param, dict)
             else (None, param)
             if param

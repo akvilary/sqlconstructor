@@ -11,9 +11,10 @@ from typing import Any
 from .sql_container import SqlContainer
 from .utils.classes.string_convertible import StringConvertible
 from .utils.classes.special_convertion_requier import SpecialConvertionRequier
+from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlEnum(StringConvertible, SpecialConvertionRequier, UserList):
+class SqlEnum(StringConvertible, SpecialConvertionRequier, ContainerConvertible, UserList):
     """
     SqlEnum class is invented for better experience to enumerate.
     """

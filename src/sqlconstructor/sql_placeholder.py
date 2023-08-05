@@ -6,9 +6,10 @@ Module of SqlPlaceholder class.
 __author__ = 'https://github.com/akvilary'
 
 from .utils.classes.string_convertible import StringConvertible
+from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlPlaceholder(StringConvertible):
+class SqlPlaceholder(StringConvertible, ContainerConvertible):
     """
     SqlPlaceholder class is invented for better experience to recieve placeholder.
     """

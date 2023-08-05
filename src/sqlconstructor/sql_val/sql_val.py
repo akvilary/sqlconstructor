@@ -9,9 +9,10 @@ from typing import Any
 
 from . import converters
 from sqlconstructor.utils.classes.string_convertible import StringConvertible
+from sqlconstructor.utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlVal(StringConvertible):
+class SqlVal(StringConvertible, ContainerConvertible):
     """
     SqlVal class is invented for better experience to convert any value to sql string.
     """

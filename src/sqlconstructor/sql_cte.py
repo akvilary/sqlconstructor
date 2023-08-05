@@ -28,7 +28,7 @@ class SqlCte(dict):
         super().__init__(*args, **kwargs)
         self.sql_id = sql_id
 
-    def __call__(self) -> SqlContainer:
+    def __call__(self, **kwargs) -> SqlContainer:
         result = SqlQuery(sql_id=self.sql_id) if self.sql_id else SqlQuery()
         counter = 0
         ctes_size = len(self)
@@ -40,7 +40,10 @@ class SqlCte(dict):
             else:
                 result[f'{cte_name} as'](cte_query('' if ctes_size == (counter + 1) else ','))
             counter += 1
-        return result()
+        container = result()
+        if kwargs:
+            container(**kwargs)
+        return container
 
     def reg(
         self,

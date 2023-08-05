@@ -5,15 +5,19 @@ Module of SqlFilter class.
 
 __author__ = 'https://github.com/akvilary'
 
+from .sql_container import SqlContainer
 from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
-from .utils import indent_text
+from .utils.classes.container_convertible import ContainerConvertible
+from .utils.wrap_text import get_wrapped
 
 
 class SqlWrap(
     FilterOperatorManager,
     StringConvertible,
+    ContainerConvertible,
 ):
+    """The class is invented to do wrapping of sql text more easier"""
     def __init__(self, text: str | StringConvertible, wrapper_text: str | StringConvertible = ''):
         """Wrap text by parentheses and add wrapper_text after them.
         wrapper_text could be empty string (in that case you get text wrapped only by parentheses).
@@ -21,21 +25,16 @@ class SqlWrap(
             - text: str - text to be wrapped
             - wrapper_text: str - string to be added after parentheses enclosing "text" argument.
         """
-        wrapper_text = str(wrapper_text)
-        self.converted = (
-            '('
-            + '\n'
-            + indent_text.indent_lines(str(text), ind=2)
-            + '\n'
-            + ')'
-            + (
-                wrapper_text
-                if wrapper_text == ','
-                else (' ' + wrapper_text)
-                if wrapper_text
-                else ''
-            )
-        )
+        self.text = text
+        self.wrapper_text = wrapper_text
 
     def __str__(self):
-        return self.converted
+        return get_wrapped(self.text, self.wrapper_text)
+
+    def inline(self) -> SqlContainer:
+        """Get container of wrapped sql text in inline"""
+        return SqlContainer(get_wrapped(self.text, self.wrapper_text, do_multiline=False))
+
+    def multiline(self) -> SqlContainer:
+        """Get container of wrapped sql text in multiline"""
+        return SqlContainer(get_wrapped(self.text, self.wrapper_text))

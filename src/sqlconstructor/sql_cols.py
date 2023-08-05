@@ -12,9 +12,10 @@ from .sql_col import SqlCol
 from .sql_container import SqlContainer
 from .utils.classes.string_convertible import StringConvertible
 from .utils.classes.special_convertion_requier import SpecialConvertionRequier
+from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlCols(SqlEnum, StringConvertible, SpecialConvertionRequier):
+class SqlCols(SqlEnum, StringConvertible, SpecialConvertionRequier, ContainerConvertible):
     """
     SqlCols class is invented for better experience to enumerate as sql columns.
     """
@@ -26,7 +27,7 @@ class SqlCols(SqlEnum, StringConvertible, SpecialConvertionRequier):
         return str(self.inline())
 
     def __as_json__(self) -> list:
-        return list('\"' + x + '\"' for x in self)
+        return list(str(SqlCol(x)) for x in self)
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""
