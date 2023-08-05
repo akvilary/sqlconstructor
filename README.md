@@ -744,14 +744,14 @@ q['where'](
 )
 ```
 ### SqlContainer
-SqlContainer inherits all vars of another SqlContainer if it provided as argument in construction (in release >= 1.1.8).
-You could add inline wrap if you provide 'multiline=False' argument in 'wrap' method (in release >= 1.1.8). Multiline type of wrapping is default.
+SqlContainer inherits all vars of another SqlContainer if it provided as argument in construction (in release >= 1.1.8). 
+You could add inline wrap if you provide 'do_multiline=False' argument in 'wrap' method (in release >= 1.1.8). Multiline type of wrapping is default. 
 
 ### SqlWrap
-It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1).
-SqlWrap also could operate & or | as SqlFilter (in release >= 1.1.4).
-SqlWrap is subclass of SqlContainer (in release >= 1.1.8).
-SqlWrap has inline and multiline methods (in release >= 1.1.8). It only change type of wrapping and do not make whole text in one line (or in multi lines).
+It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1). 
+SqlWrap also could operate & or | as SqlFilter (in release >= 1.1.4). 
+SqlWrap is subclass of SqlContainer (in release >= 1.1.8). 
+SqlWrap has inline and multiline methods (in release >= 1.1.8). It only change type of wrapping and do not make whole text in one line (or in multi lines). 
 ```python
 from sqlconstructor import SqlFilter, SqlWrap
 result = str(SqlWrap(SqlFilter(a=1) & SqlFilter(b=2)))
