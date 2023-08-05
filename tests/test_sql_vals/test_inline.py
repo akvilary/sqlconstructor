@@ -3,6 +3,7 @@ import uuid
 from sqlconstructor import SqlVals
 
 
+@pytest.mark.SqlVals
 def test_inline_one_element():
     assert (
         str(
@@ -14,6 +15,7 @@ def test_inline_one_element():
     )
 
 
+@pytest.mark.SqlVals
 def test_inline_two_and_more_elements():
     _uuid = uuid.uuid4()
     assert (
@@ -28,6 +30,7 @@ def test_inline_two_and_more_elements():
     )
 
 
+@pytest.mark.SqlVals
 def test_inline_wrap_one_element():
     assert (
         str(
@@ -39,6 +42,7 @@ def test_inline_wrap_one_element():
     )
 
 
+@pytest.mark.SqlVals
 def test_inline_wrap_two_and_more_elements():
     _uuid = uuid.uuid4()
     assert (

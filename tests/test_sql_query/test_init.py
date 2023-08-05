@@ -1,5 +1,5 @@
 import pytest
-from sqlconstructor import SqlQuery, SqlEnum, SqlVals, SqlSectionHeader
+from sqlconstructor import SqlQuery, SqlEnum, SqlVal, SqlSectionHeader
 
 from fixtures.expected_examples import simple_query_sql
 from fixtures.simple_query_dict import simple_query_dict
@@ -73,6 +73,7 @@ def test_init_query_by_dict_and_sql_section_header_with_duplicates():
         )
     )
 
+
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
@@ -84,10 +85,12 @@ def test_init_query_by_dict_and_sql_section_header_with_duplicates_and_sql_vals(
         {
             H('select'): f"'{hello}'",
             '': 'union all',
-            H('select'): SqlVals(hello).inline(),
+            H('select'): SqlVal(hello),
+            H(): 'union all',
+            H('select'): f"'{hello}'",
         }
     )
-    assert len(q.sections) == 3
+    assert len(q.sections) == 5
     container = q()
     assert str(container) == '\n'.join(
         (
@@ -96,5 +99,64 @@ def test_init_query_by_dict_and_sql_section_header_with_duplicates_and_sql_vals(
             'UNION ALL',
             'SELECT',
             f"  '{hello}'",
+            'UNION ALL',
+            'SELECT',
+            f"  '{hello}'",
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_init_query_by_dict_and_nested_dict():
+    q = SqlQuery(
+        {
+            'select': (
+                'p.id',
+                'p.name',
+            ),
+            'from': 'product as p',
+            'left join lateral': {
+                'select': (
+                    'e.id',
+                    'e.expiration_date',
+                ),
+                'from': 'expiration as e',
+                'where': (
+                    'p.id = e.id',
+                    'AND e.expiration_date <= now()',
+                ),
+                '__wrapper_text__': 'as exp on true',
+            },
+            'where': (
+                "quality = 'Best'",
+                'and brand_id = 1',
+            ),
+        }
+    )
+    assert len(q.sections) == 4
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  p.id,',
+            '  p.name',
+            'FROM',
+            '  product AS p',
+            'LEFT JOIN LATERAL',
+            '  (',
+            '    SELECT',
+            '      e.id,',
+            '      e.expiration_date',
+            '    FROM',
+            '      expiration AS e',
+            '    WHERE',
+            '      p.id = e.id',
+            '      AND e.expiration_date <= now()',
+            '  ) AS exp ON TRUE',
+            'WHERE',
+            "  quality = 'Best'",
+            '  AND brand_id = 1',
         )
     )

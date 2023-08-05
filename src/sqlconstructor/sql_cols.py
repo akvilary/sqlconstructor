@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-Module of Cols class.
+Module of SqlCols class.
 """
 
 __author__ = 'https://github.com/akvilary'
@@ -8,15 +8,13 @@ __author__ = 'https://github.com/akvilary'
 from typing import Iterable
 
 from .sql_enum import SqlEnum
+from .sql_col import SqlCol
 from .sql_container import SqlContainer
 
 
 class SqlCols(SqlEnum):
     """
-    Cols class is invented for better experience to enumerate columns.
-    It is possible to register cte and fill it after.
-    Or you could add filled query as cte instantly.
-    Now it is your choice!
+    SqlCols class is invented for better experience to enumerate as sql columns.
     """
 
     def __repr__(self) -> str:
@@ -34,4 +32,4 @@ class SqlCols(SqlEnum):
 
 def get_columns(iterable: Iterable):
     """Get columns iterator"""
-    return ('"' + str(x) + '"' for x in iterable)
+    return (str(SqlCol(x)) for x in iterable)

@@ -60,7 +60,17 @@ class SqlQuery:
                 if isinstance(value, (list, tuple)):
                     self[section](*value)
                 elif isinstance(value, dict):
-                    self[section](SqlQuery(value)())
+                    nested = dict(value)
+                    do_wrap = nested.pop('__do_wrap__', None)
+                    wrapper_text = nested.pop('__wrapper_text__', None)
+                    sql_id = nested.pop('__sql_id__', None)
+                    kwargs = {}
+                    if sql_id:
+                        kwargs['sql_id'] = sql_id
+                    container = SqlQuery(nested, **kwargs)()
+                    if do_wrap or isinstance(wrapper_text, str):
+                        container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
+                    self[section](container)
                 else:
                     self[str(section)](str(value))
 

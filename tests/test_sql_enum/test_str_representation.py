@@ -2,6 +2,7 @@ import pytest
 from sqlconstructor import SqlEnum
 
 
+@pytest.mark.SqlEnum
 def test_string_representation_one_element():
     assert (
         str(
@@ -13,6 +14,7 @@ def test_string_representation_one_element():
     )
 
 
+@pytest.mark.SqlEnum
 def test_string_representation_two_and_more_elements():
     assert (
         str(

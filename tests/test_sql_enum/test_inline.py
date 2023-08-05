@@ -2,6 +2,7 @@ import pytest
 from sqlconstructor import SqlEnum
 
 
+@pytest.mark.SqlEnum
 def test_inline_one_element():
     assert (
         str(
@@ -13,6 +14,7 @@ def test_inline_one_element():
     )
 
 
+@pytest.mark.SqlEnum
 def test_inline_one_element_case_int():
     assert (
         str(
@@ -24,6 +26,7 @@ def test_inline_one_element_case_int():
     )
 
 
+@pytest.mark.SqlEnum
 def test_inline_two_and_more_elements():
     assert (
         str(
@@ -36,6 +39,7 @@ def test_inline_two_and_more_elements():
     )
 
 
+@pytest.mark.SqlEnum
 def test_inline_wrap_one_element():
     assert (
         str(
@@ -47,6 +51,7 @@ def test_inline_wrap_one_element():
     )
 
 
+@pytest.mark.SqlEnum
 def test_inline_wrap_two_and_more_elements():
     assert (
         str(

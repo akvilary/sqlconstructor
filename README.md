@@ -70,7 +70,7 @@ WHERE
   AND brand_id = 1
 ```
 
-### It is also possible to fill SqlQuery by dict
+### It is also possible to create SqlQuery instance by dict
 ```python
 from sqlconstructor import SqlQuery, SqlCols
 
@@ -94,17 +94,22 @@ But it has certain limitation:
 
 But it is possible: 
 - include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
+- include SqlCol, SqlVal, SqlFilter, SqlFilters in query dict (in release >= 1.0.44)
 - create query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
 ```python
-from sqlconstructor import SqlQuery, SqlVals, SqlSectionHeader
+from sqlconstructor import SqlQuery, SqlVal, SqlSectionHeader
 
 
 H = SqlSectionHeader
 q = SqlQuery(
     {
         H('select'): "'hello'",
+        # it is possible to add sql section without header if header is empty string
         '': 'union all',
-        H('select'): SqlVals('hello').inline(),
+        H('select'): SqlVal('hello'),
+        # or create sql section without header by SqlSectionHeader instance constructed without arguments
+        H(): 'union all',
+        H('select'): "'hello'",
     }
 )
 container: sc.SqlContainer = q()
@@ -112,6 +117,9 @@ sql_text: str = str(container)
 ```
 Output of sql_text is:
 ```sql
+SELECT
+  'hello'
+UNION ALL
 SELECT
   'hello'
 UNION ALL
@@ -145,6 +153,69 @@ for section in q:
 ...    
 ```
 
+### Use filters
+You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)**. 
+SqlFilter and SqlFilters insert values in query instantly if you use strings in keyword argument values.
+If you you would like to insert values after building query then use SqlPlaceholder instances as filter keyword argument values.
+More about placeholders later.
+```python
+from sqlconstructor import SqlQuery, SqlFilter
+
+
+def get_product_query(
+    product_quality: str, 
+) -> SqlContainer:
+    q = SqlQuery()
+    q['select'](
+        'id',
+        'name',
+    )
+    q['from']('product')
+    q['where'](
+        SqlFilter(quality=product_quality)
+        &
+        'id <> $identifier'  # add placeholder in string
+        &
+        SqlFilter(
+            brand_id=SqlPlaceholder('brand_id')  # add placeholder as value (you could insert SqlPlaceholder anywhere where value is expected)
+        )  # will be converted to brand_id=$brand_id
+        &
+        SqlFilter('quantity > 0')
+    )
+    container: SqlContainer = q()
+    container(identifier=2, brand_id=1) # set variables after building query for placeholders
+    return container
+```
+You could use SqlFilters if all filters require same operator
+```python
+from sqlconstructor import SqlFilters
+
+# AND mode is default
+SqlFilters(
+    {
+        'quality': product_quality, 
+        'brand_id': brand_identifier,
+    }
+)
+
+# explicit AND mode
+SqlFilters(
+    {
+        'quality': product_quality, 
+        'brand_id': brand_identifier,
+    },
+    mode='AND',
+)
+
+# OR mode
+SqlFilters(
+    {
+        'quality': product_quality, 
+        'brand_id': brand_identifier,
+    },
+    mode='OR',
+)
+```
 ### Build query with placeholders to be replaced by variables later
 You could add placeholder in query by adding **$variable_name** syntax.
 #### Set variable instantly
@@ -268,6 +339,7 @@ def get_product_query() -> sc.SqlContainer:
 
 ### Build complicated and nested queries
 You could make query as nested as you would like to.
+#### Build by adding sections
 ```python
 import sqlconstructor as sc
 from typing import List
@@ -318,6 +390,40 @@ def get_filters() -> List[str]:
     where.append('AND e.expiration_date <= now()')
     return where
 ```
+
+#### Build nested queries by passing nested dict to main dict in SqlQuery constuction time
+
+If you pass nested dict in main query dict then it will be subquery. 
+If you add ('__do_wrap__': True) to nested dict then nested query will be wrapped by parenthesis.
+If you add ('__wrapper_text__': any string) to nested dict then nested query will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (__do_wrap__: True) pair).
+```python
+    q = SqlQuery(
+        {
+            'select': (
+                'p.id',
+                'p.name',
+            ),
+            'from': 'product as p',
+            'left join lateral': {
+                'select': (
+                    'e.id',
+                    'e.expiration_date',
+                ),
+                'from': 'expiration as e',
+                'where': (
+                    'p.id = e.id',
+                    'AND e.expiration_date <= now()',
+                ),
+                '__wrapper_text__': 'as exp on true',
+            },
+            'where': (
+                "quality = 'Best'",
+                'and brand_id = 1',
+            ),
+        }
+    )
+```
+
 ### Append string to query
 
 It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:

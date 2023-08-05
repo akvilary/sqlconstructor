@@ -3,6 +3,7 @@ import uuid
 from sqlconstructor import SqlVals
 
 
+@pytest.mark.SqlVals
 def test_string_representation_one_element():
     assert (
         str(
@@ -14,6 +15,7 @@ def test_string_representation_one_element():
     )
 
 
+@pytest.mark.SqlVals
 def test_string_representation_two_and_more_elements():
     _uuid = uuid.uuid4()
     assert (

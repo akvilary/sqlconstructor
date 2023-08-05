@@ -2,6 +2,7 @@ import pytest
 from sqlconstructor import SqlCols
 
 
+@pytest.mark.SqlCols
 def test_inline_one_element():
     assert (
         str(
@@ -13,6 +14,7 @@ def test_inline_one_element():
     )
 
 
+@pytest.mark.SqlCols
 def test_inline_two_and_more_elements():
     assert (
         str(
@@ -25,6 +27,7 @@ def test_inline_two_and_more_elements():
     )
 
 
+@pytest.mark.SqlCols
 def test_inline_wrap_one_element():
     assert (
         str(
@@ -36,6 +39,7 @@ def test_inline_wrap_one_element():
     )
 
 
+@pytest.mark.SqlCols
 def test_inline_wrap_two_and_more_elements():
     assert (
         str(

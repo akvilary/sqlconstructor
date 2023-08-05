@@ -4,6 +4,7 @@ from sqlconstructor import SqlSection
 SECTION_HEADER = 'select'
 
 
+@pytest.mark.SqlSection
 def test_init_with_no_header():
     section = SqlSection()
     assert section.header == ''

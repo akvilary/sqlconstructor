@@ -22,4 +22,6 @@ def convert_any_to_sql(value) -> str:
         return to_json.convert_dict_to_sql_json(value)
     if isinstance(value, uuid.UUID):
         return to_sql_string.convert_python_str_to_sql_str(value)
+    if value is None:
+        return 'NULL'
     return str(value)

@@ -1,23 +1,20 @@
 # coding=utf-8
 """
-Module of Values class.
+Module of SqlVals class.
 """
 
 __author__ = 'https://github.com/akvilary'
 
 from typing import Iterable
 
-from .helpers import converters
 from .sql_container import SqlContainer
 from .sql_enum import SqlEnum
+from .sql_val import SqlVal
 
 
 class SqlVals(SqlEnum):
     """
-    Values class is invented for better experience to enumerate values.
-    It is possible to register cte and fill it after.
-    Or you could add filled query as cte instantly.
-    Now it is your choice!
+    SqlVals class is invented for better experience to convert python values to sql strings.
     """
 
     def __repr__(self) -> str:
@@ -35,4 +32,4 @@ class SqlVals(SqlEnum):
 
 def get_values(iterable: Iterable):
     """Get values iterator"""
-    return (converters.convert_any_to_sql(x) for x in iterable)
+    return (str(SqlVal(x)) for x in iterable)

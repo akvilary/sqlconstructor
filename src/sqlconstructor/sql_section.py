@@ -3,14 +3,11 @@
 Module of SqlSection class.
 """
 
-from typing import Optional
+from typing import Optional, Any
 
 from .helpers import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
-from .sql_enum import SqlEnum
-from .sql_cols import SqlCols
-from .sql_vals import SqlVals
 
 
 class SqlSection:
@@ -39,11 +36,7 @@ class SqlSection:
 
     def __call__(
         self,
-        *statements: str
-        | SqlContainer
-        | SqlEnum
-        | SqlCols
-        | SqlVals,  # or any objects with __str__ method
+        *statements: Any,  # any objects with __str__ method
         sep: Optional[str] = None,
         line_end: str = '\n',
         section_end: str = '',
