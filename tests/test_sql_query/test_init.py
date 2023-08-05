@@ -82,7 +82,7 @@ def test_init_query_by_dict_and_sql_section_header_with_duplicates_and_sql_vals(
     hello = 'hello'
     q = SqlQuery(
         {
-            H('select'): SqlVals(hello).inline(),
+            H('select'): f"'{hello}'",
             '': 'union all',
             H('select'): SqlVals(hello).inline(),
         }

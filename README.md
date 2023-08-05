@@ -102,7 +102,7 @@ from sqlconstructor import SqlQuery, SqlVals, SqlSectionHeader
 H = SqlSectionHeader
 q = SqlQuery(
     {
-        H('select'): SqlVals('hello').inline(),
+        H('select'): "'hello'",
         '': 'union all',
         H('select'): SqlVals('hello').inline(),
     }
