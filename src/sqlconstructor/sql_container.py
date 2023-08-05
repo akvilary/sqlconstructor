@@ -47,7 +47,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.wrapper_text: Optional[str | StringConvertible] = None
         self.is_multiline_wrap_type: bool = True
 
-        self.extra_indentation: int = 0
+        self.rel_ind: int = 0  # relative indentation
 
         self.vars: dict = {}
         if isinstance(text, SqlContainer):
@@ -68,7 +68,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
             self.text,
             self.wrapper_text,
             self.is_multiline_wrap_type,
-            self.extra_indentation,
+            self.rel_ind,
         )
 
     def dumps(self) -> str:
@@ -90,7 +90,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
             text,
             self.wrapper_text,
             self.is_multiline_wrap_type,
-            self.extra_indentation,
+            self.rel_ind,
         )
 
     def wrap(self, wrapper_text: str | StringConvertible = '', do_multiline: bool = None) -> Self:
@@ -117,8 +117,8 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         return self
 
     def indent(self, num: int) -> Self:
-        """Indent text"""
-        self.extra_indentation = num
+        """Add extra relative indentation for string representation"""
+        self.rel_ind = num
         return self
 
 
@@ -126,7 +126,7 @@ def get_string_representation(
     text: str,
     wrapper_text: Optional[str],
     is_wrap_multiline: bool = True,
-    extra_indentation: int = 0,
+    rel_ind: int = 0,
 ) -> str:
     """Get text or wrap text by wrapper and return as string"""
     if wrapper_text is not None:
@@ -134,6 +134,6 @@ def get_string_representation(
             text,
             wrapper_text or '',
             is_wrap_multiline,
-            extra_indentation,
+            rel_ind,
         )
-    return indent_lines(str(text), extra_indentation) if extra_indentation else str(text)
+    return indent_lines(str(text), rel_ind) if rel_ind else str(text)

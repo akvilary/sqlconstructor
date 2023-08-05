@@ -6,6 +6,7 @@ Module of SqlSection class.
 from typing import Optional, Any
 
 import sqlconstructor.sql_query as s_q
+from .constants import DEFAULT_IND
 from .utils import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
@@ -26,7 +27,7 @@ class SqlSection:
             - header: str - could be any string (empty is also possible).
             If it be an empty string then there will be no section header in SQL block,
             and section body will be added without indentation. Otherwise section header
-            will be added, and section body starts with new line with 2 space indentation.
+            will be added, and section body starts with new line with default space indentation.
         """
         self.header: str = str(header)
         self.container: Optional[SqlContainer] = None
@@ -41,7 +42,7 @@ class SqlSection:
         sep: Optional[str] = None,
         line_end: str = '\n',
         section_end: str = '',
-        ind: int = 2,  # indentation
+        ind: int = DEFAULT_IND,  # indentation
         upper_keywords: bool = True,
     ) -> SqlContainer:
         """Process building SQL block and put result to self.container and return latter.
@@ -53,7 +54,7 @@ class SqlSection:
             - line_end: str: end of each line. It is '\n' by default.
             - section_end: str - end of SQL block created. It is empty string by default.
             - ind: int - indentation of each line of section body. If section header is not empty
-            string then each line of section body will be indented for 2 spaces.
+            string then each line of section body will be indented for default number of spaces.
             No indentation overwise.
             - upper_keywords: bool - do upper SQL keywords in section header and section body
             or do not. All SQL keywords are registered in SQL_KEYWORDS constant.

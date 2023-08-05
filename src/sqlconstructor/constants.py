@@ -3,6 +3,9 @@
 
 __author__ = 'https://github.com/akvilary'
 
+# default indentation for sql body of SqlSection
+DEFAULT_IND = 2
+
 # for filters
 AND_MODE = 'AND'
 OR_MODE = 'OR'

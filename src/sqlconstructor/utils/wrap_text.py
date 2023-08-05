@@ -5,6 +5,7 @@ Module for helpers to upper sql keywords
 
 __author__ = 'https://github.com/akvilary'
 
+from sqlconstructor.constants import DEFAULT_IND
 from .classes.string_convertible import StringConvertible
 from .indent_text import indent_lines
 
@@ -24,7 +25,8 @@ def get_wrapped(
         + '('
         + ('\n' if is_wrap_multiline else '')
         + indent_lines(
-            str(text), ind=(2 + extra_indentation) if is_wrap_multiline else 0 + (extra_indentation)
+            str(text),
+            ind=(DEFAULT_IND + extra_indentation) if is_wrap_multiline else 0 + (extra_indentation),
         )
         + ('\n' if is_wrap_multiline else '')
         + ' ' * extra_indentation

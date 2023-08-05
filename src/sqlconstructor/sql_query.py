@@ -8,6 +8,7 @@ __author__ = 'https://github.com/akvilary'
 import uuid
 from typing import List, Optional, Type
 
+from .constants import DEFAULT_IND
 from .utils import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
@@ -141,9 +142,9 @@ class SqlQuery:
     def __str__(self):
         return str(self())
 
-    def add(self, text: str | SqlContainer):
+    def add(self, text: str | SqlContainer, rel_ind: int = 0):
         """Add text as sql section"""
-        self[''](text)
+        self[''](text, ind=DEFAULT_IND + rel_ind)
 
     def __text(
         self,
