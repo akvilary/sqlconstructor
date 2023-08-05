@@ -1,6 +1,6 @@
 import pytest
 import uuid
-from sqlconstructor import SqlQuery, Cols, Vals, SqlEnum
+from sqlconstructor import SqlQuery, SqlCols, SqlVals, SqlEnum
 from fixtures.expected_examples import (
     insert_into_inline_using_cols_sql,
     insert_into_multiline_using_cols_sql,
@@ -11,14 +11,14 @@ from fixtures.expected_examples import (
 
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
-@pytest.mark.Cols
-@pytest.mark.Vals
+@pytest.mark.SqlCols
+@pytest.mark.SqlVals
 def test_insert_into_use_cols_str_and_vals_str(insert_into_multiline_using_cols_sql):
     q = SqlQuery()
     _uuid = uuid.uuid4()
     q['insert into'](
         'product',
-        Cols(
+        SqlCols(
             'brand_id',
             'name',
             'quality',
@@ -26,7 +26,7 @@ def test_insert_into_use_cols_str_and_vals_str(insert_into_multiline_using_cols_
         ),
     )
     q['values'](
-        Vals(
+        SqlVals(
             1,
             'phone',
             _uuid,
@@ -38,8 +38,8 @@ def test_insert_into_use_cols_str_and_vals_str(insert_into_multiline_using_cols_
 
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
-@pytest.mark.Cols
-@pytest.mark.Vals
+@pytest.mark.SqlCols
+@pytest.mark.SqlVals
 def test_insert_into_use_cols_multiline_wrap_and_vals_multiline_wrap(
     insert_into_multiline_using_cols_sql,
 ):
@@ -47,7 +47,7 @@ def test_insert_into_use_cols_multiline_wrap_and_vals_multiline_wrap(
     _uuid = uuid.uuid4()
     q['insert into'](
         'product',
-        Cols(
+        SqlCols(
             'brand_id',
             'name',
             'quality',
@@ -55,7 +55,7 @@ def test_insert_into_use_cols_multiline_wrap_and_vals_multiline_wrap(
         ).multiline().wrap(),
     )
     q['values'](
-        Vals(
+        SqlVals(
             1,
             'phone',
             _uuid,
@@ -67,8 +67,8 @@ def test_insert_into_use_cols_multiline_wrap_and_vals_multiline_wrap(
 
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
-@pytest.mark.Cols
-@pytest.mark.Vals
+@pytest.mark.SqlCols
+@pytest.mark.SqlVals
 def test_insert_into_use_cols_inline_wrap_and_vals_multiline_wrap(
     insert_into_inline_using_cols_sql,
 ):
@@ -76,7 +76,7 @@ def test_insert_into_use_cols_inline_wrap_and_vals_multiline_wrap(
     _uuid = uuid.uuid4()
     q['insert into'](
         'product',
-        Cols(
+        SqlCols(
             'brand_id',
             'name',
             'quality',
@@ -84,7 +84,7 @@ def test_insert_into_use_cols_inline_wrap_and_vals_multiline_wrap(
         ).inline().wrap(),
     )
     q['values'](
-        Vals(
+        SqlVals(
             1,
             'phone',
             _uuid,
@@ -96,8 +96,8 @@ def test_insert_into_use_cols_inline_wrap_and_vals_multiline_wrap(
 
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
-@pytest.mark.Cols
-@pytest.mark.Vals
+@pytest.mark.SqlCols
+@pytest.mark.SqlVals
 def test_insert_into_use_sql_enum_multiline_wrap_and_vals_multiline_wrap(
     insert_into_multiline_using_sqlenum_sql,
 ):
@@ -115,7 +115,7 @@ def test_insert_into_use_sql_enum_multiline_wrap_and_vals_multiline_wrap(
         .wrap(),
     )
     q['values'](
-        Vals(
+        SqlVals(
             1,
             'phone',
             _uuid,
@@ -129,8 +129,8 @@ def test_insert_into_use_sql_enum_multiline_wrap_and_vals_multiline_wrap(
 
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
-@pytest.mark.Cols
-@pytest.mark.Vals
+@pytest.mark.SqlCols
+@pytest.mark.SqlVals
 def test_insert_into_use_sql_enum_inline_wrap_and_vals_inline_wrap(
     insert_into_inline_using_sqlenum_sql,
 ):
@@ -148,7 +148,7 @@ def test_insert_into_use_sql_enum_inline_wrap_and_vals_inline_wrap(
         .wrap(),
     )
     q['values'](
-        Vals(
+        SqlVals(
             1,
             'phone',
             _uuid,

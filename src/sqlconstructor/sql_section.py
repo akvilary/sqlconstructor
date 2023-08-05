@@ -9,8 +9,8 @@ from . import helpers
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
 from .sql_enum import SqlEnum
-from .cols import Cols
-from .vals import Vals
+from .sql_cols import SqlCols
+from .sql_vals import SqlVals
 
 
 class SqlSection:
@@ -42,8 +42,8 @@ class SqlSection:
         *statements: str
         | SqlContainer
         | SqlEnum
-        | Cols
-        | Vals,  # or any objects with __str__ method
+        | SqlCols
+        | SqlVals,  # or any objects with __str__ method
         sep: Optional[str] = None,
         line_end: str = '\n',
         section_end: str = '',

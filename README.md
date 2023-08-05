@@ -245,7 +245,7 @@ def get_filters() -> List[str]:
     where.append('AND e.expiration_date <= now()')
     return where
 ```
-### Append simple string (simple sql statement) to query
+### Append string to query
 
 It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
 ```python
@@ -363,17 +363,17 @@ def get_ctes() -> sc.SqlContainer:
 ```
 
 ### Enumerate columns, values
-In release >= 1.0.21 you could enumerate columns and values a little bit easier:
+In release >= 1.0.29 you could enumerate columns and values a little bit easier:
 ```python
 import uuid
-from sqlconstructor import SqlQuery, Cols, Vals
+from sqlconstructor import SqlQuery, SqlCols, SqlVals
 
 
 q = SqlQuery()
 _uuid = uuid.uuid4()
 q['insert into'](
     'product',
-    Cols(
+    SqlCols(
         'brand_id',
         'name',
         'quality',
@@ -381,7 +381,7 @@ q['insert into'](
     ),
 )
 q['values'](
-    Vals(
+    SqlVals(
         1,
         'phone',
         'Best',
@@ -409,11 +409,11 @@ VALUES
     '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
-If you would like to do not add double quotes to columns then you could use SqlEnum class. Any of this class (SqlEnum, Vals, Cols) has 'inline' and 'multiline' method (return SqlContainer which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.24.
+If you would like to do not add double quotes to columns then you could use SqlEnum class. Any of this class (SqlEnum, SqlVals, SqlCols) has 'inline' and 'multiline' method (return SqlContainer which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.29.
 Example:
 ```python
 import uuid
-from sqlconstructor import SqlQuery, SqlEnum, Vals
+from sqlconstructor import SqlQuery, SqlEnum, SqlVals
 
 
 q = SqlQuery()
@@ -428,7 +428,7 @@ q['insert into'](
     ).inline().wrap(),
 )
 q['values'](
-    Vals(
+    SqlVals(
         1,
         'phone',
         'Best',
