@@ -16,6 +16,7 @@ def test_init_with_sql_id():
     sql_id = 'abc'
     q = SqlQuery(sql_id=sql_id)
     assert q.sql_id == sql_id
+    assert str(q()) == f"-- sql_id='{sql_id}'"
 
 
 @pytest.mark.SqlQuery
