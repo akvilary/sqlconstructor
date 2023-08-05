@@ -8,9 +8,12 @@ $ python3 -m pip install sqlconstructor
 ```
 ## Little bit of theory
 1) Each sql building starts with SqlQuery - class instance that helps us to register into it as many SqlSection instances as we would like to.
-2) SqlSection - it is part of SqlQuery. It process data and store it to SqlContainer.
+2) SqlSection - it is part of SqlQuery. It process data and store it to SqlContainer (which located as SqlSection instance attribute).
 3) SqlContainer holds result of processed data. SqlContainer contains sql text (as string), optional wrapper (usually required for nested subqueries), and optional variables (to be replaced with placeholders).
-4) When you build query (call \_\_call\_\_ method of SqlQuery) then you union all SqlContainer instances (of each SqlSection) into one SqlContainer which inherits variables of united instances.
+4) We register (i.e. append) SqlSection by \_\_getitem\_\_ method of SqlQuery. It is possible to add sections with duplicate header. Header can be any string! SqlSection instances will be written in query in order you set them.
+5) Because of sql headers ('select', 'from' and etc.) cannot be unique that's why it is only possible to append sql sections (but not get it back by index).
+6) When we call \_\_call\_\_ method of SqlSection we build SqlContainer of SqlSection (combining sql header with values passed by arguments).
+7) When you build query (call \_\_call\_\_ method of SqlQuery) then you union all SqlContainer instances (of each SqlSection) into one SqlContainer which inherits variables of united instances and return it.
 
 
 ## How to use
@@ -66,12 +69,8 @@ WHERE
   quality = 'Best'
   AND brand_id = 1
 ```
-### Another portion of theory
-1) Because of sql headers ('select', 'from' and etc.) cannot be unique that's why it is only possible to append sql sections (but not get it back by index).
-2) We register (i.e. append) SqlSection by \_\_getitem\_\_ method of SqlQuery. It is possible to add sections with duplicate header. Header can be any string! SqlSection instances will be written in query in order you set them.
-3) When we call \_\_call\_\_ method of SqlSection we build SqlContainer of SqlSection (combining sql header with values passed by arguments).
 
-### It is also possible to fill simple SqlQuery by dict
+### It is also possible to fill SqlQuery by dict
 ```python
 from sqlconstructor import SqlQuery, SqlCols
 
@@ -91,25 +90,31 @@ q = SqlQuery(
 )
 ```
 But it has certain limitation:
-- It is not possible to create query with duplicate headers by strings (because of dict nature).
+- It is not possible to create query by dict with duplicate headers if headers are strings (because of dict nature).
 
 But it is possible: 
-- fill dict with duplicate headers by SqlSectionHeader class (in release >= 1.0.40). See example below.
 - include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
+- create query query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
 ```python
-    import uuid
-    from sqlconstructor import SqlQuery, SqlVals, SqlSectionHeader
+from sqlconstructor import SqlQuery, SqlVals, SqlSectionHeader
 
 
-    H = SqlSectionHeader
-    _uuid = uuid.uuid4()
-    q = SqlQuery(
-        {
-            H('select'): SqlVals(_uuid).inline(),
-            '': 'union all',
-            H('select'): SqlVals(_uuid).inline(),
-        }
-    )
+H = SqlSectionHeader
+q = SqlQuery(
+    {
+        H('select'): SqlVals('hello').inline(),
+        '': 'union all',
+        H('select'): SqlVals('hello').inline(),
+    }
+)
+```
+Output
+```sql
+SELECT
+  'hello'
+UNION ALL
+SELECT
+  'hello'
 ```
 
 ### Iterate through SqlSection instances and change text for ready SqlContainer
