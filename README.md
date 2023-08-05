@@ -27,16 +27,33 @@ q['select'](
     'name',
 )
 q['from'](
-    'catalog'
+    'product'
 )
 q['where'](
-    "name = 'Smart'"
+    "quality = 'Best'",
+    'and brand_id = 1',
 )
 
 # build query into SqlContainer
 container: sc.SqlContainer = q()
 # get sql as string
 sql_text: str = str(container)
+```
+### Output
+SqlSection automatically transform all sql keywords in uppercase.
+It does not upper in following cases:
+1) if sql keyword is located in inline/multiline comment.
+2) if sql keyword is located inside single/double quotes.
+Output of sql_text is
+```sql
+SELECT
+  id,
+  name
+FROM
+  product
+WHERE
+  quality = 'Best'
+  AND brand_id = 1
 ```
 ### Another portion of theory
 1) Because of sql headers ('select', 'from' and etc.) cannot be unique that's why it is only possible to append sql sections (but not get it back by index).
@@ -51,18 +68,22 @@ You could add placeholder in query by adding **$variable_name** syntax.
 import sqlconstructor as sc
 
 
-def get_product_query(prod_name: str) -> sc.SqlContainer:
+def get_product_query(
+    product_quality: str, 
+    brand_identifier: int,
+) -> sc.SqlContainer:
     q = sc.SqlQuery()
     q['select'](
         'id',
         'name',
     )
     q['from'](
-        'catalog'
+        'product'
     )
     q['where'](
-        'name = $product_name'
-    )(product_name=prod_name)
+        'quality = $quality',
+        'and brand_id = $brand_id'
+    )(qulaity=product_quality, brand_id=brand_identifier)
     q['order by']('name DESC')
     container: sc.SqlContainer = q()
     return container
@@ -75,13 +96,14 @@ import sqlconstructor as sc
 
 def main():
     container: sc.SqlContainer = get_product_query()
-    # set variable to existing container
-    container(product_name='Smart')
+    # set variables to existing container
+    container(quality='Best', brand_id=1)
     # or
-    container.vars['product_name'] = 'Smart'
+    container.vars['quality'] = 'Best'
+    container.vars['brand_id'] = 1
 
     # if you would like to rewrite all vars
-    new_vars = {'product_name': 'Smart'}
+    new_vars = {'quality': 'Medium', 'brand_id': 2}
     container.vars = new_vars
 
     # if you would like to remove all vars
@@ -95,10 +117,11 @@ def get_product_query() -> sc.SqlContainer:
         'name',
     )
     q['from'](
-        'catalog'
+        'product'
     )
     q['where'](
-        'name = $product_name'
+        'quality = $quality',
+        'and brand_id = $brand_id'
     )
     container: sc.SqlContainer = q()
     return container
@@ -112,8 +135,8 @@ from functools import cache
 
 def main():
     container: sc.SqlContainer = get_product_query()
-    # set variable to existing container
-    container(product_name='Smart')
+    # set variables to existing container
+    container(quality='Best', brand_id=1)
 
 
 @cache
@@ -129,7 +152,7 @@ from functools import cache
 
 def main():
     container: sc.SqlContainer = get_product_query()
-    container.vars['product_name'] = 'Smart'
+    container.vars.update({'quality': 'Best', 'brand_id': 1})
     # to replace placeholders by variables call 'dumps' method
     sql_text: str = container.dumps()
 
@@ -146,7 +169,7 @@ from functools import cache
 
 def main():
     container: sc.SqlContainer = get_product_query()
-    container.vars['product_name'] = 'Smart'
+    container.vars.update({'quality': 'Best', 'brand_id': 1})
     # get sql without replacing placeholders by variables
     sql_text: str = str(container)
 
@@ -166,23 +189,26 @@ from typing import List
 def main():
     q = sc.SqlQuery()
     q['select'](
-        'c.id',
-        'c.name',
+        'p.id',
+        'p.name',
     )
     q['from'](
-        'catalog as c',
+        'product as p',
     )
     q['left join lateral'](
         get_left_join_lateral(),
     )
-    q['where']('c.name = $product_name')(product_name='Smart')
+    q['where'](
+      'p.quality = $quality',
+      'and brand_id = $brand_id'
+    )(quality='Best', brand_id=1)
 
 
 def get_left_join_lateral() -> sc.SqlContainer:
     j = sc.SqlQuery()
     j['select'](
-        'id',
-        'expiration_date',
+        'e.id',
+        'e.expiration_date',
     )
     j['from']('expiration as e')
     j['where'](*get_filters())
@@ -201,11 +227,11 @@ def get_left_join_lateral() -> sc.SqlContainer:
 def get_filters() -> List[str]:
     """Create filters"""
     where = []
-    where.append('c.id = e.id')
-    where.append('AND expiration_date <= now()')
+    where.append('p.id = e.id')
+    where.append('AND e.expiration_date <= now()')
     return where
 ```
-### Append simple sql statements to query
+### Append simple string (simple sql statement) to query
 
 It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
 ```python
@@ -216,11 +242,11 @@ def main():
     q = sc.SqlQuery()
     q += '-- some comment here'
     q['select'](
-        'c.id',
-        'c.name',
+        'p.id',
+        'p.name',
     )
 ```
-### Append ready SqlContainer to query
+### Append SqlContainer to query
 ```python
 import sqlconstructor as sc
 
@@ -228,8 +254,8 @@ import sqlconstructor as sc
 def main():
     q = sc.SqlQuery()
     q['select'](
-        'c.id',
-        'c.name',
+        'p.id',
+        'p.name',
     )
     q += get_from_statement()
     ...
