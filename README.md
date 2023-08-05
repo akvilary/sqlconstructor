@@ -409,7 +409,15 @@ VALUES
     '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
-If you would like to do not add double quotes to columns then you could use SqlEnum class. Any of this class (SqlEnum, SqlVals, SqlCols) has 'inline' and 'multiline' method (return SqlContainer which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.29.
+**SqlVals** converts python objects to sql values (same mechanics used in '$value' replacement by 'dumps' method of **SqlContainer**).
+- any string will be added with single quotes;
+- uuid will be added as string with single quotes;
+- list, set, tuple will be converted to array (sql example: "ARRAY['xo', 'ox']");
+- dict will be converted to json (sql example: '{"id": 23, "names": ["xo", "ox"]}')
+
+If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** transmit strings as is, and do not add any extra characters.
+
+Any of this class (**SqlEnum, SqlVals, SqlCols**) has 'inline' and 'multiline' method (return **SqlContainer** which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.29.
 Example:
 ```python
 import uuid
