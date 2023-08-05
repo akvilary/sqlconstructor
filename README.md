@@ -11,7 +11,7 @@ $ python3 -m pip install sqlconstructor
 2) SqlSection - it is part of SqlQuery. It process data and store it to SqlContainer (which located as SqlSection instance attribute).
 3) SqlContainer holds result of processed data. SqlContainer contains sql text (as string), optional wrapper (usually required for nested subqueries), and optional variables (to be replaced with placeholders).
 4) We register (i.e. append) SqlSection by \_\_getitem\_\_ method of SqlQuery. It is possible to add sections with duplicate header. Header can be any string! SqlSection instances will be written in query in order you set them.
-5) Because of sql headers ('select', 'from' and etc.) cannot be unique that's why it is only possible to append sql sections (but not get it back by index).
+5) Because of sql headers ('select', 'from' and etc.) cannot be unique that's why it is only possible to append sql sections (but not get it back by sql header).
 6) When we call \_\_call\_\_ method of SqlSection we build SqlContainer of SqlSection (combining sql header with values passed by arguments).
 7) When you build query (call \_\_call\_\_ method of SqlQuery) then you union all SqlContainer instances (of each SqlSection) into one SqlContainer which inherits variables of united instances and return it.
 
@@ -69,6 +69,27 @@ WHERE
   quality = 'Best'
   AND brand_id = 1
 ```
+### SqlSection \_\_call\_\_
+It is possible to give special keyword arguments in SqlSection \_\_call\_\_ method:
+- ind - indentation of sql body (default=2)
+- sep - separator of statements. Default is ',' for comma separated sections else ''.
+- line_end - end of line of each statement (default='\\n')
+- section_end - end of sql section (default='')
+- upper_keywords - do upper sql keywords (default=True)
+```python
+...
+q['where'](
+    "quality = 'Best'",
+    'brand_id = 1',
+    ind=4,
+    # delimeter = sep + line_end
+    sep=' AND',
+    line_end=' ',
+    section_end=';',
+    upper_keywords=False,
+)
+...
+```
 
 ### It is also possible to create SqlQuery instance by dict
 ```python
@@ -91,6 +112,7 @@ q = SqlQuery(
 ```
 But it has certain limitation:
 - It is not possible to create query by dict with duplicate headers if headers are strings (because of dict nature).
+- It is not possible to give indent, line_end and etc. keyword arguments in section \_\_call\_\_ method.
 
 But it is possible: 
 - include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
@@ -180,7 +202,7 @@ q['where'](
 )
 
 # get only SELECT and FROM statements
-new_query = q[:-1]
+new_query = q[:2]
 # get first SqlSection
 select = q[0]
 ...    
