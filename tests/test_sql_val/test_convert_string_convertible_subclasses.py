@@ -1,5 +1,4 @@
 import pytest
-import json
 from sqlconstructor import (
     SqlContainer,
     SqlVal,

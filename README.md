@@ -842,6 +842,10 @@ result is:
 You could convert each instance of classes below into SqlContainer and set sql variables in one step by \_\_call\_\_ method (in release >= 1.1.5):
 SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVals.
 
+### SqlJson
+SqlJson (in release >= 1.2.9) has 'loads' and 'dumps' static methods similar to python 'json' library.
+loads convert from sql json to python object and dumps convert from python object to sql json.
+
 ### Debugging
 
 #### How to find piece of code by produced sql

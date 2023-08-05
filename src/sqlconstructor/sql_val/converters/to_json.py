@@ -33,6 +33,6 @@ class SqlEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-def convert_dict_to_sql_json(dictionary: dict) -> str:
+def convert_dict_to_sql_json(dictionary: dict | list | str) -> str:
     """Convert python dictionary to sql representation"""
     return f"""{'E' if DIALECT == 'PostgreSQL' else ''}'{json.dumps(dictionary, cls=SqlEncoder)}'"""

@@ -19,3 +19,4 @@ from .sql_filter import SqlFilter
 from .sql_filters import SqlFilters
 from .sql_placeholder import SqlPlaceholder
 from .sql_wrap import SqlWrap
+from .sql_json import SqlJson

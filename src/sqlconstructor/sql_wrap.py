@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-Module of SqlFilter class.
+Module of SqlWrap class.
 """
 
 __author__ = 'https://github.com/akvilary'
