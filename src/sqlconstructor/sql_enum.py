@@ -9,10 +9,10 @@ from typing import Any
 
 from .sql_container import SqlContainer
 from .abstracts.string_convertible import StringConvertible
-from .abstracts.inline_enum import InlineEnum
+from .abstracts.special_json_convertible import SpecialJsonConvertible
 
 
-class SqlEnum(list, StringConvertible, InlineEnum):
+class SqlEnum(list, StringConvertible, SpecialJsonConvertible):
     """
     SqlEnum class is invented for better experience to enumerate.
     """
@@ -23,8 +23,13 @@ class SqlEnum(list, StringConvertible, InlineEnum):
         super().__init__(statements)
 
     def __str__(self) -> str:
-        """Return SqlEnum as str"""
         return str(self.multiline().wrap())
+
+    def __json_str__(self) -> str:
+        return str(self.inline())
+
+    def __json_array__(self) -> list:
+        return list(str(x) for x in self)
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""

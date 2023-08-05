@@ -9,7 +9,7 @@ import uuid
 import json
 
 from sqlconstructor.abstracts.string_convertible import StringConvertible
-from sqlconstructor.abstracts.inline_enum import InlineEnum
+from sqlconstructor.abstracts.special_json_convertible import SpecialJsonConvertible
 
 
 class SqlEncoder(json.JSONEncoder):
@@ -20,8 +20,8 @@ class SqlEncoder(json.JSONEncoder):
     """
 
     def default(self, o):
-        if isinstance(o, InlineEnum):
-            return str(o.inline())
+        if isinstance(o, SpecialJsonConvertible):
+            return json.dumps(o.__json_array__())
         if isinstance(
             o,
             (

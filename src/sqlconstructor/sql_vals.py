@@ -11,10 +11,10 @@ from .sql_container import SqlContainer
 from .sql_enum import SqlEnum
 from .sql_val import SqlVal
 from .abstracts.string_convertible import StringConvertible
-from .abstracts.inline_enum import InlineEnum
+from .abstracts.special_json_convertible import SpecialJsonConvertible
 
 
-class SqlVals(SqlEnum, StringConvertible, InlineEnum):
+class SqlVals(SqlEnum, StringConvertible, SpecialJsonConvertible):
     """
     SqlVals class is invented for better experience to convert python values to sql strings.
     """
@@ -22,6 +22,9 @@ class SqlVals(SqlEnum, StringConvertible, InlineEnum):
     def __str__(self) -> str:
         """Convert SqlContainer instance to str"""
         return str(self.multiline().wrap())
+
+    def __json_str__(self) -> str:
+        return str(self.inline())
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""
