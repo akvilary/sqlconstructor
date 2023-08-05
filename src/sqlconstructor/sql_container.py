@@ -87,8 +87,9 @@ class SqlContainer(StringConvertible):
         return self
 
     def unwrap(self) -> Self:
-        """Delete wrapper"""
+        """Delete wrapper and set default values"""
         self.wrapper_text = None
+        self.is_multiline_wrap_type = True
         return self
 
 

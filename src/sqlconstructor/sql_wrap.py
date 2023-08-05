@@ -39,6 +39,6 @@ class SqlWrap(
         return self
 
     def multiline(self) -> Self:
-        """Set inline option"""
+        """Set multiline option"""
         self.is_multiline_wrap_type = True
         return self
