@@ -736,7 +736,7 @@ VALUES
 - any string will be added with single quotes;
 - uuid will be added as string with single quotes;
 - list, set, tuple will be converted to array (sql example: ARRAY['xo', 'ox']);
-- dict will be converted to json (sql example: '{"id": 23, "names": ["xo", "ox"]}')
+- dict will be converted to json (sql example: E'{"id": 23, "names": ["xo", "ox"]}' ). Character 'E' will be only added if DIALECT constant is 'PostgreSQL' to support escape single qoute character in json. 
 
 If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** converts to strings as is (without extra processing), and do not add any extra characters (no single quotes either).
 

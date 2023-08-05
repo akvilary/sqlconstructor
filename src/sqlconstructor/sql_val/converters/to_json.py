@@ -8,6 +8,7 @@ __author__ = 'https://github.com/akvilary'
 import uuid
 import json
 
+from sqlconstructor.constants import DIALECT
 from sqlconstructor.utils.classes.string_convertible import StringConvertible
 from sqlconstructor.utils.classes.special_convertion_requier import SpecialConvertionRequier
 
@@ -24,10 +25,7 @@ class SqlEncoder(json.JSONEncoder):
             return o.__as_json__()
         if isinstance(
             o,
-            (
-                uuid.UUID,
-                StringConvertible
-            ),
+            (uuid.UUID, StringConvertible),
         ):
             return str(o)
         if isinstance(o, set):
@@ -37,4 +35,4 @@ class SqlEncoder(json.JSONEncoder):
 
 def convert_dict_to_sql_json(dictionary: dict) -> str:
     """Convert python dictionary to sql representation"""
-    return "E'" + json.dumps(dictionary, cls=SqlEncoder) + "'"
+    return f"""{'E' if DIALECT == 'PostgreSQL' else ''}'{json.dumps(dictionary, cls=SqlEncoder)}'"""
