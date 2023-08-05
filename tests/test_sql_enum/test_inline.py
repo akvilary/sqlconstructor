@@ -13,6 +13,17 @@ def test_inline_one_element():
     )
 
 
+def test_inline_one_element_case_int():
+    assert (
+        str(
+            SqlEnum(
+                1,
+            ).inline()
+        )
+        == '1'
+    )
+
+
 def test_inline_two_and_more_elements():
     assert (
         str(

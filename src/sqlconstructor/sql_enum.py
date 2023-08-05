@@ -30,8 +30,8 @@ class SqlEnum(list):
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""
-        return SqlContainer(', '.join(self))
+        return SqlContainer(', '.join(str(x) for x in self))
 
     def multiline(self) -> SqlContainer:
         """Get multiline representation"""
-        return SqlContainer(',\n'.join(self))
+        return SqlContainer(',\n'.join(str(x) for x in self))

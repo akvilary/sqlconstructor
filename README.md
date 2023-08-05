@@ -415,7 +415,7 @@ VALUES
 - list, set, tuple will be converted to array (sql example: "ARRAY['xo', 'ox']");
 - dict will be converted to json (sql example: '{"id": 23, "names": ["xo", "ox"]}')
 
-If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** transmit strings as is, and do not add any extra characters.
+If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** convert to strings as is (without extra processing), and do not add any extra characters.
 
 Any of this class (**SqlEnum, SqlVals, SqlCols**) has 'inline' and 'multiline' method (return **SqlContainer** which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.29.
 Example:
