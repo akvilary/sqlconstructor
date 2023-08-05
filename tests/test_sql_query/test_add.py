@@ -36,3 +36,17 @@ def test_add_simple_by_magic_add():
     container = q()
     assert str(container) == 'abc xyz'
     assert q is _q
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_inherit_vars_of_containers_in_add_method():
+    q = SqlQuery()
+    subquery = SqlQuery()
+    subquery['select']('$id', '$name')(id=1, name='phone')
+    subquery_container = subquery()
+    q += subquery_container
+    query_container = q()
+    assert query_container.vars == subquery_container.vars
+    assert query_container.dumps() == "SELECT\n  1,\n  'phone'"

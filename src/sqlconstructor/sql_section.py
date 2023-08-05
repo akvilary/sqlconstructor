@@ -96,11 +96,8 @@ class SqlSection:
 
         self.container = SqlContainer(sql_block)
 
-        vars_of_containers = {
-            key: value
-            for statement in statements
-            if isinstance(statement, SqlContainer)
-            for key, value in statement.vars.items()
-        }
-        self.container.vars = vars_of_containers
+        for statement in statements:
+            if isinstance(statement, SqlContainer):
+                self.container.vars.update(statement.vars)
+
         return self.container
