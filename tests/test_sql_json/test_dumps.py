@@ -1,5 +1,5 @@
 import pytest
-from sqlconstructor import SqlJson, SqlContainer, SqlVal, SqlCol
+from sqlconstructor import SqlJson, SqlContainer, SqlVal, SqlCol, SqlFilter
 
 
 @pytest.mark.SqlJson
@@ -32,3 +32,19 @@ def test_dumps_dict_with_col():
     obj = {'a': SqlCol('b')}
     result = SqlJson.dumps(obj)
     assert result == """E'{"a": "\\\\"b\\\\""}'"""
+
+
+@pytest.mark.SqlJson
+@pytest.mark.SqlFilter
+def test_dumps_dict_with_filter_as_str():
+    obj = {'a': SqlFilter('b')}
+    result = SqlJson.dumps(obj)
+    assert result == """E'{"a": "b"}'"""
+
+
+@pytest.mark.SqlJson
+@pytest.mark.SqlFilter
+def test_dumps_dict_with_filter_as_dict():
+    obj = {'a': SqlFilter({'b': 'c'})}
+    result = SqlJson.dumps(obj)
+    assert result == """E'{"a": "b=\\\'c\\\'"}'"""
