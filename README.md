@@ -407,6 +407,45 @@ VALUES
     '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
+If you would like to do not add double quotes to columne then you could use SqlEnum class. Any of this class(SqlEnum, Vals, Cols) has inline and multiline method (return SqlContainer which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.24.
+Example:
+```python
+import uuid
+from sqlconstructor import SqlQuery, SqlEnum, Vals
+
+
+q = SqlQuery()
+_uuid = uuid.uuid4()
+q['insert into'](
+    'product',
+    SqlEnum(
+        'brand_id',
+        'name',
+        'quality',
+        'uuid_id',
+    ).inline().wrap(),
+)
+q['values'](
+    Vals(
+        1,
+        'phone',
+        _uuid,
+    ).inline().wrap()
+)
+sql_text = str(q())
+```
+sql_text output will be
+```sql
+INSERT INTO
+  product
+  (
+    brand_id, name, quality, uuid_id
+  )
+VALUES
+  (
+    1, 'phone', '82611533-25c4-4cbd-8497-3f5024ca29a1'
+  )
+```
 
 ### Debugging
 
