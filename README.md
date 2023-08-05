@@ -275,7 +275,7 @@ def main():
         'p.name',
     )
     q += get_from_statement()
-    q['where'] = get_where_filters()
+    q += get_where_filters()
     ...
 
 
