@@ -44,6 +44,15 @@ def test_convert_sql_cols():
 
 
 @pytest.mark.SqlVal
+@pytest.mark.SqlContainer
+def test_convert_sql_cols_in_dict_value():
+    assert (
+        str(SqlVal({'a': SqlCols('product', 'quantity')}))
+        == '{"a": ["\\"product\\"", "\\"quantity\\""]}'
+    )
+
+
+@pytest.mark.SqlVal
 @pytest.mark.SqlEnum
 def test_convert_sql_enum():
     assert str(SqlVal(SqlEnum('product', 'quantity'))) == 'product, quantity'
@@ -53,15 +62,6 @@ def test_convert_sql_enum():
 @pytest.mark.SqlEnum
 def test_convert_sql_enum_in_dict_value():
     assert str(SqlVal({'a': SqlEnum('product', 'quantity')})) == '{"a": ["product", "quantity"]}'
-
-
-@pytest.mark.SqlVal
-@pytest.mark.SqlContainer
-def test_convert_sql_cols_in_dict_value():
-    assert (
-        str(SqlVal({'a': SqlCols('product', 'quantity')}))
-        == '{"a": ["\\"product\\"", "\\"quantity\\""]}'
-    )
 
 
 @pytest.mark.SqlVal
