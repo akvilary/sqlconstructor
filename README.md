@@ -365,6 +365,7 @@ def get_ctes() -> sc.SqlContainer:
 ### Enumerate columns, values
 In release >= 1.0.21 you could enumerate columns and values a little bit easier:
 ```python
+import uuid
 from sqlconstructor import SqlQuery, Cols, Vals
 
 
