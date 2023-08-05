@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sqlconstructor"
-version = "1.0.40"
+version = "1.0.41"
 authors = [
   { name="Andrey Smirnov", email="smirnovcode@mail.ru" },
 ]
