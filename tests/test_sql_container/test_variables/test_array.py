@@ -14,6 +14,12 @@ def test_array_variable(my_array):
     assert container.dumps() == "ARRAY[1, 2]"
 
 
+def test_array_variable_case_nested_arrays():
+    my_arrays = [['a', 'b'], ['c', 'd']]
+    container = SqlContainer('$my_arrays')(my_arrays=my_arrays)
+    assert container.dumps() == "ARRAY[ARRAY['a', 'b'], ARRAY['c', 'd']]"
+
+
 def test_array_variable_strings_case_single_quotes():
     my_array = ['a', 'b']
     container = SqlContainer('$my_array')(my_array=my_array)
