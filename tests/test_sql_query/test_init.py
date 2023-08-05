@@ -22,11 +22,36 @@ def test_init_with_sql_id():
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
+@pytest.mark.SqlSectionHeader
 def test_init_query_by_dict(simple_query_dict, simple_query_sql):
     q = SqlQuery(simple_query_dict)
     assert len(q) == 3
     container = q()
     assert str(container) == simple_query_sql
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_init_query_by_dict_with_empty_body():
+    h = SqlSectionHeader
+    query_dict = {
+        h('SELECT'): 1,
+        h('UNION'): None,
+        h('SELECT'): 2,
+    }
+    q = SqlQuery(query_dict)
+    assert len(q) == 3
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  1',
+            'UNION',
+            'SELECT',
+            '  2',
+        )
+    )
 
 
 @pytest.mark.SqlQuery

@@ -88,7 +88,9 @@ class SqlSection(StringConvertible, ContainerConvertible):
 
         sql_block = ''
         if self.header:
-            sql_block += self.header + '\n'
+            sql_block += self.header
+            if section_body:
+                sql_block += '\n'
         sql_block += section_body + section_end
 
         if upper_keywords:

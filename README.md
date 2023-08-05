@@ -129,11 +129,11 @@ H = SqlSectionHeader
 q = SqlQuery(
     {
         H('select'): "'hello'",
-        # create sql section without header by SqlSectionHeader instance constructed without arguments
-        H(): 'union all',
+        # it is possible to add sql section without body
+        H('union all'): None,
         H('select'): SqlVal('hello'),
-        # it is possible to add sql section without header if header is empty string
-        '': 'union all',
+        # or create sql section without header
+        H(): 'union all',
         H('select'): "'hello'",
     }
 )

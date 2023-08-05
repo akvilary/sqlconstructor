@@ -80,6 +80,7 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
                     if is_cte:
                         ctes[section] = container
                         continue
+
                     self[section](container)
                 else:
                     self[section](value)
