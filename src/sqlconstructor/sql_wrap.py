@@ -37,4 +37,4 @@ class SqlWrap(
 
     def multiline(self) -> SqlContainer:
         """Get container of wrapped sql text in multiline"""
-        return SqlContainer(get_wrapped(self.text, self.wrapper_text))
+        return SqlContainer(str(self))

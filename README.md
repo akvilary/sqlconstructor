@@ -324,7 +324,7 @@ SqlFilter and SqlFilters insert value in query instantly if you use string as va
 
 If you you would like to insert value after building query then:
   - use SqlPlaceholder instance as value in filter keyword argument or dict.
-  - or add placeholder by syntax in string as filter value (neither in dict nor in keyword argument, because they are converted to sql value)
+  - or add placeholder by syntax in string as whole value (neither in dict nor in keyword argument, because they will be converted to sql value)
 ```python
 from sqlconstructor import SqlQuery, SqlFilter, SqlContainer, SqlWrap
 
@@ -346,9 +346,9 @@ def get_product_query() -> SqlContainer:
         SqlFilter('quantity > 0')  # string will not be converted by SqlVal and will be passed as is
         &
         SqlWrap(
-            SqlFilter(quality='Best')  # value will be converted to sql string by SqlVal
+            SqlFilter(quality='Best')  # keyword argument value will be converted to sql string by SqlVal
             |  # OR operator
-            SqlFilter({'rating': 'high'})  # each value of dict will be converted by SqlVal
+            SqlFilter({'rating': 'high'})  # dict value will be converted to sql string by SqlVal
         )
     )
     container: SqlContainer = q()
@@ -400,7 +400,7 @@ from sqlconstructor import SqlFilters
 # AND mode is default
 SqlFilters(
     {
-        'quality': product_quality, 
+        'quality': product_quality,  # each value of dict will be converted by SqlVal
         'brand_id': brand_identifier,
     }
 )
