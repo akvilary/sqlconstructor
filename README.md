@@ -361,6 +361,52 @@ def main():
 def get_ctes() -> sc.SqlContainer:
     ...
 ```
+
+### Enumerate columns, values
+In release >= 1.0.21 you could enumerate columns and values a little bit easier:
+```python
+from sqlconstructor import SqlQuery, Cols, Vals
+
+
+q = SqlQuery()
+_uuid = uuid.uuid4()
+q['insert into'](
+    'product',
+    Cols(
+        'brand_id',
+        'name',
+        'quality',
+        'uuid',
+    ),
+)
+q['values'](
+    Vals(
+        1,
+        'phone',
+        _uuid,
+    )
+)
+sql_text = str(q())
+```
+
+sql_text output will be
+```sql
+INSERT INTO
+  product
+  (
+    "brand_id",
+    "name",
+    "quality",
+    "uuid"
+  )
+VALUES
+  (
+    1,
+    'phone',
+    '82611533-25c4-4cbd-8497-3f5024ca29a1'
+  )
+```
+
 ### Debugging
 
 #### How to find piece of code by produced sql
