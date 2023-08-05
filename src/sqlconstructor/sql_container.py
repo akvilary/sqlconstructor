@@ -47,7 +47,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.wrapper_text: Optional[str | StringConvertible] = None
         self.is_multiline_wrap_type: bool = True
 
-        self.rel_ind: int = 0  # relative indentation
+        self.ind: int = 0  # relative indentation
 
         self.vars: dict = {}
         unite_container_vars(self, text)
@@ -67,7 +67,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
             self.text,
             self.wrapper_text,
             self.is_multiline_wrap_type,
-            self.rel_ind,
+            self.ind,
         )
 
     def dumps(self) -> str:
@@ -80,7 +80,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         if text and self.vars:
             for keyword, value in self.vars.items():
                 pattern = r'\$' + keyword + r'\b'
-                converted_value = lambda matchobj: str(SqlVal(value))
+                converted_value = lambda _: str(SqlVal(value))
                 text = re.sub(
                     pattern,
                     converted_value,
@@ -90,7 +90,7 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
             text,
             self.wrapper_text,
             self.is_multiline_wrap_type,
-            self.rel_ind,
+            self.ind,
         )
 
     def wrap(self, wrapper_text: str | StringConvertible = '', do_multiline: bool = None) -> Self:
@@ -116,9 +116,9 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.is_multiline_wrap_type = True
         return self
 
-    def indent(self, num: int) -> Self:
+    def indent(self, ind: int) -> Self:
         """Add extra relative indentation for string representation"""
-        self.rel_ind = num
+        self.ind = ind
         return self
 
 
@@ -126,7 +126,7 @@ def get_string_representation(
     text: str,
     wrapper_text: Optional[str],
     is_wrap_multiline: bool = True,
-    rel_ind: int = 0,
+    ind: int = 0,
 ) -> str:
     """Get text or wrap text by wrapper and return as string"""
     if wrapper_text is not None:
@@ -134,9 +134,9 @@ def get_string_representation(
             text,
             wrapper_text or '',
             is_wrap_multiline,
-            rel_ind,
+            ind,
         )
-    return indent_lines(str(text), rel_ind) if rel_ind else str(text)
+    return indent_lines(str(text), ind) if ind else str(text)
 
 
 def unite_container_vars(container: SqlContainer, obj: Any):
