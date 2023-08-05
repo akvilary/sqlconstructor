@@ -11,7 +11,7 @@ def test_json_variable():
         'id': 23,
         'list': ['a', 'b'],
         'tuple': ('a', 'b'),
-        'set': {'a', 'b'},
+        'set': {1, 2},
         1: uuid_value,
     }
     container = SqlContainer("SELECT $my_dict->'tuple' as names")(my_dict=my_dict)
@@ -20,7 +20,7 @@ def test_json_variable():
         '"id": 23, '
         '"list": ["a", "b"], '
         '"tuple": ["a", "b"], '
-        '"set": ["a", "b"], '
+        '"set": [1, 2], '
         f'"1": "{uuid_value}"'
         "}->'tuple' as names"
     )
