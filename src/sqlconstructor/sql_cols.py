@@ -36,8 +36,8 @@ class SqlCols(SqlEnum, StringConvertible, SpecialConvertionRequier):
         """Get multiline representation"""
         return SqlContainer(',\n'.join(get_columns(self)))
 
-    def copy(self, /):
-        return SqlCols(list(self.list))
+    def copy(self):
+        return SqlCols(*self.data.copy())
 
 
 def get_columns(iterable: Iterable):

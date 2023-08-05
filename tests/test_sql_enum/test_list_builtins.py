@@ -106,3 +106,9 @@ def test_remove():
 def test_count():
     sql_enum = SqlEnum('a', 'a')
     assert sql_enum.count('a') == 2
+
+
+@pytest.mark.SqlEnum
+def test_copy():
+    sql_enum = SqlEnum('a', 'b')
+    assert list(sql_enum.copy()) == ['a', 'b']

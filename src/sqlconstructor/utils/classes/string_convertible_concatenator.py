@@ -1,14 +1,14 @@
 # coding=utf-8
 """
-Module of Adder class.
+Module of StringConvertibleConcatenator class.
 """
 
 __author__ = 'https://github.com/akvilary'
 
 
-class Adder:
+class StringConvertibleConcatenator:
     """
-    Adder is invented to provide add and radd method for StringConvertible.
+    The class is invented to provide add and radd method for StringConvertible.
     """
     def __add__(self, other):
         return str(self) + str(other)

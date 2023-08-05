@@ -6,10 +6,10 @@ Module of StringConvertible class.
 __author__ = 'https://github.com/akvilary'
 
 from abc import ABC, abstractmethod
-from .adder_class import Adder
+from .string_convertible_concatenator import StringConvertibleConcatenator
 
 
-class StringConvertible(Adder, ABC):
+class StringConvertible(StringConvertibleConcatenator, ABC):
     """
     StringConvertible class is invented to group all supplementary classes 
     which provide '__str__' method.

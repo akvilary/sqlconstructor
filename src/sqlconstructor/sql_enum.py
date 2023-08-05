@@ -46,5 +46,5 @@ class SqlEnum(StringConvertible, SpecialConvertionRequier, UserList):
         """Get multiline representation"""
         return SqlContainer(',\n'.join(str(x) for x in self))
 
-    def copy(self, /):
-        return SqlEnum(list(self.list))
+    def copy(self):
+        return SqlEnum(*self.data.copy())
