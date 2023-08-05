@@ -909,11 +909,11 @@ StringConvertible subclasses:
 
 ### ContainerConvertible
 You could convert each instance of classes below into SqlContainer and set sql variables in one step by \_\_call\_\_ method (in release >= 1.1.5):
-SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVals, SqlCte (in release >= 1.3.0).
+SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVal, SqlVals, SqlCte (in release >= 1.3.0).
 
 ### SqlJson
 SqlJson (in release >= 1.2.9) has 'loads' and 'dumps' static methods similar to python 'json' library.
-loads convert from sql json to python object and dumps convert from python object to sql json.
+'loads' convert from sql json to python object and 'dumps' convert from python object to sql json.
 
 ### Debugging
 
