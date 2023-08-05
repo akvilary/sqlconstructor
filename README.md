@@ -112,7 +112,7 @@ q = SqlQuery(
 ```
 But it has certain limitation:
 - It is not possible to create query by dict with duplicate headers if headers are strings (because of dict nature).
-- It is not possible to give indent, line_end and etc. keyword arguments in section \_\_call\_\_ method.
+- It is not possible to set custom settings for sql section (as ind, line_end and etc.). It is rarely used and not a big deal.
 
 But it is possible: 
 - include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
