@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sqlconstructor"
-version = "1.0.36"
+version = "1.0.37"
 authors = [
-  { name="Andrey Smirnov", email="abc-sm@yandex.ru" },
+  { name="Andrey Smirnov", email="smirnovcode@mail.ru" },
 ]
 description = "Let you build SQL requests in pythonic way. SQL blocks could be nested and flexible as you want it to be, constructed dynamically and look pretty! You could also build request once and cache it (but still use variables to replace dynamically). Solid solution!"
 readme = "README.md"
@@ -18,6 +18,6 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/akvilary/sqlconstructor"
+"Github" = "https://github.com/akvilary/sqlconstructor"
 "Bug Tracker" = "https://github.com/akvilary/sqlconstructor/issues"
-"Telegram" = "https://t.me/sqlconstructor"
+"Release notes in Telegram" = "https://t.me/sqlconstructor"
