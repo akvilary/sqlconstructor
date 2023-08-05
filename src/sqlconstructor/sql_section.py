@@ -17,20 +17,20 @@ class SqlSection:
     """SqlSection is invented to build one SQL block of query and put the result of
     this process to self.container which is SqlContainer instance.
     SQL block is build of:
-        - section header provided of self.section_header
+        - section header provided of self.header
         - section body which consists of:
             *statements provided in self.__call__ method.
     """
 
-    def __init__(self, section_header: str = ''):
+    def __init__(self, header: str = ''):
         """Constract SqlSection instance.
         Params:
-            - section_header: str - could be any string (empty is also possible).
+            - header: str - could be any string (empty is also possible).
             If it be an empty string then there will be no section header in SQL block,
             and section body will be added without indentation. Otherwise section header
             will be added, and section body starts with new line with 2 space indentation.
         """
-        self.section_header: str = section_header
+        self.header: str = header
         self.container: Optional[SqlContainer] = None
 
     def __bool__(self) -> bool:
@@ -68,27 +68,27 @@ class SqlSection:
             sep
             if sep is not None
             else ','
-            if self.section_header.upper() in SECTIONS_WITH_COMMA_SEPARATOR
+            if self.header.upper() in SECTIONS_WITH_COMMA_SEPARATOR
             else ''
         )
         delimiter = sep + line_end
 
         section_body = delimiter.join(
             # if self.section_name == '' then do not indent
-            indent_text.indent_lines(str(x), ind=ind) if self.section_header else str(x)
+            indent_text.indent_lines(str(x), ind=ind) if self.header else str(x)
             for x in statements
             if x
         )
 
-        if not (self.section_header or section_body):
+        if not (self.header or section_body):
             raise AttributeError(
                 'Header or body of sql section is not filled. '
-                f'Section header={self.section_header}, section body={section_body}'
+                f'Section header={self.header}, section body={section_body}'
             )
 
         sql_block = ''
-        if self.section_header:
-            sql_block += self.section_header + '\n'
+        if self.header:
+            sql_block += self.header + '\n'
         sql_block += section_body + section_end
 
         if upper_keywords:

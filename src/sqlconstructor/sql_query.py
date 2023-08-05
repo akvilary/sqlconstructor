@@ -104,13 +104,8 @@ class SqlQuery:
         container = SqlContainer(**params)
 
         # inherit all vars of included containers
-        vars_of_containers = {
-            key: value
-            for section in self.sections
-            if section
-            for key, value in section.container.vars.items()
-        }
-        container.vars = vars_of_containers
+        for section in self.sections:
+            container.vars.update(section.container.vars)
         return container
 
     def __iter__(self):
