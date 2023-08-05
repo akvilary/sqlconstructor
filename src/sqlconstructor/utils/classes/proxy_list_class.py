@@ -21,6 +21,9 @@ class ProxyList:
     def __add__(self, value, /):
         return self.list + value
 
+    def __radd__(self, value, /):
+        return value + self.list
+
     def __contains__(self, key, /):
         return key in self.list
 

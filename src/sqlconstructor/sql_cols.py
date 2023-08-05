@@ -11,10 +11,10 @@ from .sql_enum import SqlEnum
 from .sql_col import SqlCol
 from .sql_container import SqlContainer
 from .utils.classes.string_convertible import StringConvertible
-from .utils.classes.special_json_convertible import SpecialJsonConvertible
+from .utils.classes.special_convertion_requier import SpecialConvertionRequier
 
 
-class SqlCols(SqlEnum, StringConvertible, SpecialJsonConvertible):
+class SqlCols(SqlEnum, StringConvertible, SpecialConvertionRequier):
     """
     SqlCols class is invented for better experience to enumerate as sql columns.
     """
@@ -22,10 +22,10 @@ class SqlCols(SqlEnum, StringConvertible, SpecialJsonConvertible):
         """Convert SqlCols instance to str"""
         return str(self.multiline().wrap())
 
-    def __json_str__(self) -> str:
+    def __as_sql__(self) -> str:
         return str(self.inline())
 
-    def __json_array__(self) -> list:
+    def __as_json__(self) -> list:
         return list('\"' + x + '\"' for x in self)
 
     def inline(self) -> SqlContainer:

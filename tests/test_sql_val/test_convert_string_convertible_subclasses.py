@@ -48,8 +48,9 @@ def test_convert_sql_cols():
 @pytest.mark.SqlContainer
 def test_convert_sql_cols_in_dict_value():
     cols = SqlCols('product', 'quantity')
-    assert cols.__json_array__() == ['"product"', '"quantity"']
-    assert json.dumps(cols.__json_array__()) == '["\\"product\\"", "\\"quantity\\""]'
+    as_json = cols.__as_json__()
+    assert as_json == ['"product"', '"quantity"']
+    assert json.dumps(as_json) == '["\\"product\\"", "\\"quantity\\""]'
 
     expected_result = '{"a": ["\\"product\\"", "\\"quantity\\""]}'
     assert (

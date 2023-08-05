@@ -11,10 +11,10 @@ from .sql_container import SqlContainer
 from .sql_enum import SqlEnum
 from .sql_val import SqlVal
 from .utils.classes.string_convertible import StringConvertible
-from .utils.classes.special_json_convertible import SpecialJsonConvertible
+from .utils.classes.special_convertion_requier import SpecialConvertionRequier
 
 
-class SqlVals(SqlEnum, StringConvertible, SpecialJsonConvertible):
+class SqlVals(SqlEnum, StringConvertible, SpecialConvertionRequier):
     """
     SqlVals class is invented for better experience to convert python values to sql strings.
     """

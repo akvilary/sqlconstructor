@@ -5,6 +5,8 @@ Module of SqlFilters class.
 
 __author__ = 'https://github.com/akvilary'
 
+from typing import Optional
+
 
 from .constants import AND_MODE, OR_MODE
 from .sql_filter import SqlFilter
@@ -16,8 +18,16 @@ class SqlFilters(StringConvertible):
     SqlFilters class is invented to build sql filters faster.
     """
 
-    def __init__(self, filters: dict, mode: str = AND_MODE):
-        self.filters = filters
+    def __init__(self, filters: Optional[dict] = None, mode: str = AND_MODE, **kwargs):
+        self.filters = (
+            dict(filters, **kwargs)
+            if filters and kwargs
+            else filters
+            if filters
+            else kwargs
+            if kwargs
+            else {}
+        )
         self.mode = mode
 
     def __str__(self):

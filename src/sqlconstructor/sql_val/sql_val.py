@@ -8,9 +8,10 @@ __author__ = 'https://github.com/akvilary'
 from typing import Any
 
 from . import converters
+from sqlconstructor.utils.classes.string_convertible import StringConvertible
 
 
-class SqlVal:
+class SqlVal(StringConvertible):
     """
     SqlVal class is invented for better experience to convert any value to sql string.
     """

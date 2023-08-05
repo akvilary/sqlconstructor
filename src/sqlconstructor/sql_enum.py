@@ -7,22 +7,28 @@ __author__ = 'https://github.com/akvilary'
 
 from .sql_container import SqlContainer
 from .utils.classes.string_convertible import StringConvertible
-from .utils.classes.special_json_convertible import SpecialJsonConvertible
+from .utils.classes.special_convertion_requier import SpecialConvertionRequier
 from .utils.classes.proxy_list_class import ProxyList
 
 
-class SqlEnum(ProxyList, StringConvertible, SpecialJsonConvertible):
+class SqlEnum(ProxyList, StringConvertible, SpecialConvertionRequier):
     """
     SqlEnum class is invented for better experience to enumerate.
     """
     def __str__(self) -> str:
         return str(self.multiline().wrap())
 
-    def __json_str__(self) -> str:
+    def __as_sql__(self) -> str:
         return str(self.inline())
 
-    def __json_array__(self) -> list:
+    def __as_json__(self) -> list:
         return list(str(x) for x in self)
+
+    def __add__(self, other) -> str:
+        return self.__as_sql__() + str(other)
+
+    def __radd__(self, other) -> str:
+        return str(other) + self.__as_sql__()
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""
