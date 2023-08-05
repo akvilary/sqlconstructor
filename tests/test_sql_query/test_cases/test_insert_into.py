@@ -80,4 +80,3 @@ def test_insert_into_use_sql_enum_inline_wrap_and_vals_inline_wrap():
         f"    1, 'phone', '{_uuid}'\n"
         '  )'
     )
-
