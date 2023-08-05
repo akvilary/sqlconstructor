@@ -3,10 +3,11 @@ from sqlconstructor import SqlContainer
 
 
 @pytest.mark.SqlContainer
-def test_wrap():
+def test_unwrap():
     text = 'abc'
     wrapper_text = 'xyz'
     container = SqlContainer(text)
-    _container = container.wrap(wrapper_text)
-    assert container is _container
+    container.wrap(wrapper_text)
     assert str(container) == f'(\n  {text}\n) {wrapper_text}'
+    container.unwrap()
+    assert str(container) == text
