@@ -767,7 +767,7 @@ VALUES
 - any string will be added with single quotes;
 - uuid will be added as string with single quotes;
 - list, set, tuple will be converted to array (sql example: ARRAY['xo', 'ox']);
-- dict will be converted to json (sql example: E'{"id": 23, "names": ["xo", "ox"]}' ). Character 'E' will be only added if DIALECT constant is 'PostgreSQL' to support escape single qoute character in json. 
+- dict will be converted to json (sql example: E'{"id": 23, "names": ["xo", "ox"]}' ). Character 'E' will be only added if DIALECT constant is 'PostgreSQL' to support escape characters in json. 
 
 If you would like to do not add double quotes to columns then you could use **SqlEnum** class. **SqlEnum** converts to strings as is (without extra processing), and do not add any extra characters (no single quotes either).
 
@@ -868,6 +868,22 @@ result is:
   b=2
 )
 ```
+
+### StringConvertible
+SqlQuery is StringConvertible (in release >= 1.3.0). Now it supports \_\_add\_\_ and \_\_radd\_\_ methods with another StringConvertible subclasses.
+StringConvertible subclasses:
+- SqlCol
+- SqlCols
+- SqlContainer
+- SqlEnum
+- SqlFilter
+- SqlFilters
+- SqlPlaceholder
+- SqlQuery
+- SqlSection
+- SqlSectionHeader
+- SqlVals
+- SqlWrap
 
 ### ContainerConvertible
 You could convert each instance of classes below into SqlContainer and set sql variables in one step by \_\_call\_\_ method (in release >= 1.1.5):

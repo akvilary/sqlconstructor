@@ -10,9 +10,11 @@ from .constants import DEFAULT_IND
 from .utils import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
+from .utils.classes.string_convertible import StringConvertible
+from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlSection:
+class SqlSection(StringConvertible, ContainerConvertible):
     """SqlSection is invented to build one SQL block of query and put the result of
     this process to self.container which is SqlContainer instance.
     SQL block is build of:
