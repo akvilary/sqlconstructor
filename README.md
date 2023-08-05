@@ -40,10 +40,20 @@ container: sc.SqlContainer = q()
 sql_text: str = str(container)
 ```
 ### Output
-SqlSection automatically transform all sql keywords in uppercase.
+**SqlSection** automatically transforms all sql keywords in uppercase. 
 It does not upper in following cases:
 - if sql keyword is located in inline/multiline comment.
 - if sql keyword is located inside single/double quotes.
+
+**SqlSection** automatically adds comma between provided sql statements in \_\_call\_\_ method for next headers:
+- SELECT
+- FROM
+- SET
+- VALUES
+- ORDER BY
+- GROUP BY
+- JSON_OBJECT_AGG
+- COALESCE
 
 Output of sql_text is
 ```sql
