@@ -71,6 +71,47 @@ WHERE
 2) We register (i.e. append) SqlSection by \_\_getitem\_\_ method of SqlQuery. It is possible to add sections with duplicate header. Header can be any string! SqlSection instances will be written in query in order you set them.
 3) When we call \_\_call\_\_ method of SqlSection we build SqlContainer of SqlSection (combining sql header with values passed by arguments).
 
+### It is also possible to fill simple SqlQuery by dict
+```python
+from sqlconstructor import SqlQuery, SqlCols
+
+
+q = SqlQuery(
+    {
+        'select': (
+            'id',
+            'name',
+        ),
+        'from': 'product',
+        'where': (
+            "quality = 'Best'",
+            'and brand_id = 1',
+        ),
+    }
+)
+```
+But it has certain limitation:
+- It is not possible to create query with duplicate headers by strings (because of dict nature).
+
+But it is possible: 
+- fill dict with duplicate headers by SqlSectionHeader class (in release >= 1.0.40). See example below.
+- include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
+```python
+    import uuid
+    from sqlconstructor import SqlQuery, SqlVals, SqlSectionHeader
+
+
+    H = SqlSectionHeader
+    _uuid = uuid.uuid4()
+    q = SqlQuery(
+        {
+            H('select'): SqlVals(_uuid).inline(),
+            '': 'union all',
+            H('select'): SqlVals(_uuid).inline(),
+        }
+    )
+```
+
 ### Iterate through SqlSection instances and change text for ready SqlContainer
 ```python
 import sqlconstructor as sc
@@ -481,31 +522,6 @@ VALUES
   (
     1, 'phone', 'Best', '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
-```
-
-### It is also possible to fill simple SqlQuery by dict
-But it has certain limitation:
-- It is not possible to create query with duplicate headers (because of dict nature)
-But it is possible to include SqlCols, SqlVals and SqlEnum instances (in release >= 1.0.39).
-```python
-from sqlconstructor import SqlQuery, SqlCols
-
-
-q = SqlQuery(
-    {
-        'select': (
-            'id',
-            'name',
-        ),
-        # or
-        # 'select': SqlEnum('id', 'name').multiline(),
-        'from': 'product',
-        'where': (
-            "quality = 'Best'",
-            'and brand_id = 1',
-        ),
-    }
-)
 ```
 
 ### Debugging

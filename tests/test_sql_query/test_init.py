@@ -1,5 +1,5 @@
 import pytest
-from sqlconstructor import SqlQuery, SqlEnum
+from sqlconstructor import SqlQuery, SqlEnum, SqlVals, SqlSectionHeader
 
 from fixtures.expected_examples import simple_query_sql
 from fixtures.simple_query_dict import simple_query_dict
@@ -22,7 +22,7 @@ def test_init_with_sql_id():
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
-def test_init_with_query_dict(simple_query_dict, simple_query_sql):
+def test_init_query_by_dict(simple_query_dict, simple_query_sql):
     q = SqlQuery(simple_query_dict)
     assert len(q.sections) == 3
     container = q()
@@ -32,7 +32,7 @@ def test_init_with_query_dict(simple_query_dict, simple_query_sql):
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
-def test_init_with_query_dict_and_sql_cols_instance(simple_query_sql):
+def test_init_query_by_dict_and_sql_cols_instance(simple_query_sql):
     q = SqlQuery(
         {
             'select': SqlEnum('id', 'name').multiline(),
@@ -46,3 +46,55 @@ def test_init_with_query_dict_and_sql_cols_instance(simple_query_sql):
     assert len(q.sections) == 3
     container = q()
     assert str(container) == simple_query_sql
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+@pytest.mark.SqlSectionHeader
+def test_init_query_by_dict_and_sql_section_header_with_duplicates():
+    H = SqlSectionHeader
+    q = SqlQuery(
+        {
+            H('select'): True,
+            '': 'union all',
+            H('select'): True,
+        }
+    )
+    assert len(q.sections) == 3
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  TRUE',
+            'UNION ALL',
+            'SELECT',
+            '  TRUE',
+        )
+    )
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+@pytest.mark.SqlSectionHeader
+def test_init_query_by_dict_and_sql_section_header_with_duplicates_and_sql_vals():
+    H = SqlSectionHeader
+    hello = 'hello'
+    q = SqlQuery(
+        {
+            H('select'): SqlVals(hello).inline(),
+            '': 'union all',
+            H('select'): SqlVals(hello).inline(),
+        }
+    )
+    assert len(q.sections) == 3
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            f"  '{hello}'",
+            'UNION ALL',
+            'SELECT',
+            f"  '{hello}'",
+        )
+    )
