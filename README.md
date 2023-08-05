@@ -711,19 +711,19 @@ VALUES
 
 SqlEnum, SqlCols, SqlVals classes have list behavior (in release >= 1.1.4). You could set, get, iterate any of theses classes as list:
 ```python
-from sqlconstructor import SqlEnum
+from sqlconstructor import SqlVals
 
-sql_enum = SqlEnum('a', 'b')
+sql_vals = SqlVals('a', 'b')
 
-sql_enum[0] = 'f'
-f_char = sql_enum[0]
+sql_vals[0] = 'f'
+f_char = sql_vals[0]
 
-sql_enum.append('c')
-sql_enum.extend(['d', 'e'])
-sql_enum.pop()
+sql_vals.append('c')
+sql_vals.extend(['d', 'e'])
+sql_vals.pop()
 
-if 'd' in sql_enum:
-    sql_enum.remove('d')
+if 'd' in sql_vals:
+    sql_vals.remove('d')
 ```
 
 ### SqlVal, SqlCol
