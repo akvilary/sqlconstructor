@@ -94,7 +94,7 @@ But it has certain limitation:
 
 But it is possible: 
 - include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
-- create query query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
+- create query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
 ```python
 from sqlconstructor import SqlQuery, SqlVals, SqlSectionHeader
 
