@@ -23,7 +23,7 @@ class SqlSection(StringConvertible, ContainerConvertible):
             *statements provided in self.__call__ method.
     """
 
-    def __init__(self, header: str = ''):
+    def __init__(self, header: str | StringConvertible = ''):
         """Constract SqlSection instance.
         Params:
             - header: str - could be any string (empty is also possible).
