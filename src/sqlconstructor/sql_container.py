@@ -13,6 +13,7 @@ from .sql_val import SqlVal
 from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
 from .utils.wrap_text import get_wrapped
+from .utils.indent_text import indent_lines
 
 
 class SqlContainer(FilterOperatorManager, StringConvertible):
@@ -46,6 +47,8 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.wrapper_text: Optional[str | StringConvertible] = None
         self.is_multiline_wrap_type: bool = True
 
+        self.extra_indentation: int = 0
+
         self.vars: dict = {}
         if isinstance(text, SqlContainer):
             self.vars.update(text.vars)
@@ -61,7 +64,12 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
 
     def __str__(self) -> str:
         """Convert SqlContainer instance to str"""
-        return get_string_representation(self.text, self.wrapper_text, self.is_multiline_wrap_type)
+        return get_string_representation(
+            self.text,
+            self.wrapper_text,
+            self.is_multiline_wrap_type,
+            self.extra_indentation,
+        )
 
     def dumps(self) -> str:
         """Get SqlContainer as str and do replace placeholders by self.vars
@@ -78,7 +86,12 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
                     str(SqlVal(value)),
                     text,
                 )
-        return get_string_representation(text, self.wrapper_text, self.is_multiline_wrap_type)
+        return get_string_representation(
+            text,
+            self.wrapper_text,
+            self.is_multiline_wrap_type,
+            self.extra_indentation,
+        )
 
     def wrap(self, wrapper_text: str | StringConvertible = '', do_multiline: bool = None) -> Self:
         """
@@ -86,9 +99,9 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         Params:
             - wrapper_text: is text after wrapped parentheses.
             - do_multiline:
-                - if True then add parentheses in separate lines 
+                - if True then add parentheses in separate lines
                 and indent text body inside (but it do not split self.text in multi lines).
-                - if False then parentheses will be added without new lines and self.text will be 
+                - if False then parentheses will be added without new lines and self.text will be
                 not extra indented (but it do not convert self.text in one line).
 
         """
@@ -103,13 +116,23 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.is_multiline_wrap_type = True
         return self
 
+    def indent(self, num: int):
+        """Indent text"""
+        self.extra_indentation = num
+
 
 def get_string_representation(
     text: str,
     wrapper_text: Optional[str],
     is_wrap_multiline: bool = True,
+    extra_indentation: int = 0,
 ) -> str:
     """Get text or wrap text by wrapper and return as string"""
     if wrapper_text is not None:
-        return get_wrapped(text, wrapper_text or '', is_wrap_multiline)
+        return get_wrapped(
+            text,
+            wrapper_text or '',
+            is_wrap_multiline,
+            extra_indentation,
+        )
     return str(text)

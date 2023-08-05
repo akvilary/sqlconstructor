@@ -56,24 +56,36 @@ class SqlQuery:
             self.add(f"-- sql_id='{self.sql_id}'")
 
         if query:
+            ctes = SqlCte()
             for section, value in query.items():
                 if isinstance(value, (list, tuple)):
                     self[section](*value)
                 elif isinstance(value, dict):
                     nested = dict(value)
+
+                    is_cte = nested.pop('__is_cte__', None)
                     do_wrap = nested.pop('__do_wrap__', None)
                     wrapper_text = nested.pop('__wrapper_text__', None)
                     sql_id = nested.pop('__sql_id__', None)
+
                     kwargs = {}
                     if sql_id:
                         kwargs['sql_id'] = sql_id
                     container = SqlQuery(nested, **kwargs)()
                     if do_wrap or isinstance(wrapper_text, str):
                         container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
+
+                    if is_cte:
+                        ctes[section] = container
+                        continue
                     self[section](container)
                 else:
                     self[section](value)
 
+            if ctes:
+                self.add(ctes())
+                ctes_section = self.sections.pop()
+                self.sections.insert(0, ctes_section)
 
     def __bool__(self) -> bool:
         return bool(self.sections)
@@ -148,3 +160,73 @@ class SqlQuery:
         query_text = '\n'.join(str(x) for x in sections) if sections else ''
         query_text = indent_text.indent_lines(query_text, ind=ind)
         return query_text
+
+
+###################################################################################################
+# Because of circular dependency we need to pass SqlCte here
+###################################################################################################
+
+
+class SqlCte(dict):
+    """
+    SqlCte class is invented for better experience with filling cte queries.
+    It is possible to register cte and fill it after.
+    Or you could add filled query as cte instantly.
+    Now it is your choice!
+    """
+
+    def __init__(
+        self,
+        *args,
+        sql_id: Optional[str | uuid.UUID] = '',
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        self.sql_id = sql_id
+
+    def __call__(self, **kwargs) -> SqlContainer:
+        result = SqlQuery(sql_id=self.sql_id) if self.sql_id else SqlQuery()
+        ctes_size = len(self)
+        for counter, (cte_name, cte) in enumerate(self.items()):
+            if counter == 0:
+                sql_section_header = f'with {cte_name} as'
+                wrapper_text = ',' if ctes_size > (counter + 1) else ''
+                add_cte_section(result, cte, sql_section_header, wrapper_text)
+            else:
+                sql_section_header = f'{cte_name} as'
+                wrapper_text = '' if ctes_size == (counter + 1) else ','
+                add_cte_section(result, cte, sql_section_header, wrapper_text)
+        container = result()
+        if kwargs:
+            container(**kwargs)
+        return container
+
+    def reg(
+        self,
+        cte_name: str,
+        sql_query: Optional[SqlQuery] = None,
+        *,
+        sql_id: Optional[str | uuid.UUID] = '',  # works only if sql_query parameter is not provided
+    ) -> SqlQuery:
+        """Create new cte and return SqlQuery instance"""
+        kwargs = {}
+        if sql_id:
+            kwargs['sql_id'] = sql_id
+        query = sql_query if isinstance(sql_query, SqlQuery) else SqlQuery(**kwargs)
+        self[cte_name] = query
+        return query
+
+
+def add_cte_section(
+    query: SqlQuery,
+    cte: SqlQuery | SqlContainer,
+    sql_section_header: str,
+    wrapper_text: str,
+):
+    """Add cte as SqlSection in SqlQuery"""
+    if isinstance(cte, SqlQuery):
+        query[sql_section_header](cte(wrapper_text))
+    elif isinstance(cte, SqlContainer):
+        cte.is_multiline_wrap_type = True
+        cte.wrapper_text = wrapper_text
+        query[sql_section_header](cte)

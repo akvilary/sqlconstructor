@@ -13,16 +13,21 @@ def get_wrapped(
     text: str | StringConvertible,
     wrapper_text: str | StringConvertible = '',
     is_wrap_multiline: bool = True,
+    extra_indentation: int = 0,
 ) -> str:
     """Wrap and return as string"""
     text = str(text)
     wrapper_text = str(wrapper_text)
 
     return (
-        '('
+        ' ' * extra_indentation
+        + '('
         + ('\n' if is_wrap_multiline else '')
-        + indent_lines(str(text), ind=2 if is_wrap_multiline else 0)
+        + indent_lines(
+            str(text), ind=(2 + extra_indentation) if is_wrap_multiline else 0 + (extra_indentation)
+        )
         + ('\n' if is_wrap_multiline else '')
+        + ' ' * extra_indentation
         + ')'
         + (
             wrapper_text
