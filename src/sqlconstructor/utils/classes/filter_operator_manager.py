@@ -36,14 +36,17 @@ def gather_filters(
 ):  # return SqlContainer
     """Gather two filters by operator"""
     filters = []
+    united_vars = {}
+
     for _filter in (one, another):
+        if isinstance(_filter, s_c.SqlContainer):
+            united_vars.update(_filter.vars)
+
         filter_as_str = str(_filter)
         if filter_as_str:
             filters.append(filter_as_str)
     text = ('\n' + operator + '\n').join(filters)
 
     container = s_c.SqlContainer(text)
-    for _filter in (one, another):
-        if isinstance(_filter, s_c.SqlContainer):
-            container.vars.update(_filter.vars)
+    container.vars = united_vars
     return container

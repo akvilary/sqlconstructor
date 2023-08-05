@@ -499,8 +499,8 @@ def get_filters() -> List[str]:
 #### Build nested queries by passing nested dict to main dict in SqlQuery construction time
 
 If you pass nested dict in main query dict then it will be subquery. 
-If you add ('__do_wrap__': True) to nested dict then nested subquery will be wrapped by parenthesis.
-If you add ('__wrapper_text__': any string) to nested dict then nested subquery will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (__do_wrap__: True)).
+If you add ('\_\_do\_wrap\_\_': True) to nested dict then nested subquery will be wrapped by parenthesis.
+If you add ('\_\_wrapper\_text\_\_': any string) to nested dict then nested subquery will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (\_\_do\_wrap\_\_: True)).
 ```python
 from sqlconstructor import SqlQuery
 q = SqlQuery(
@@ -766,7 +766,7 @@ result is:
 ```
 
 ### ContainerConvertible
-You could convert each instance of classes below into SqlContainer and set sql variables in one step by __call__ method (in release >= 1.1.5):
+You could convert each instance of classes below into SqlContainer and set sql variables in one step by \_\_call\_\_ method (in release >= 1.1.5):
 SqlCol, SqlCols, SqlCte, SqlEnum, SqlFilter, SqlFilters, SqlPlaceholder, SqlSectionHeader, SqlVals.
 
 ### Debugging
