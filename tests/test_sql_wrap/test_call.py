@@ -7,7 +7,7 @@ from sqlconstructor import SqlContainer
 def test_call():
     sql_wrap = SqlWrap('a')
     container = sql_wrap(y=1, z=2)
-    assert type(container) is SqlContainer
+    assert isinstance(container, SqlContainer)
     assert str(container) == '\n'.join(
         (
             '(',
@@ -22,7 +22,7 @@ def test_call():
 def test_unwrap_after_call():
     sql_wrap = SqlWrap('a')
     container = sql_wrap()
-    assert type(container) is SqlContainer
+    assert isinstance(container, SqlContainer)
     assert str(container) == '\n'.join(
         (
             '(',

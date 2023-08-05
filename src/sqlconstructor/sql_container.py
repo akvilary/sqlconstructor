@@ -22,14 +22,13 @@ class SqlContainer(StringConvertible):
         1) self.text: str - body of SQL block as text;
         2) self.wrapper_text: str (if required by user) - this parameter treated as
             "wrap SQL body with parentheses and add wrapper_text after parentheses".
-            If you add wrapper_text (empty string is also possible)
-            then parentheses will automatically wrap main SQL text block,
-            and wrapper_text will be added after wrapped parentheses.
+            If you call 'wrap' method then parentheses will automatically wrap main SQL text block,
+            and wrapper_text will be added after wrapped parentheses (if you have provided it).
             If wrapper_text is empty string then you get text wrapped with only parentheses;
         3) self.vars: dict - variables for replacement
             which are useful if you have passed placeholders in SQL body
-            (placeholder starts with ! character and is continued by an word with no space,
-            !my_var for example) and want replace placeholders by variables.
+            (placeholder starts with $ character and is continued by an word with no space,
+            $my_var for example) and want replace placeholders by variables.
             You could:
                 - set variables by calling instance of SqlContainer with any keyword arguments
                 (which all will be added to self.vars)
@@ -39,12 +38,16 @@ class SqlContainer(StringConvertible):
 
     def __init__(
         self,
-        text: str,
+        text: str | StringConvertible,
     ):
         self.text: str = str(text)
-        self.wrapper_text: Optional[str] = None
-        self.__is_multiline_wrap: bool = True
+
+        self.wrapper_text: Optional[str | StringConvertible] = None
+        self.is_multiline_wrap: bool = True
+
         self.vars: dict = {}
+        if isinstance(text, SqlContainer):
+            self.vars.update(text.vars)
 
     def __bool__(self):
         """True if self.text is True"""
@@ -57,7 +60,7 @@ class SqlContainer(StringConvertible):
 
     def __str__(self) -> str:
         """Convert SqlContainer instance to str"""
-        return get_string_representation(self.text, self.wrapper_text, self.__is_multiline_wrap)
+        return get_string_representation(self.text, self.wrapper_text, self.is_multiline_wrap)
 
     def dumps(self) -> str:
         """Get SqlContainer as str and do replace placeholders by self.vars
@@ -74,12 +77,23 @@ class SqlContainer(StringConvertible):
                     str(SqlVal(value)),
                     text,
                 )
-        return get_string_representation(text, self.wrapper_text, self.__is_multiline_wrap)
+        return get_string_representation(text, self.wrapper_text, self.is_multiline_wrap)
 
-    def wrap(self, wrapper_text: str = '', multiline: bool = True) -> Self:
+    def inline(self) -> Self:
+        """Set inline option"""
+        self.is_multiline_wrap = False
+        return self
+
+    def multiline(self) -> Self:
+        """Set inline option"""
+        self.is_multiline_wrap = True
+        return self
+
+    def wrap(self, wrapper_text: str | StringConvertible = '', multiline: bool = None) -> Self:
         """Set wrapper and text after it (optional)"""
         self.wrapper_text = wrapper_text or ''
-        self.__is_multiline_wrap = multiline
+        if multiline is not None:
+            self.is_multiline_wrap = multiline
         return self
 
     def unwrap(self) -> Self:
