@@ -8,9 +8,9 @@ from typing import Optional
 from .helpers import indent_text, upper_sql_keywords
 from .constants import SECTIONS_WITH_COMMA_SEPARATOR, SQL_KEYWORDS
 from .sql_container import SqlContainer
-from .sql_transmitters.sql_enum import SqlEnum
-from .sql_transmitters.sql_cols import SqlCols
-from .sql_transmitters.sql_vals import SqlVals
+from .sql_enum import SqlEnum
+from .sql_cols import SqlCols
+from .sql_vals import SqlVals
 
 
 class SqlSection:

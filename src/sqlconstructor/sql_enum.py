@@ -7,7 +7,7 @@ __author__ = 'https://github.com/akvilary'
 
 from typing import Any
 
-from ..sql_container import SqlContainer
+from .sql_container import SqlContainer
 
 
 class SqlEnum(list):

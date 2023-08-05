@@ -8,6 +8,7 @@ __author__ = 'https://github.com/akvilary'
 import re
 from typing import Tuple
 
+
 def upper_keywords(text: str, keywords: Tuple[str]) -> str:
     """Upper certain keywords in string (case insensitive)"""
     for keyword in keywords:
