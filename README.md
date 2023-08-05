@@ -19,11 +19,11 @@ $ python3 -m pip install sqlconstructor
 ## How to use
 ### Build simple query
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 
 
 # create SqlQuery instance
-q = sc.SqlQuery()
+q = SqlQuery()
 # register as many SqlSection instances as you'd like
 q['select'](
     'id',
@@ -38,7 +38,7 @@ q['where'](
 )
 
 # build query into SqlContainer
-container: sc.SqlContainer = q()
+container: SqlContainer = q()
 # get sql as string
 sql_text: str = str(container)
 ```
@@ -72,7 +72,7 @@ WHERE
 
 ### It is also possible to create SqlQuery instance by dict
 ```python
-from sqlconstructor import SqlQuery, SqlCols
+from sqlconstructor import SqlQuery
 
 
 q = SqlQuery(
@@ -98,7 +98,7 @@ But it is possible:
 - create query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
 - insert nested subqueries (wrapped and with text after wrapper) as nested dict (in release >= 1.1.0). More on this later.
 
-Example of using SqlSectionHeader
+Example of using SqlSectionHeader:
 ```python
 from sqlconstructor import SqlQuery, SqlVal, SqlSectionHeader
 
@@ -115,7 +115,7 @@ q = SqlQuery(
         H('select'): "'hello'",
     }
 )
-container: sc.SqlContainer = q()
+container: SqlContainer = q()
 sql_text: str = str(container)
 ```
 Output of sql_text is:
@@ -132,10 +132,10 @@ SELECT
 
 ### Iterate through SqlSection instances and change text for ready SqlContainer
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery
 
 
-q = sc.SqlQuery()
+q = SqlQuery()
 q['select'](
     'id',
     'name',
@@ -159,11 +159,11 @@ for section in q:
 ### Append string to query
 It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery
 
 
 def main():
-    q = sc.SqlQuery()
+    q = SqlQuery()
     q += '-- some comment here'
 
     with open('./some_file.sql', encoding='utf-8') as file:
@@ -178,11 +178,11 @@ def main():
 
 ### Append SqlContainer to query
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 
 
 def main():
-    q = sc.SqlQuery()
+    q = SqlQuery()
     q['select'](
         'p.id',
         'p.name',
@@ -191,7 +191,7 @@ def main():
     ...
 
 
-def get_from_statement() -> sc.SqlContainer:
+def get_from_statement() -> SqlContainer:
     ...
 ```
 
@@ -199,14 +199,14 @@ def get_from_statement() -> sc.SqlContainer:
 You could add placeholder in query by adding **$variable_name** syntax.
 #### Set variable instantly
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 
 
 def get_product_query(
     product_quality: str, 
     brand_identifier: int,
-) -> sc.SqlContainer:
-    q = sc.SqlQuery()
+) -> SqlContainer:
+    q = SqlQuery()
     q['select'](
         'id',
         'name',
@@ -219,17 +219,17 @@ def get_product_query(
         'and brand_id = $brand_id'
     )(quality=product_quality, brand_id=brand_identifier)
     q['order by']('name DESC')
-    container: sc.SqlContainer = q()
+    container: SqlContainer = q()
     return container
 ```
 
 #### or later in SqlContainer
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 
 
 def main():
-    container: sc.SqlContainer = get_product_query()
+    container: SqlContainer = get_product_query()
     # set variables to existing container
     container(quality='Best', brand_id=1)
     # or
@@ -244,8 +244,8 @@ def main():
     container.vars.clear()
 
 
-def get_product_query() -> sc.SqlContainer:
-    q = sc.SqlQuery()
+def get_product_query() -> SqlContainer:
+    q = SqlQuery()
     q['select'](
         'id',
         'name',
@@ -257,13 +257,13 @@ def get_product_query() -> sc.SqlContainer:
         'quality = $quality',
         'and brand_id = $brand_id'
     )
-    container: sc.SqlContainer = q()
+    container: SqlContainer = q()
     return container
 ```
 
 ### You could cache SqlContainer and set/change variables later
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlContainer
 from functools import cache
 
 
@@ -271,60 +271,62 @@ def main():
     # you could set default values of variables inside of cached result
     # and reassign them later. 
     # Or do not set them in cached result at all and set them later. 
-    container: sc.SqlContainer = get_product_query()
+    container: SqlContainer = get_product_query()
     # set/reassign variables to existing container
     container(quality='Best', brand_id=1)
 
 
 @cache
-def get_product_query() -> sc.SqlContainer:
+def get_product_query() -> SqlContainer:
     ...
 ```
 
 ### Get sql where placeholders are replaced by variables
 Use **'dumps'** method of SqlContainer:
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlContainer
 from functools import cache
 
 
 def main():
-    container: sc.SqlContainer = get_product_query()
+    container: SqlContainer = get_product_query()
     container.vars.update({'quality': 'Best', 'brand_id': 1})
     # to replace placeholders by variables call 'dumps' method
     sql_text: str = container.dumps()
 
 
 @cache
-def get_product_query() -> sc.SqlContainer:
+def get_product_query() -> SqlContainer:
     ...
 ```
 If you would like to get sql without replacing placeholders then call **'\_\_str\_\_'** method of SqlContainer instead of 'dumps':
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlContainer
 from functools import cache
 
 
 def main():
-    container: sc.SqlContainer = get_product_query()
+    container: SqlContainer = get_product_query()
     container.vars.update({'quality': 'Best', 'brand_id': 1})
     # get sql without replacing placeholders by variables
     sql_text: str = str(container)
 
 
 @cache
-def get_product_query() -> sc.SqlContainer:
+def get_product_query() -> SqlContainer:
     ...
 ```
 
 ### Use filters
-You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)** (in release >= 1.1.0). 
+You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)** (in release >= 1.1.0).
+
 SqlFilter and SqlFilters insert value in query instantly if you use string as value in keyword argument or dict.
+
 If you you would like to insert value after building query then:
   - use SqlPlaceholder instance as value in filter keyword argument or dict.
   - or add placeholder by syntax in string as filter value (neither in dict nor in keyword argument, because they are converted to sql value)
 ```python
-from sqlconstructor import SqlQuery, SqlFilter
+from sqlconstructor import SqlQuery, SqlFilter, SqlContainer
 
 
 def get_product_query(
@@ -407,12 +409,12 @@ SqlFilters(
 You could make query as nested as you would like to.
 #### Build by adding sections
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 from typing import List
 
 
 def main():
-    q = sc.SqlQuery()
+    q = SqlQuery()
     q['select'](
         'p.id',
         'p.name',
@@ -430,8 +432,8 @@ def main():
     )(quality='Best', brand_id=1)
 
 
-def get_left_join_lateral() -> sc.SqlContainer:
-    j = sc.SqlQuery()
+def get_left_join_lateral() -> SqlContainer:
+    j = SqlQuery()
     j['select'](
         'e.id',
         'e.expiration_date as exp_date',
@@ -464,32 +466,33 @@ If you pass nested dict in main query dict then it will be subquery.
 If you add ('__do_wrap__': True) to nested dict then nested subquery will be wrapped by parenthesis.
 If you add ('__wrapper_text__': any string) to nested dict then nested subquery will be wrapped and wrapper_text will be added after parenthesis (even if you do not add (__do_wrap__: True)).
 ```python
-    q = SqlQuery(
-        {
+from sqlconstructor import SqlQuery
+q = SqlQuery(
+    {
+        'select': (
+            'p.id',
+            'p.name',
+            'exp.exp_date'
+        ),
+        'from': 'product as p',
+        'left join lateral': {
             'select': (
-                'p.id',
-                'p.name',
-                'exp.exp_date'
+                'e.id',
+                'e.expiration_date as exp_date',
             ),
-            'from': 'product as p',
-            'left join lateral': {
-                'select': (
-                    'e.id',
-                    'e.expiration_date as exp_date',
-                ),
-                'from': 'expiration as e',
-                'where': (
-                    'p.id = e.id',
-                    'AND e.expiration_date <= now()',
-                ),
-                '__wrapper_text__': 'as exp on true',
-            },
+            'from': 'expiration as e',
             'where': (
-                "quality = 'Best'",
-                'and brand_id = 1',
+                'p.id = e.id',
+                'AND e.expiration_date <= now()',
             ),
-        }
-    )
+            '__wrapper_text__': 'as exp on true',
+        },
+        'where': (
+            "quality = 'Best'",
+            'and brand_id = 1',
+        ),
+    }
+)
 ```
 
 ### Easy ways to handle ctes
@@ -497,16 +500,16 @@ If you add ('__wrapper_text__': any string) to nested dict then nested subquery 
 #### Create ctes
 1) Create cte and fill it later
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer, SqlCte
 
 
-def get_ctes() -> sc.SqlContainer:
+def get_ctes() -> SqlContainer:
     """
     Build ctes
     """
-    ctes = sc.SqlCte()
+    ctes = SqlCte()
     # regiter cte and fill it later
-    a: sc.SqlQuery = ctes.reg('warehouse_cte')
+    a: SqlQuery = ctes.reg('warehouse_cte')
     a['select'](
         'id',
         'quantity',
@@ -522,14 +525,14 @@ def get_ctes() -> sc.SqlContainer:
 
 2) Or create SqlQuery instance and set it
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer, SqlCte
 
 
-def get_ctes() -> sc.SqlContainer:
+def get_ctes() -> SqlContainer:
     """
     Build ctes
     """
-    ctes = sc.SqlCte()
+    ctes = SqlCte()
     ctes['warehouse_cte'] = get_warehouse_cte()
     # or
     # ctes.reg('warehouse_cte', get_warehouse_cte())
@@ -541,7 +544,7 @@ def get_ctes() -> sc.SqlContainer:
     return ctes()
 
 
-def get_warehouse_cte() -> sc.SqlQuery:
+def get_warehouse_cte() -> SqlQuery:
     a = sc.SqlQuery()
     a['select'](
         'id',
@@ -558,11 +561,11 @@ def get_warehouse_cte() -> sc.SqlQuery:
 #### Add ctes to query
 It is so easy!
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 
 
 def main():
-    q = sc.SqlQuery()
+    q = SqlQuery()
     q += get_ctes()
     q['select'](
         'id',
@@ -571,7 +574,7 @@ def main():
     ...
 
 
-def get_ctes() -> sc.SqlContainer:
+def get_ctes() -> SqlContainer:
     ...
 ```
 
@@ -697,11 +700,11 @@ q['where'](
 #### How to find piece of code by produced sql
 If you would like to find your piece of code in editor by ready sql which is produced by sqlconstructor then you have to mark SqlQuery instances by 'sql_id' parameter in advance (before you have produced ready sql):
 ```python
-import sqlconstructor as sc
+from sqlconstructor import SqlQuery, SqlContainer
 
 
 def main():
-    q = sc.SqlQuery()
+    q = SqlQuery()
     q += get_part_of_query()
     q['select'](
         'id',
@@ -710,13 +713,16 @@ def main():
     ...
 
 
-def get_part_of_query() -> sc.SqlContainer:
+def get_part_of_query() -> SqlContainer:
     p = sc.SqlQuery(sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b')
+    p['select']('quantity')
     ...
 ```
 It adds comment to produced sql as
 ```sql
 -- sql_id='25b11c69-ae05-4804-89ea-8ee405f6be8b'
+SELECT
+  quantity
 ...
 ```
 Now when you see sql_id in your logs then it will be easy to find that part of code in your editor!
