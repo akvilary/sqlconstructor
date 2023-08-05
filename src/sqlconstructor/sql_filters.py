@@ -18,25 +18,21 @@ class SqlFilters(StringConvertible):
     SqlFilters class is invented to build sql filters faster.
     """
 
-    def __init__(self, filters: Optional[dict] = None, mode: str = AND_MODE, **kwargs):
-        self.filters = (
-            dict(filters, **kwargs)
-            if filters and kwargs
-            else filters
-            if filters
-            else kwargs
-            if kwargs
-            else {}
-        )
+    def __init__(self, filters: Optional[dict] = None, mode: str = AND_MODE, /, **kwargs):
+        self.filters = {}
+        if filters:
+            self.filters.update(filters)
+        if kwargs:
+            self.filters.update(kwargs)
         self.mode = mode
 
     def __str__(self):
         converted = ''
         if self.filters:
             method = (
-                '__rand__'  # converted & current_filter
+                '__rand__'
                 if self.mode.upper() == AND_MODE
-                else '__ror__'  # converted | current_filter
+                else '__ror__'
                 if self.mode.upper() == OR_MODE
                 else None
             )

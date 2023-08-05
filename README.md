@@ -394,7 +394,7 @@ SqlFilters(
         'quality': product_quality, 
         'brand_id': brand_identifier,
     },
-    mode='AND',
+    'AND',
 )
 
 # OR mode
@@ -403,7 +403,23 @@ SqlFilters(
         'quality': product_quality, 
         'brand_id': brand_identifier,
     },
-    mode='OR',
+    'OR',
+)
+
+# Build filters by keyword arguments
+
+# AND as default
+SqlFilters(
+    quality=product_quality, 
+    brand_id=brand_identifier,
+)
+
+# OR
+SqlFilters(
+    None,
+    'OR',
+    quality=product_quality, 
+    brand_id=brand_identifier,
 )
 ```
 

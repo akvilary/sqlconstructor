@@ -31,10 +31,7 @@ def expected_result():
 
 @pytest.mark.SqlFilters
 def test_string_representation_empty_filters_default_mode():
-    dictionary = {1:1}
-    filters = SqlFilters(dictionary)
-    dictionary.popitem()
-    assert len(dictionary) == 0
+    filters = SqlFilters()
     assert str(filters) == ''
 
 
@@ -48,12 +45,24 @@ def test_string_representation_default_mode(dict_for_filters, expected_result):
 @pytest.mark.SqlFilters
 def test_string_representation_and_mode(dict_for_filters, expected_result):
     _uuid = dict_for_filters['identifier']
-    filters = SqlFilters(dict_for_filters, mode=AND_MODE)
+    filters = SqlFilters(dict_for_filters, AND_MODE)
     assert str(filters) == expected_result.format(mode=AND_MODE, uuid=_uuid)
 
 
 @pytest.mark.SqlFilters
 def test_string_representation_or_mode(dict_for_filters, expected_result):
     _uuid = dict_for_filters['identifier']
-    filters = SqlFilters(dict_for_filters, mode=OR_MODE)
+    filters = SqlFilters(dict_for_filters, OR_MODE)
     assert str(filters) == expected_result.format(mode=OR_MODE, uuid=_uuid)
+
+
+@pytest.mark.SqlFilters
+def test_filters_and_mode_as_keyword_arguments():
+    filters = SqlFilters(None, OR_MODE, filters='a', mode='b')
+    assert str(filters) == '\n'.join(
+        (
+            "filters='a'",
+            OR_MODE,
+            "mode='b'",
+        )
+    )
