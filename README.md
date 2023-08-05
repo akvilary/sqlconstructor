@@ -384,6 +384,7 @@ q['values'](
     Vals(
         1,
         'phone',
+        'Best',
         _uuid,
     )
 )
@@ -404,6 +405,7 @@ VALUES
   (
     1,
     'phone',
+    'Best',
     '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
@@ -429,6 +431,7 @@ q['values'](
     Vals(
         1,
         'phone',
+        'Best',
         _uuid,
     ).inline().wrap()
 )
@@ -443,7 +446,7 @@ INSERT INTO
   )
 VALUES
   (
-    1, 'phone', '82611533-25c4-4cbd-8497-3f5024ca29a1'
+    1, 'phone', 'Best', '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
 
