@@ -376,7 +376,7 @@ q['insert into'](
         'brand_id',
         'name',
         'quality',
-        'uuid',
+        'uuid_id',
     ),
 )
 q['values'](
@@ -397,7 +397,7 @@ INSERT INTO
     "brand_id",
     "name",
     "quality",
-    "uuid"
+    "uuid_id"
   )
 VALUES
   (
