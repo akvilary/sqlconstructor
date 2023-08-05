@@ -25,5 +25,4 @@ def test_del_certain_var_of_container():
 
     del container.vars['quality']
     assert len(container.vars) == 1
-    assert '$quality' in container.dumps()
-    assert '$brand_id' not in container.dumps()
+    assert 'quality = $quality AND brand_id = 1' == container.dumps()
