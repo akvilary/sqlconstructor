@@ -142,9 +142,11 @@ class SqlQuery:
     def __str__(self):
         return str(self())
 
-    def add(self, text: str | SqlContainer, rel_ind: int = 0):
+    def add(self, text: str | SqlContainer, ind: int = 0):
         """Add text as sql section"""
-        self[''](text, ind=DEFAULT_IND + rel_ind)
+        container = self[''](text)
+        if ind:
+            container.indent(ind)
 
     def __text(
         self,

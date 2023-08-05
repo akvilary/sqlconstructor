@@ -1,5 +1,5 @@
 import pytest
-from sqlconstructor import SqlQuery
+from sqlconstructor import SqlQuery, SqlContainer
 from fixtures.expected_examples import select_section_of_simple_query_sql
 
 
@@ -50,3 +50,43 @@ def test_inherit_vars_of_containers_in_add_method():
     query_container = q()
     assert query_container.vars == subquery_container.vars
     assert query_container.dumps() == "SELECT\n  1,\n  'phone'"
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_str_with_positive_indentation():
+    q = SqlQuery()
+    q.add('a', ind=2)
+    container = q()
+    assert str(container) == '  a'
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_str_with_negative_indentation():
+    q = SqlQuery()
+    q.add('  a', ind=-4)
+    container = q()
+    assert str(container) == 'a'
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_container_with_positive_indentation():
+    q = SqlQuery()
+    q.add(SqlContainer('a'), ind=2)
+    container = q()
+    assert str(container) == '  a'
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_container_with_negative_indentation():
+    q = SqlQuery()
+    q.add(SqlContainer('  a'), ind=-4)
+    container = q()
+    assert str(container) == 'a'
