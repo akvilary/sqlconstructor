@@ -79,11 +79,21 @@ class SqlContainer(StringConvertible):
                 )
         return get_string_representation(text, self.wrapper_text, self.is_multiline_wrap_type)
 
-    def wrap(self, wrapper_text: str | StringConvertible = '', multiline: bool = None) -> Self:
-        """Set wrapper and text after it (optional)"""
+    def wrap(self, wrapper_text: str | StringConvertible = '', do_multiline: bool = None) -> Self:
+        """
+        Set wrapper and text after it (optional).
+        Params:
+            - wrapper_text: is text after wrapped parentheses.
+            - do_multiline:
+                - if True then add parentheses in separate lines 
+                and indent text body inside (but it do not split self.text in multi lines).
+                - if False then parentheses will be added without new lines and self.text will be 
+                not extra indented (but it do not convert self.text in one line).
+
+        """
         self.wrapper_text = wrapper_text or ''
-        if multiline is not None:
-            self.is_multiline_wrap_type = multiline
+        if do_multiline is not None:
+            self.is_multiline_wrap_type = do_multiline
         return self
 
     def unwrap(self) -> Self:

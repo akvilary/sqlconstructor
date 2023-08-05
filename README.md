@@ -6,7 +6,7 @@ You could install from PyPi:
 ```console
 $ python3 -m pip install sqlconstructor
 ```
-## Little bit of theory
+## A little bit of theory
 1) Each sql building starts with SqlQuery - class instance that helps us to register into it as many SqlSection instances as we would like to.
 2) SqlSection - it is part of SqlQuery. It process data and store it to SqlContainer (which located as SqlSection instance attribute).
 3) SqlContainer holds result of processed data. SqlContainer contains sql text (as string), optional wrapper (usually required for nested subqueries), and optional variables (to be replaced with placeholders).
