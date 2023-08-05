@@ -5,7 +5,7 @@ Module for wrapping helpers
 
 __author__ = 'https://github.com/akvilary'
 
-from .indent_text import indent_lines
+from . import indent_text
 
 
 def get_text_wrapped(text: str, wrapper_text: str) -> str:
@@ -18,7 +18,7 @@ def get_text_wrapped(text: str, wrapper_text: str) -> str:
     return (
         '('
         + '\n'
-        + indent_lines(text, ind=2)
+        + indent_text.indent_lines(text, ind=2)
         + '\n'
         + ')'
         + (
