@@ -1,6 +1,5 @@
 import pytest
-from sqlconstructor import SqlQuery, SqlSection, SqlContainer, SqlFilter, SqlPlaceholder
-from sqlconstructor.constants import AND_MODE
+from sqlconstructor import SqlQuery, SqlContainer, SqlFilter, SqlPlaceholder, AND
 
 
 @pytest.mark.SqlQuery
@@ -38,11 +37,11 @@ def test_build_query_with_filters_and_placeholders():
             '  product',
             'WHERE',
             "  quality='Best'",
-            '  ' + AND_MODE,
+            '  ' + AND,
             '  id <> $id',
-            '  ' + AND_MODE,
+            '  ' + AND,
             '  brand_id=$brand_id',
-            '  ' + AND_MODE,
+            '  ' + AND,
             '  quantity > 0',
         )
     )

@@ -1,7 +1,5 @@
 import pytest
-from sqlconstructor import SqlFilters
-from sqlconstructor import SqlContainer
-from sqlconstructor.constants import AND_MODE
+from sqlconstructor import SqlFilters, SqlContainer, AND
 
 
 @pytest.mark.SqlFilters
@@ -12,7 +10,7 @@ def test_call():
     assert str(container) == '\n'.join(
         (
             'a=3',
-            AND_MODE,
+            AND,
             'b=4',
         )
     )

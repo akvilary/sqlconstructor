@@ -1,6 +1,5 @@
 import pytest
-from sqlconstructor import SqlWrap, SqlFilter, SqlPlaceholder, SqlContainer
-from sqlconstructor.constants import AND_MODE, OR_MODE
+from sqlconstructor import SqlWrap, SqlFilter, SqlPlaceholder, SqlContainer, AND, OR
 
 
 @pytest.mark.SqlWrap
@@ -37,7 +36,7 @@ def test_wrap_filters():
         (
             '(',
             '  a=1',
-            '  ' + AND_MODE,
+            '  ' + AND,
             '  b=2',
             ')',
         )
@@ -70,14 +69,14 @@ def test_wrap_and_filters():
     assert str(filters) == '\n'.join(
         (
             'id <> $identifier',
-            AND_MODE,
+            AND,
             'brand_id=$brand_id',
-            AND_MODE,
+            AND,
             'quantity > 0',
-            AND_MODE,
+            AND,
             '(',
             "  quality='Best'",
-            '  ' + OR_MODE,
+            '  ' + OR,
             "  rating='high'",
             ')',
         )

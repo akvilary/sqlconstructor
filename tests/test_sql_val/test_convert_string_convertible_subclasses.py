@@ -9,8 +9,8 @@ from sqlconstructor import (
     SqlFilters,
     SqlPlaceholder,
     SqlSectionHeader,
+    AND
 )
-from sqlconstructor.constants import AND_MODE
 
 
 @pytest.mark.SqlVal
@@ -118,7 +118,7 @@ def test_convert_sql_filters():
     assert str(SqlVal(SqlFilters({'product_name': 'tv', 'quality': 'Best'}))) == '\n'.join(
         (
             "product_name='tv'",
-            AND_MODE,
+            AND,
             "quality='Best'",
         )
     )
@@ -133,7 +133,7 @@ def test_convert_sql_filters_in_dict_value():
         + '\\n'.join(
             (
                 "\"product_name='tv'",
-                AND_MODE,
+                AND,
                 "quality='Best'\"",
             )
         )

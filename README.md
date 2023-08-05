@@ -492,7 +492,7 @@ for key, value in filters.items():
 
 You could use SqlFilters if all filters require same operator
 ```python
-from sqlconstructor import SqlFilters
+from sqlconstructor import SqlFilters, AND, OR
 
 # AND mode is default
 SqlFilters(
@@ -508,7 +508,7 @@ SqlFilters(
         'quality': product_quality, 
         'brand_id': brand_identifier,
     },
-    'AND',
+    AND,
 )
 
 # OR mode
@@ -517,7 +517,7 @@ SqlFilters(
         'quality': product_quality, 
         'brand_id': brand_identifier,
     },
-    'OR',
+    OR,
 )
 
 # Build filters by keyword arguments
@@ -531,7 +531,7 @@ SqlFilters(
 # OR
 SqlFilters(
     None,
-    'OR',
+    OR,
     quality=product_quality, 
     brand_id=brand_identifier,
 )

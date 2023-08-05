@@ -1,6 +1,5 @@
 import pytest
-from sqlconstructor import SqlFilter
-from sqlconstructor.constants import AND_MODE
+from sqlconstructor import SqlFilter, AND
 
 
 @pytest.mark.SqlFilter
@@ -10,7 +9,7 @@ def test_and_two_filters():
     assert str(first_filter & second_filter) == '\n'.join(
         (
             'a=1',
-            AND_MODE,
+            AND,
             'b=2',
         )
     )
@@ -23,9 +22,9 @@ def test_and_three_filters():
     assert str(first_filter & second_filter & third_filter) == '\n'.join(
         (
             'a=1',
-            AND_MODE,
+            AND,
             'b=2',
-            AND_MODE,
+            AND,
             'c=3',
         )
     )

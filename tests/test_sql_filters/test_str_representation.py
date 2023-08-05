@@ -1,7 +1,6 @@
 import pytest
 import uuid
-from sqlconstructor import SqlFilters
-from sqlconstructor.constants import AND_MODE, OR_MODE
+from sqlconstructor import SqlFilters, AND, OR
 
 
 @pytest.fixture
@@ -39,30 +38,30 @@ def test_string_representation_empty_filters_default_mode():
 def test_string_representation_default_mode(dict_for_filters, expected_result):
     _uuid = dict_for_filters['identifier']
     filters = SqlFilters(dict_for_filters)
-    assert str(filters) == expected_result.format(mode=AND_MODE, uuid=_uuid)
+    assert str(filters) == expected_result.format(mode=AND, uuid=_uuid)
 
 
 @pytest.mark.SqlFilters
 def test_string_representation_and_mode(dict_for_filters, expected_result):
     _uuid = dict_for_filters['identifier']
-    filters = SqlFilters(dict_for_filters, AND_MODE)
-    assert str(filters) == expected_result.format(mode=AND_MODE, uuid=_uuid)
+    filters = SqlFilters(dict_for_filters, AND)
+    assert str(filters) == expected_result.format(mode=AND, uuid=_uuid)
 
 
 @pytest.mark.SqlFilters
 def test_string_representation_or_mode(dict_for_filters, expected_result):
     _uuid = dict_for_filters['identifier']
-    filters = SqlFilters(dict_for_filters, OR_MODE)
-    assert str(filters) == expected_result.format(mode=OR_MODE, uuid=_uuid)
+    filters = SqlFilters(dict_for_filters, OR)
+    assert str(filters) == expected_result.format(mode=OR, uuid=_uuid)
 
 
 @pytest.mark.SqlFilters
 def test_filters_and_mode_as_keyword_arguments():
-    filters = SqlFilters(None, OR_MODE, filters='a', mode='b')
+    filters = SqlFilters(None, OR, filters='a', mode='b')
     assert str(filters) == '\n'.join(
         (
             "filters='a'",
-            OR_MODE,
+            OR,
             "mode='b'",
         )
     )

@@ -1,6 +1,6 @@
 import pytest
 from sqlconstructor import SqlFilter
-from sqlconstructor.constants import OR_MODE
+from sqlconstructor.constants import OR
 
 
 @pytest.mark.SqlFilter
@@ -10,7 +10,7 @@ def test_or_two_filters():
     assert str(first_filter | second_filter) == '\n'.join(
         (
             'a=1',
-            OR_MODE,
+            OR,
             'b=2',
         )
     )
@@ -23,9 +23,9 @@ def test_or_three_filters():
     assert str(first_filter | second_filter | third_filter) == '\n'.join(
         (
             'a=1',
-            OR_MODE,
+            OR,
             'b=2',
-            OR_MODE,
+            OR,
             'c=3',
         )
     )

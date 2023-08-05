@@ -9,8 +9,8 @@ DEFAULT_IND = 2
 DIALECT = 'PostgreSQL'
 
 # for filters
-AND_MODE = 'AND'
-OR_MODE = 'OR'
+AND = 'AND'
+OR = 'OR'
 
 # if you want statements be separated by comma by default then add section keyword here
 SECTIONS_WITH_COMMA_SEPARATOR = (

@@ -1,6 +1,5 @@
 import pytest
-from sqlconstructor import SqlFilters
-from sqlconstructor.constants import AND_MODE
+from sqlconstructor import SqlFilters, AND
 
 
 @pytest.mark.SqlFilters
@@ -8,7 +7,7 @@ def test_add():
     assert str(SqlFilters({'a': 1, 'b': 2}) + 'c') == '\n'.join(
         (
             'a=1',
-            AND_MODE,
+            AND,
             'b=2c',
         )
     )
@@ -19,7 +18,7 @@ def test_radd():
     assert str('c' + SqlFilters({'a': 1, 'b': 2})) == '\n'.join(
         (
             'ca=1',
-            AND_MODE,
+            AND,
             'b=2',
         )
     )
