@@ -98,7 +98,7 @@ class SqlQuery:
             - ind : int - you could set additional indentation for each line of query text.
             But it is rarely used because nested subelements automatically add 2 space indentation.
         """
-        params = {'text': self.text(ind=ind)}
+        params = {'text': self.__text(ind=ind)}
         if wrap is not None:
             params['wrapper_text'] = wrap
         container = SqlContainer(**params)
@@ -125,13 +125,12 @@ class SqlQuery:
         """Add text as sql section"""
         self[''](text)
 
-    def text(
+    def __text(
         self,
         ind: int = 0,  # indentation
     ) -> str:
         """
-        Usually called automatically when you use __call__ method.
-        Rarely called directly.
+        Used in __call__ method.
         Description:
             - Build SQL text by SQL sections and return string (not SqlContainer!).
         Params:

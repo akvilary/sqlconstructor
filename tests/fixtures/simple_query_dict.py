@@ -11,7 +11,7 @@ def simple_query_dict():
         'from': 'product',
         'where': (
             "quality = 'Best'",
-            'AND brand_id = 1',
+            'and brand_id = 1',
         ),
     }
 
