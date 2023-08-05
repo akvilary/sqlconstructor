@@ -24,3 +24,23 @@ def simple_query_sql():
 @pytest.fixture
 def select_section_of_simple_query_sql():
     return read_file_without_newline_at_the_end('select_section_of_simple_query.sql')
+
+
+@pytest.fixture
+def insert_into_inline_using_cols_sql():
+    return read_file_without_newline_at_the_end('insert_into_inline_using_cols.sql')
+
+
+@pytest.fixture
+def insert_into_multiline_using_cols_sql():
+    return read_file_without_newline_at_the_end('insert_into_multiline_using_cols.sql')
+
+
+@pytest.fixture
+def insert_into_inline_using_sqlenum_sql():
+    return read_file_without_newline_at_the_end('insert_into_inline_using_sqlenum.sql')
+
+
+@pytest.fixture
+def insert_into_multiline_using_sqlenum_sql():
+    return read_file_without_newline_at_the_end('insert_into_multiline_using_sqlenum.sql')

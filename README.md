@@ -407,7 +407,7 @@ VALUES
     '82611533-25c4-4cbd-8497-3f5024ca29a1'
   )
 ```
-If you would like to do not add double quotes to columne then you could use SqlEnum class. Any of this class(SqlEnum, Vals, Cols) has inline and multiline method (return SqlContainer which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.24.
+If you would like to do not add double quotes to columns then you could use SqlEnum class. Any of this class(SqlEnum, Vals, Cols) has inline and multiline method (return SqlContainer which you could wrap by 'wrap' method or do not wrap) in release >= 1.0.24.
 Example:
 ```python
 import uuid
