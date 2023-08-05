@@ -4,6 +4,7 @@ from sqlconstructor import (
     SqlVal,
     SqlCol,
     SqlCols,
+    SqlEnum,
     SqlFilter,
     SqlFilters,
     SqlPlaceholder,
@@ -40,6 +41,18 @@ def test_convert_sql_col_in_dict_value():
 @pytest.mark.SqlCols
 def test_convert_sql_cols():
     assert str(SqlVal(SqlCols('product', 'quantity'))) == '"product", "quantity"'
+
+
+@pytest.mark.SqlVal
+@pytest.mark.SqlEnum
+def test_convert_sql_enum():
+    assert str(SqlVal(SqlEnum('product', 'quantity'))) == 'product, quantity'
+
+
+@pytest.mark.SqlVal
+@pytest.mark.SqlEnum
+def test_convert_sql_enum_in_dict_value():
+    assert str(SqlVal({'a': SqlEnum('product', 'quantity')})) == '{"a": ["product", "quantity"]}'
 
 
 @pytest.mark.SqlVal
