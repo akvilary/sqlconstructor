@@ -90,7 +90,7 @@ q['where'](
 )
 
 for section in q:
-    # add empty line for "from statement"
+    # add empty line for "from" statement
     if section.header == 'from':
         # change container's text in place 
         section.container.text += '\n'
