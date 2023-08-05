@@ -5,6 +5,8 @@ Module of SqlFilter class.
 
 __author__ = 'https://github.com/akvilary'
 
+from typing import Self
+
 from .sql_container import SqlContainer
 from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
@@ -30,3 +32,13 @@ class SqlWrap(
         """
         SqlContainer.__init__(self, text)
         self.wrap(wrapper_text)
+
+    def inline(self) -> Self:
+        """Set inline option"""
+        self.is_multiline_wrap_type = False
+        return self
+
+    def multiline(self) -> Self:
+        """Set inline option"""
+        self.is_multiline_wrap_type = True
+        return self
