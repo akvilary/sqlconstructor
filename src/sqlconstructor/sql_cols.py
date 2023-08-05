@@ -18,7 +18,6 @@ class SqlCols(SqlEnum, StringConvertible, SpecialJsonConvertible):
     """
     SqlCols class is invented for better experience to enumerate as sql columns.
     """
-
     def __str__(self) -> str:
         """Convert SqlCols instance to str"""
         return str(self.multiline().wrap())

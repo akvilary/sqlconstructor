@@ -21,7 +21,7 @@ class SqlEncoder(json.JSONEncoder):
 
     def default(self, o):
         if isinstance(o, SpecialJsonConvertible):
-            return json.dumps(o.__json_array__())
+            return o.__json_array__()
         if isinstance(
             o,
             (

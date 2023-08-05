@@ -1,4 +1,5 @@
 import pytest
+import json
 from sqlconstructor import (
     SqlContainer,
     SqlVal,
@@ -46,14 +47,16 @@ def test_convert_sql_cols():
 @pytest.mark.SqlVal
 @pytest.mark.SqlContainer
 def test_convert_sql_cols_in_dict_value():
-    import json
     cols = SqlCols('product', 'quantity')
     assert cols.__json_array__() == ['"product"', '"quantity"']
     assert json.dumps(cols.__json_array__()) == '["\\"product\\"", "\\"quantity\\""]'
+
+    expected_result = '{"a": ["\\"product\\"", "\\"quantity\\""]}'
     assert (
         str(SqlVal({'a': cols}))
-        == '{"a": ["\\"product\\"", "\\"quantity\\""]}'
+        == expected_result
     )
+    assert json.loads(expected_result) == {'a': ['"product"', '"quantity"']}
 
 
 @pytest.mark.SqlVal

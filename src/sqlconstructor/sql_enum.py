@@ -5,22 +5,19 @@ Module of SqlEnum class.
 
 __author__ = 'https://github.com/akvilary'
 
-from typing import Any
-
 from .sql_container import SqlContainer
 from .abstracts.string_convertible import StringConvertible
 from .abstracts.special_json_convertible import SpecialJsonConvertible
+from .helpers.proxy_list_class import ProxyList
 
 
-class SqlEnum(list, StringConvertible, SpecialJsonConvertible):
+class SqlEnum(ProxyList, StringConvertible, SpecialJsonConvertible):
     """
     SqlEnum class is invented for better experience to enumerate.
     """
-    def __init__(
-        self,
-        *statements: Any,
-    ):
-        super().__init__(statements)
+
+    def copy(self, /):
+        return SqlEnum(self.list)
 
     def __str__(self) -> str:
         return str(self.multiline().wrap())
