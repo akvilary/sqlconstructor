@@ -78,7 +78,7 @@ class SqlContainer(StringConvertible):
 
     def wrap(self, wrapper_text: str = '', multiline: bool = True) -> Self:
         """Set wrapper and text after it (optional)"""
-        self.wrapper_text = wrapper_text or self.wrapper_text or ''
+        self.wrapper_text = wrapper_text or ''
         self.__is_multiline_wrap = multiline
         return self
 

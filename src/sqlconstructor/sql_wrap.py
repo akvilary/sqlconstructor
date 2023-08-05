@@ -37,10 +37,7 @@ class SqlWrap(
 
     def __call__(self, **kwargs):
         container = self.multiline()
-        # add vars to container
-        if kwargs:
-            container(**kwargs)
-        return container
+        return ContainerConvertible.__call__(self, container, **kwargs)
 
     def inline(self) -> SqlContainer:
         """Get container of wrapped sql text in inline"""
