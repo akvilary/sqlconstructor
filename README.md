@@ -156,6 +156,31 @@ for section in q:
 ...    
 ```
 
+### Get sliced query
+It is possible to slice query (in release >= 1.2.10). When you slice you get new SqlQuery instance. 
+But it is not deep copied (you get new query but with same SqlSection instance elements).
+```python
+from sqlconstructor import SqlQuery
+
+
+q = SqlQuery()
+q['select'](
+    'id',
+    'name',
+)
+q['from'](
+    'product'
+)
+q['where'](
+    "quality = 'Best'",
+    'and brand_id = 1',
+)
+
+# get only SELECT and FROM statements
+new_query = q[:-1]
+...    
+```
+
 ### Append string to query
 It is possible to append string or any SqlContainer to query as new SqlSection without header in this way:
 ```python

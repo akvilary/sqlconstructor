@@ -6,9 +6,8 @@ Module of SqlQuery class.
 __author__ = 'https://github.com/akvilary'
 
 import uuid
-from typing import List, Optional, Type
+from typing import List, Optional, Type, Self
 
-from .constants import DEFAULT_IND
 from .utils import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
@@ -94,16 +93,21 @@ class SqlQuery:
     def __len__(self) -> int:
         return len(self.sections)
 
-    def __getitem__(self, section_name: str) -> SqlSection:
+    def __getitem__(self, section_name: str | slice) -> SqlSection | Self:
         """Add SQL section by name of.
         Params:
             - section: str - section name. The name will be header in SqlSection instance.
             Name is not required to be unique.
             You could add as many SQL sections with same header as you like.
         """
-        section = SqlSection(section_name)
-        self.sections.append(section)
-        return section
+        if isinstance(section_name, str):
+            section = SqlSection(section_name)
+            self.sections.append(section)
+            return section
+        if isinstance(section_name, slice):
+            query = SqlQuery()
+            query.sections = self.sections[section_name]
+            return query
 
     def __call__(
         self,
