@@ -326,7 +326,7 @@ If you you would like to insert value after building query then:
   - use SqlPlaceholder instance as value in filter keyword argument or dict.
   - or add placeholder by syntax in string as filter value (neither in dict nor in keyword argument, because they are converted to sql value)
 ```python
-from sqlconstructor import SqlQuery, SqlFilter, SqlContainer
+from sqlconstructor import SqlQuery, SqlFilter, SqlContainer, SqlWrap
 
 
 def get_product_query() -> SqlContainer:
@@ -700,9 +700,7 @@ q['where'](
 It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1).
 ```python
 from sqlconstructor import SqlFilter, SqlWrap
-first_filter = SqlFilter(a=1)
-second_filter = SqlFilter(b=2)
-result = str(SqlWrap(first_filter & second_filter))
+result = str(SqlWrap(SqlFilter(a=1) & SqlFilter(b=2)))
 ```
 result is:
 ```sql
