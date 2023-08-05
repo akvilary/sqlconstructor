@@ -698,6 +698,20 @@ q['where'](
 
 ### SqlWrap
 It is possible wrap any str or string convertible by SqlWrap (in release >= 1.1.1).
+```python
+from sqlconstructor import SqlFilter, SqlWrap
+first_filter = SqlFilter(a=1)
+second_filter = SqlFilter(b=2)
+result = str(SqlWrap(first_filter & second_filter))
+```
+result is:
+```sql
+(
+  a=1
+  AND
+  b=2
+)
+```
 
 ### Debugging
 
