@@ -691,13 +691,13 @@ q['from'](
     'product'
 )
 q['where'](
-    f"quality = {SqlVal('Best')}",
+    'quality = ' + SqlVal('Best'),
     f"and brand_id = {SqlVal(1)}",
 )
 ```
 
 ### SqlWrap
-It is possible wrap any str or string convertible by SqlWrap (in release >= 1.1.1).
+It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1).
 ```python
 from sqlconstructor import SqlFilter, SqlWrap
 first_filter = SqlFilter(a=1)
