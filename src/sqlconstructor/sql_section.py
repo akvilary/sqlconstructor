@@ -36,6 +36,9 @@ class SqlSection:
         """True if self.container is True"""
         return bool(self.container)
 
+    def __str__(self) -> str:
+        return str(self.container) if self.container else ''
+
     def __call__(
         self,
         *statements: Any,  # any objects with __str__ method

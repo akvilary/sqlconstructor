@@ -156,9 +156,11 @@ for section in q:
 ...    
 ```
 
-### Get sliced query
+### Get part of query
 It is possible to slice query (in release >= 1.2.10). When you slice you get new SqlQuery instance. 
 But it is not deep copied (you get new query but with same SqlSection instance elements).
+
+It is possible to get certain SqlSection instance by getitem with integer argument (in release >= 1.2.11).
 ```python
 from sqlconstructor import SqlQuery
 
@@ -178,6 +180,8 @@ q['where'](
 
 # get only SELECT and FROM statements
 new_query = q[:-1]
+# get first SqlSection
+select = q[0]
 ...    
 ```
 
