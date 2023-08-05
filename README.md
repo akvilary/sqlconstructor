@@ -42,8 +42,9 @@ sql_text: str = str(container)
 ### Output
 SqlSection automatically transform all sql keywords in uppercase.
 It does not upper in following cases:
-1) if sql keyword is located in inline/multiline comment.
-2) if sql keyword is located inside single/double quotes.
+- if sql keyword is located in inline/multiline comment.
+- if sql keyword is located inside single/double quotes.
+
 Output of sql_text is
 ```sql
 SELECT
@@ -83,7 +84,7 @@ def get_product_query(
     q['where'](
         'quality = $quality',
         'and brand_id = $brand_id'
-    )(qulaity=product_quality, brand_id=brand_identifier)
+    )(quality=product_quality, brand_id=brand_identifier)
     q['order by']('name DESC')
     container: sc.SqlContainer = q()
     return container
@@ -134,8 +135,11 @@ from functools import cache
 
 
 def main():
+    # you could set default values of variables inside of cached result
+    # and reset it later. 
+    # Or do not set them in cached result at all and set them later. 
     container: sc.SqlContainer = get_product_query()
-    # set variables to existing container
+    # set/reset variables to existing container
     container(quality='Best', brand_id=1)
 
 
@@ -200,7 +204,7 @@ def main():
     )
     q['where'](
       'p.quality = $quality',
-      'and brand_id = $brand_id'
+      'and p.brand_id = $brand_id'
     )(quality='Best', brand_id=1)
 
 
