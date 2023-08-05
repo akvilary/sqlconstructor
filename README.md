@@ -71,6 +71,31 @@ WHERE
 2) We register (i.e. append) SqlSection by \_\_getitem\_\_ method of SqlQuery. It is possible to add sections with duplicate header. Header can be any string! SqlSection instances will be written in query in order you set them.
 3) When we call \_\_call\_\_ method of SqlSection we build SqlContainer of SqlSection (combining sql header with values passed by arguments).
 
+### Iterate through SqlSection instances and change text for ready SqlContainer
+```python
+import sqlconstructor as sc
+
+
+q = sc.SqlQuery()
+q['select'](
+    'id',
+    'name',
+)
+q['from'](
+    'product'
+)
+q['where'](
+    "quality = 'Best'",
+    'and brand_id = 1',
+)
+
+for section in q:
+    # add empty line for "from statement"
+    if section.header == 'from':
+        # change container's text in place 
+        section.container.text += '\n'
+...    
+```
 
 ### Build query with placeholders to be replaced by variables later
 You could add placeholder in query by adding **$variable_name** syntax.
@@ -213,8 +238,8 @@ def main():
         get_left_join_lateral(),
     )
     q['where'](
-      'p.quality = $quality',
-      'and p.brand_id = $brand_id'
+        'p.quality = $quality',
+        'and p.brand_id = $brand_id'
     )(quality='Best', brand_id=1)
 
 
