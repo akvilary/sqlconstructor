@@ -34,4 +34,4 @@ class SqlCols(SqlEnum):
 
 def get_columns(iterable: Iterable):
     """Get columns iterator"""
-    return ('"' + x + '"' for x in iterable)
+    return ('"' + str(x) + '"' for x in iterable)
