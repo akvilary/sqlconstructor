@@ -10,11 +10,12 @@ from typing import Optional, Self
 import re
 
 from .sql_val import SqlVal
+from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
 from .utils.wrap_text import get_wrapped
 
 
-class SqlContainer(StringConvertible):
+class SqlContainer(FilterOperatorManager, StringConvertible):
     """SqlContainer is invented to store prepared SQL text and is an end result of
     any SQL constracting manipulations (it is a product of SqlSection and SqlQuery instances).
 

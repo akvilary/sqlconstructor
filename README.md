@@ -319,6 +319,7 @@ def get_product_query() -> SqlContainer:
 
 ### Use filters
 You could use & or | operator **between filters** or **betweem filter and str (or object with __str__ method)** (in release >= 1.1.0).
+Result of & or | operator is SqlContainer and SqlContainer (and SqlWrap) also can operate & and | (in release >= 1.2.0)
 
 SqlFilter and SqlFilters insert value in query instantly if you use string as value in keyword argument or dict.
 
@@ -700,13 +701,9 @@ sql_text output will be
 ```sql
 INSERT INTO
   product
-  (
-    brand_id, name, quality, uuid_id
-  )
+  (brand_id, name, quality, uuid_id)
 VALUES
-  (
-    1, 'phone', 'Best', '82611533-25c4-4cbd-8497-3f5024ca29a1'
-  )
+  (1, 'phone', 'Best', '82611533-25c4-4cbd-8497-3f5024ca29a1')
 ```
 
 SqlEnum, SqlCols, SqlVals classes have list behavior (in release >= 1.1.4). You could set, get, iterate any of theses classes as list:

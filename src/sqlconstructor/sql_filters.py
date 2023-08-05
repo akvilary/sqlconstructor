@@ -44,4 +44,4 @@ class SqlFilters(FilterOperatorManager, StringConvertible, ContainerConvertible,
                 for key, value in self.items():
                     current_filter = SqlFilter({key: value})
                     converted = getattr(current_filter, method)(converted)
-        return converted
+        return str(converted)

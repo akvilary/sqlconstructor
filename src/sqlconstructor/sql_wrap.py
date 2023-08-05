@@ -8,13 +8,11 @@ __author__ = 'https://github.com/akvilary'
 from typing import Self
 
 from .sql_container import SqlContainer
-from .utils.classes.filter_operator_manager import FilterOperatorManager
 from .utils.classes.string_convertible import StringConvertible
 
 
 class SqlWrap(
     SqlContainer,
-    FilterOperatorManager,
     StringConvertible,
 ):
     """The class is invented to do wrapping of sql text more easier"""

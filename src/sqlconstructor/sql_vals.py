@@ -29,7 +29,9 @@ class SqlVals(SqlEnum, StringConvertible, SpecialConvertionRequier, ContainerCon
 
     def inline(self) -> SqlContainer:
         """Get inline representation"""
-        return SqlContainer(', '.join(get_values(self)))
+        container = SqlContainer(', '.join(get_values(self)))
+        container.is_multiline_wrap_type = False
+        return container
 
     def multiline(self) -> SqlContainer:
         """Get multiline representation"""

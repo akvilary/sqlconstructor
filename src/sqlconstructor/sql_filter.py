@@ -24,17 +24,15 @@ class SqlFilter(FilterOperatorManager, StringConvertible, ContainerConvertible):
         /,
         **kwargs,
     ):
-        key, value = (
+        self.key, self.value = (
             param.popitem()  # take only last one
             if param and isinstance(param, dict)
             else (None, param)
             if param
             else kwargs.popitem()
         )
-        if key:
-            self.converted = str(key) + '=' + str(SqlVal(value))
-        else:
-            self.converted = str(value)
 
     def __str__(self):
-        return self.converted
+        if self.key:
+            return str(self.key) + '=' + str(SqlVal(self.value))
+        return str(self.value)

@@ -11,7 +11,7 @@ def get_three_filters():
 @pytest.mark.SqlFilter
 def test_three_filters_or_and(get_three_filters):
     first_filter, second_filter, third_filter = get_three_filters
-    assert (first_filter | second_filter & third_filter) == '\n'.join(
+    assert str(first_filter | second_filter & third_filter) == '\n'.join(
         (
             'a=1',
             OR_MODE,
@@ -25,7 +25,7 @@ def test_three_filters_or_and(get_three_filters):
 @pytest.mark.SqlFilter
 def test_three_filters_and_or(get_three_filters):
     first_filter, second_filter, third_filter = get_three_filters
-    assert (first_filter & second_filter | third_filter) == '\n'.join(
+    assert str(first_filter & second_filter | third_filter) == '\n'.join(
         (
             'a=1',
             AND_MODE,

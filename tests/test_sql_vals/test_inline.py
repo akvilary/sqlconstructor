@@ -38,7 +38,7 @@ def test_inline_wrap_one_element():
                 1,
             ).inline().wrap()
         )
-        == '(\n  1\n)'
+        == '(1)'
     )
 
 
@@ -53,5 +53,5 @@ def test_inline_wrap_two_and_more_elements():
                 _uuid,
             ).inline().wrap()
         )
-        == f"(\n  1, 'phone', '{_uuid}'\n)"
+        == f"(1, 'phone', '{_uuid}')"
     )

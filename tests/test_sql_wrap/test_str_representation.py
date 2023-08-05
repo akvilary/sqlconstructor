@@ -1,9 +1,10 @@
 import pytest
-from sqlconstructor import SqlWrap, SqlFilter, SqlPlaceholder
+from sqlconstructor import SqlWrap, SqlFilter, SqlPlaceholder, SqlContainer
 from sqlconstructor.constants import AND_MODE, OR_MODE
 
 
 @pytest.mark.SqlWrap
+@pytest.mark.SqlContainer
 def test_string_representation():
     assert str(SqlWrap('a')) == '\n'.join(
         (
@@ -15,6 +16,7 @@ def test_string_representation():
 
 
 @pytest.mark.SqlWrap
+@pytest.mark.SqlContainer
 def test_string_representation_fake_wrapper_text():
     assert str(SqlWrap('a', None)) == '\n'.join(
         (
@@ -27,6 +29,7 @@ def test_string_representation_fake_wrapper_text():
 
 @pytest.mark.SqlWrap
 @pytest.mark.SqlFilter
+@pytest.mark.SqlContainer
 def test_wrap_filters():
     first_filter = SqlFilter(a=1)
     second_filter = SqlFilter(b=2)
@@ -44,6 +47,7 @@ def test_wrap_filters():
 @pytest.mark.SqlWrap
 @pytest.mark.SqlFilter
 @pytest.mark.SqlPlaceholder
+@pytest.mark.SqlContainer
 def test_wrap_and_filters():
     filters = (
         'id <> $identifier'  # add placeholder in string
@@ -62,7 +66,8 @@ def test_wrap_and_filters():
             )  # each value of dict will be converted by SqlVal
         )
     )
-    assert filters == '\n'.join(
+    assert isinstance(filters, SqlContainer)
+    assert str(filters) == '\n'.join(
         (
             'id <> $identifier',
             AND_MODE,

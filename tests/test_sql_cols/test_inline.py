@@ -35,7 +35,7 @@ def test_inline_wrap_one_element():
                 'brand_id',
             ).inline().wrap()
         )
-        == '(\n  "brand_id"\n)'
+        == '("brand_id")'
     )
 
 
@@ -48,5 +48,5 @@ def test_inline_wrap_two_and_more_elements():
                 'name',
             ).inline().wrap()
         )
-        == '(\n  "brand_id", "name"\n)'
+        == '("brand_id", "name")'
     )
