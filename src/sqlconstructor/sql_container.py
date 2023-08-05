@@ -116,9 +116,10 @@ class SqlContainer(FilterOperatorManager, StringConvertible):
         self.is_multiline_wrap_type = True
         return self
 
-    def indent(self, num: int):
+    def indent(self, num: int) -> Self:
         """Indent text"""
         self.extra_indentation = num
+        return self
 
 
 def get_string_representation(
@@ -135,4 +136,4 @@ def get_string_representation(
             is_wrap_multiline,
             extra_indentation,
         )
-    return str(text)
+    return indent_lines(str(text), extra_indentation) if extra_indentation else str(text)
