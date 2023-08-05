@@ -34,7 +34,7 @@ def test_convert_sql_col():
 @pytest.mark.SqlVal
 @pytest.mark.SqlCol
 def test_convert_sql_col_in_dict_value():
-    assert str(SqlVal({'a': SqlCol('product')})) == """E'{"a": "\\\\\\"product\\\\\\""}'"""
+    assert str(SqlVal({'a': SqlCol('product')})) == """E'{"a": "\\\\"product\\\\""}'"""
 
 
 @pytest.mark.SqlVal
@@ -49,7 +49,7 @@ def test_convert_sql_cols_in_dict_value():
     cols = SqlCols('product', 'quantity')
 
     result = str(SqlVal({'a': cols}))
-    expected_result = """E'{"a": ["\\\\\\"product\\\\\\"", "\\\\\\"quantity\\\\\\""]}'"""
+    expected_result = """E'{"a": ["\\\\"product\\\\"", "\\\\"quantity\\\\""]}'"""
     assert result == expected_result
 
 
@@ -91,7 +91,7 @@ def test_convert_sql_filter_as_dict():
 def test_convert_sql_filter_as_dict_in_dict_value():
     assert (
         str(SqlVal({'a': SqlFilter({'product_name': 'tv'})}))
-        == """E'{"a": "product_name=\'tv\'"}'"""
+        == """E'{"a": "product_name=\\\'tv\\\'"}'"""
     )
 
 
@@ -104,7 +104,10 @@ def test_convert_sql_filter_with_kwarg():
 @pytest.mark.SqlVal
 @pytest.mark.SqlFilter
 def test_convert_sql_filter_with_kwarg_in_dict_value():
-    assert str(SqlVal({'a': SqlFilter(product_name='tv')})) == """E'{"a": "product_name=\'tv\'"}'"""
+    assert (
+        str(SqlVal({'a': SqlFilter(product_name='tv')}))
+        == """E'{"a": "product_name=\\\'tv\\\'"}'"""
+    )
 
 
 @pytest.mark.SqlVal

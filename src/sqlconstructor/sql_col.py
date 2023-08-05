@@ -21,4 +21,4 @@ class SqlCol(StringConvertible, JsonConvertionRequier, ContainerConvertible):
         return '"' + str(self.name) + '"'
 
     def __as_json__(self):
-        return '\\\"' + str(self.name) + '\\\"'
+        return '\\"' + str(self.name) + '\\"'

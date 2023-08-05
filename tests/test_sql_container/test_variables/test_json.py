@@ -30,6 +30,6 @@ def test_json_variable():
         f'"1": "{uuid_value}", '
         '"container": "a", '
         '"val": "\\\'a\\\'", '
-        '"col": "\\\\\"a\\\\\""'
+        '"col": "\\"a\\""'
         "}'::json->'tuple' as names"
     )
