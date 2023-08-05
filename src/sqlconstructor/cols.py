@@ -21,7 +21,3 @@ class Cols(SqlEnum):
     def __repr__(self) -> str:
         """Convert SqlContainer instance to str"""
         return '(\n' + helpers.indent_lines(',\n'.join('"' + x + '"' for x in self), ind=2) + '\n)'
-
-    def __str__(self) -> str:
-        """Return SqlContainer as str"""
-        return repr(self)

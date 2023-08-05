@@ -21,7 +21,3 @@ class Vals(SqlEnum):
         """Convert SqlContainer instance to str"""
         text = ',\n'.join(helpers.convert_to_sql_repr(x) for x in self)
         return helpers.get_text_wrapped(text, '')
-
-    def __str__(self) -> str:
-        """Return SqlContainer as str"""
-        return repr(self)
