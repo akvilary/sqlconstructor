@@ -7,7 +7,10 @@ from sqlconstructor import SqlQuery, SqlContainer
 @pytest.mark.SqlContainer
 def test_get_sql_container_if_call_empty_sql_query():
     q = SqlQuery()
-    assert isinstance(q(), SqlContainer)
+    container = q()
+    assert isinstance(container, SqlContainer)
+    assert str(container) == ''
+
 
 
 @pytest.mark.SqlQuery
