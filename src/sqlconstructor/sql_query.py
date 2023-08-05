@@ -6,7 +6,7 @@ Module of SqlQuery class.
 __author__ = 'https://github.com/akvilary'
 
 import uuid
-from typing import List, Optional, Type, Self
+from typing import Optional, Type, Self
 from collections import UserList, UserDict
 
 from .utils import indent_text
@@ -59,37 +59,27 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
 
         if query:
             ctes = SqlCte()
-            for section, value in query.items():
+            for section_header, value in query.items():
                 if isinstance(value, (list, tuple)):
-                    self[section](*value)
+                    self[section_header](*value)
                 elif isinstance(value, dict):
-                    nested = dict(value)
-
-                    is_cte = nested.pop('__is_cte__', None)
-                    do_wrap = nested.pop('__do_wrap__', None)
-                    wrapper_text = nested.pop('__wrapper_text__', None)
-                    sql_id = nested.pop('__sql_id__', None)
-
-                    kwargs = {}
-                    if sql_id:
-                        kwargs['sql_id'] = sql_id
-                    container = SqlQuery(nested, **kwargs)()
-                    if do_wrap or isinstance(wrapper_text, str):
-                        container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
-
-                    if is_cte:
-                        ctes[section] = container
-                        continue
-
-                    self[section](container)
+                    subquery_dict = dict(value)
+                    is_cte = subquery_dict.pop('__is_cte__', None)
+                    if section_header == '__ctes__':
+                        for cte_name, cte_dict in subquery_dict.items():
+                            container = form_container_by_dict(cte_dict)
+                            ctes[cte_name] = container
+                    else:
+                        container = form_container_by_dict(subquery_dict)
+                        if is_cte:
+                            ctes[section_header] = container
+                        else:
+                            self[section_header](container)
                 else:
-                    self[section](value)
+                    self[section_header](value)
 
             if ctes:
-                self.add(ctes())
-                ctes_section = self.pop()
-                self.insert(0, ctes_section)
-
+                add_ctes_to_query(self, ctes)
 
     def __getitem__(self, item: str | int | slice) -> SqlSection | Self:
         """Add SQL section by name of.
@@ -142,11 +132,21 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
     def __str__(self):
         return str(self())
 
-    def add(self, text: str | SqlContainer, ind: int = 0):
-        """Add text as sql section"""
-        container = self[''](text)
+    def add(self, data: str | SqlContainer | dict, ind: int = 0):
+        """Add data as sql section"""
+        if isinstance(data, dict):
+            container = form_container_by_dict(data)
+        elif isinstance(data, SqlContainer):
+            container = data
+        else:
+            container = SqlContainer(data)
+
         if ind:
             container.indent(ind)
+
+        section = SqlSection()
+        section(container)
+        self.append(section)
 
     def __text(
         self,
@@ -223,6 +223,27 @@ class SqlCte(UserDict, StringConvertible, ContainerConvertible):
         return query
 
 
+def form_container_by_dict(
+    subquery_dict: dict,
+) -> SqlContainer:
+    """
+    Form container by dict
+    """
+    do_wrap = subquery_dict.pop('__do_wrap__', None)
+    wrapper_text = subquery_dict.pop('__wrapper_text__', None)
+    sql_id = subquery_dict.pop('__sql_id__', None)
+
+    kwargs = {}
+    if sql_id:
+        kwargs['sql_id'] = sql_id
+    container = SqlQuery(subquery_dict, **kwargs)()
+
+    if do_wrap or isinstance(wrapper_text, str):
+        container.wrap(wrapper_text if isinstance(wrapper_text, str) else '')
+
+    return container
+
+
 def add_cte_section(
     query: SqlQuery,
     cte: SqlQuery | SqlContainer,
@@ -236,3 +257,16 @@ def add_cte_section(
         cte.is_multiline_wrap_type = True
         cte.wrapper_text = wrapper_text
         query[sql_section_header](cte)
+
+
+def add_ctes_to_query(query: SqlQuery, ctes: SqlCte):
+    """
+    Add ctes to query
+    """
+    ctes_section = SqlSection()
+    ctes_section(ctes())
+    # if we have other sections before ctes
+    if query:
+        query.insert(0, ctes_section)
+    else:
+        query.append(ctes_section)

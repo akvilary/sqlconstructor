@@ -185,3 +185,93 @@ def test_init_query_by_dict_and_nested_dict():
             '  AND brand_id = 1',
         )
     )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_init_query_by_dict_with_cte():
+    q = SqlQuery(
+        {
+            'products': {
+                '__is_cte__': True,
+                'select': 'product_id',
+                'from': 'warehouse',
+                'where': 'quantity > 0',
+            },
+            'select': 'product_id',
+            'from': 'products',
+        }
+    )
+    assert len(q) == 3
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'WITH products AS',
+            '  (',
+            '    SELECT',
+            '      product_id',
+            '    FROM',
+            '      warehouse',
+            '    WHERE',
+            '      quantity > 0',
+            '  )',
+            'SELECT',
+            '  product_id',
+            'FROM',
+            '  products',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+@pytest.mark.parametrize(
+    'query_dict_with_ctes',
+    [
+        {
+            '__ctes__': {
+                'products': {
+                    'select': 'product_id',
+                    'from': 'warehouse',
+                    'where': 'quantity > 0',
+                },
+            },
+            'select': 'product_id',
+            'from': 'products',
+        },
+        {
+            'select': 'product_id',
+            'from': 'products',
+            '__ctes__': {
+                'products': {
+                    'select': 'product_id',
+                    'from': 'warehouse',
+                    'where': 'quantity > 0',
+                },
+            },
+        },
+    ],
+)
+def test_init_query_by_dict_with_ctes_in_one_nested_dict(query_dict_with_ctes):
+    q = SqlQuery(query_dict_with_ctes)
+    assert len(q) == 3
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'WITH products AS',
+            '  (',
+            '    SELECT',
+            '      product_id',
+            '    FROM',
+            '      warehouse',
+            '    WHERE',
+            '      quantity > 0',
+            '  )',
+            'SELECT',
+            '  product_id',
+            'FROM',
+            '  products',
+        )
+    )
