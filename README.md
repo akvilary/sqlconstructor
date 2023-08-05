@@ -176,6 +176,21 @@ def main():
     )
 ```
 
+It is possible add extra indentation (positive or negative) for string or SqlContainer by 'add' method (in release >= 1.2.5)
+```python
+from sqlconstructor import SqlQuery
+
+
+def main():
+    q = SqlQuery()
+    q += '-- some comment here'
+
+    with open('./some_file.sql', encoding='utf-8') as file:
+        sql_file = file.read().rstrip()
+    q.add(sql_file, ind=4)
+    ...
+```
+
 ### Append SqlContainer to query
 ```python
 from sqlconstructor import SqlQuery, SqlContainer
@@ -648,6 +663,28 @@ def get_ctes() -> SqlContainer:
     ...
 ```
 
+### Build cte by dict in query construction
+In release >= 1.2.5
+```python
+from sqlconstructor import SqlQuery, SqlContainer
+
+
+def main():
+    q = SqlQuery(        
+        'products': {
+            '__is_cte__': True,
+            'select': 'product_id',
+            'from': 'warehouse',
+            'where': 'quantity > 0',
+        },
+        'select': (
+            'id',
+            'name',
+        ),
+        ...
+    )
+    ...
+
 ### Enumerate columns, values
 In release >= 1.0.29 you could enumerate columns and values a little bit easier:
 ```python
@@ -780,6 +817,8 @@ q['where'](
 ### SqlContainer
 SqlContainer inherits all vars of another SqlContainer if it provided as argument in construction (in release >= 1.1.8). 
 You could add inline wrap if you provide 'do_multiline=False' argument in 'wrap' method (in release >= 1.1.8). Multiline type of wrapping is default. 
+
+SqlContainer has 'indent' method to make positive or negative indentation (in release >= 1.2.5).
 
 ### SqlWrap
 It is possible wrap any str or string convertible object by SqlWrap (in release >= 1.1.1). 
