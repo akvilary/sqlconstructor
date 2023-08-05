@@ -5,6 +5,7 @@ __author__ = 'https://github.com/akvilary'
 
 import re
 import uuid
+import json
 from typing import Tuple
 
 def indent_lines(text: str, ind: int) -> str:
@@ -62,16 +63,21 @@ def convert_to_sql_str(value) -> str:
     return f"'{value}'"
 
 
+class SqlEncoder(json.JSONEncoder):
+    """
+    Custom json encoder.
+    Add support for:
+        - uuid
+    """
+    def default(self, o):
+        if isinstance(o, uuid.UUID):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
+
 def convert_dict_to_sql_repr(dictionary: dict) -> str:
     """Convert python dictionary to sql representation"""
-    converted = 'json_build_object('
-    unzipped = []
-    for key, value in dictionary.items():
-        for item in (key, value):
-            unzipped.append(convert_to_sql_repr(item))
-    converted += ', '.join(unzipped)
-    converted += ')'
-    return converted
+    return json.dumps(dictionary, cls=SqlEncoder)
 
 
 def get_text_wrapped(text: str, wrapper_text: str) -> str:

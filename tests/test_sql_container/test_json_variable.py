@@ -12,8 +12,10 @@ def test_json_variable():
     assert (
         container.dumps()
         == (
-        "SELECT json_build_object("
-        f"'id', 23, 'names', ARRAY['xo', 'ox'], 1, '{uuid_value}'"
-        ")->'names' as names"
+        "SELECT {"
+            '"id": 23, '
+            '"names": ["xo", "ox"], '
+            f'"1": "{uuid_value}"'
+        "}->'names' as names"
         )
     )
