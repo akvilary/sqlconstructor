@@ -10,7 +10,7 @@ import json
 
 from sqlconstructor.constants import DIALECT
 from sqlconstructor.utils.classes.string_convertible import StringConvertible
-from sqlconstructor.utils.classes.special_convertion_requier import SpecialConvertionRequier
+from sqlconstructor.utils.classes.json_convertion_requier import JsonConvertionRequier
 
 
 class SqlEncoder(json.JSONEncoder):
@@ -21,7 +21,7 @@ class SqlEncoder(json.JSONEncoder):
     """
 
     def default(self, o):
-        if isinstance(o, SpecialConvertionRequier):
+        if isinstance(o, JsonConvertionRequier):
             return o.__as_json__()
         if isinstance(
             o,

@@ -10,14 +10,18 @@ from typing import Any
 
 from .sql_container import SqlContainer
 from .utils.classes.string_convertible import StringConvertible
-from .utils.classes.special_convertion_requier import SpecialConvertionRequier
 from .utils.classes.container_convertible import ContainerConvertible
+from .utils.classes.json_convertion_requier import JsonConvertionRequier
+from .utils.classes.sql_convertion_requier import SqlConvertionRequier
 
 
-class SqlEnum(StringConvertible, SpecialConvertionRequier, ContainerConvertible, UserList):
+class SqlEnum(
+    StringConvertible, JsonConvertionRequier, SqlConvertionRequier, ContainerConvertible, UserList
+):
     """
     SqlEnum class is invented for better experience to enumerate.
     """
+
     def __init__(
         self,
         *statements: Any,

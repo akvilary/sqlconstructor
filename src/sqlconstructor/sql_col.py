@@ -7,9 +7,10 @@ __author__ = 'https://github.com/akvilary'
 
 from .utils.classes.string_convertible import StringConvertible
 from .utils.classes.container_convertible import ContainerConvertible
+from .utils.classes.json_convertion_requier import JsonConvertionRequier
 
 
-class SqlCol(StringConvertible, ContainerConvertible):
+class SqlCol(StringConvertible, JsonConvertionRequier, ContainerConvertible):
     """
     SqlCol class is invented for better experience to convert string to column.
     """
@@ -18,3 +19,6 @@ class SqlCol(StringConvertible, ContainerConvertible):
 
     def __str__(self):
         return '"' + str(self.name) + '"'
+
+    def __as_json__(self):
+        return '\\\"' + str(self.name) + '\\\"'

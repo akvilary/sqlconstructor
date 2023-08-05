@@ -1,6 +1,6 @@
 # coding=utf-8
 """
-Module of SpecialJsonConvertible class.
+Module of JsonConvertionRequier class.
 """
 
 __author__ = 'https://github.com/akvilary'
@@ -8,15 +8,11 @@ __author__ = 'https://github.com/akvilary'
 from abc import ABC, abstractmethod
 
 
-class SpecialConvertionRequier(ABC):
+class JsonConvertionRequier(ABC):
     """
     Class is invented to group all supplementary classes 
-    which provide '__json_str__' method.
+    which provide '__as_json__' method.
     """
-    @abstractmethod
-    def __as_sql__(self) -> str:
-        """Used to provide special convetrion"""
-        raise NotImplementedError()
 
     @abstractmethod
     def __as_json__(self) -> list:
