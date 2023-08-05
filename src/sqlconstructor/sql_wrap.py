@@ -18,7 +18,12 @@ class SqlWrap(
     ContainerConvertible,
 ):
     """The class is invented to do wrapping of sql text more easier"""
-    def __init__(self, text: str | StringConvertible, wrapper_text: str | StringConvertible = ''):
+
+    def __init__(
+        self,
+        text: str | StringConvertible,
+        wrapper_text: str | StringConvertible = '',
+    ):
         """Wrap text by parentheses and add wrapper_text after them.
         wrapper_text could be empty string (in that case you get text wrapped only by parentheses).
         Params:
@@ -33,8 +38,8 @@ class SqlWrap(
 
     def inline(self) -> SqlContainer:
         """Get container of wrapped sql text in inline"""
-        return SqlContainer(get_wrapped(self.text, self.wrapper_text, do_multiline=False))
+        return SqlContainer(self.text, self.wrapper_text).wrap(multiline=False)
 
     def multiline(self) -> SqlContainer:
         """Get container of wrapped sql text in multiline"""
-        return SqlContainer(str(self))
+        return SqlContainer(self.text, self.wrapper_text).wrap()

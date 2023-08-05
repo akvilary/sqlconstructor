@@ -12,7 +12,7 @@ from .indent_text import indent_lines
 def get_wrapped(
     text: str | StringConvertible,
     wrapper_text: str | StringConvertible = '',
-    do_multiline: bool = True,
+    is_wrap_multiline: bool = True,
 ) -> str:
     """Wrap and return as string"""
     text = str(text)
@@ -20,9 +20,9 @@ def get_wrapped(
 
     return (
         '('
-        + ('\n' if do_multiline else '')
-        + indent_lines(str(text), ind=2 if do_multiline else 0)
-        + ('\n' if do_multiline else '')
+        + ('\n' if is_wrap_multiline else '')
+        + indent_lines(str(text), ind=2 if is_wrap_multiline else 0)
+        + ('\n' if is_wrap_multiline else '')
         + ')'
         + (
             wrapper_text

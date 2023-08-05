@@ -30,16 +30,14 @@ class SqlCte(dict):
 
     def __call__(self, **kwargs) -> SqlContainer:
         result = SqlQuery(sql_id=self.sql_id) if self.sql_id else SqlQuery()
-        counter = 0
         ctes_size = len(self)
-        for cte_name, cte_query in self.items():
+        for counter, (cte_name, cte_query) in enumerate(self.items()):
             if counter == 0:
                 result[f'with {cte_name} as'](
                     cte_query(',' if ctes_size > (counter + 1) else '')
                 )
             else:
                 result[f'{cte_name} as'](cte_query('' if ctes_size == (counter + 1) else ','))
-            counter += 1
         container = result()
         if kwargs:
             container(**kwargs)
