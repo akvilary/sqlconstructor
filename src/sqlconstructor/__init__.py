@@ -22,3 +22,4 @@ from .sql_wrap import SqlWrap
 from .sql_json import SqlJson
 from .constants import AND, OR
 from .sql_bultin_functions import coalesce, nullif
+from .sql_case import SqlCase

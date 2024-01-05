@@ -1008,11 +1008,38 @@ from sqlconstructor import coalesce, nullif, SqlVal
 
 a = coalesce(None, 3, 4, None)  # will be 3
 b = coalesce(None, None)  # will be None
-c = SqlVal(coalesce(None, b))  # will be 'null'
+c = SqlVal(coalesce(None, None))  # will be 'null'
 
 d = nullif(3, 4)  # will be 3
 e = nullif(3, 3)  # will be None
 f = SqlVal(nullif(3, 3))  # will be 'null'
+```
+
+### SqlCase
+In release 1.4.1 we add SqlCase class. It is invented to be python implementation of CASE-WHEN-THEN-ELSE-END construction.
+Each WHEN-THEN is a tuple. ELSE statement is single value. After ELSE statement construction will be closed even if you add tuples after it.
+
+Example of SqlCase use:
+```python
+from sqlconstructor import SqlCase
+
+
+sql_case = SqlCase(('b=1', "'one'"), ('b=2', "'two'"), "'nothing'")
+```
+result of str(sql_case) will be:
+```sql
+CASE
+  WHEN
+    b=1
+  THEN
+    'one'
+  WHEN
+    b=2
+  THEN
+    'two'
+  ELSE
+    'nothing'
+END
 ```
 
 ### StringConvertible

@@ -178,7 +178,7 @@ def add_sections_by_dict(
         if (kwarg := section_data.pop('__' + x + '__', None)) is not None
     }
     for section_header, value in section_data.items():
-        if isinstance(value, (list, tuple)):
+        if isinstance(value, (tuple, list)):
             query[section_header](*value, **section_kwargs).indent(ind)
         elif isinstance(value, dict):
             add_section_by_dict(query, value, section_header, ind=ind)
