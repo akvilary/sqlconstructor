@@ -828,7 +828,7 @@ def main():
     ...
 ```
 
-### Add ctes as dict to query by .add method
+### Add ctes via dict to query with .add method
 In release >= 1.3.13
 ```python
 from sqlconstructor import SqlQuery

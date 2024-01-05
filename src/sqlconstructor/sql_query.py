@@ -9,7 +9,6 @@ import uuid
 from typing import Optional, Type, Self
 from collections import UserList, UserDict
 
-from .utils import indent_text
 from .sql_section import SqlSection
 from .sql_container import SqlContainer
 from .utils.classes.string_convertible import StringConvertible
@@ -87,8 +86,6 @@ class SqlQuery(StringConvertible, UserList):
     def __call__(
         self,
         wrap: Optional[str] = None,
-        *,
-        ind: int = 0,  # indentation
     ) -> SqlContainer:
         """Build SQL query by sections.
         Params:
@@ -101,7 +98,7 @@ class SqlQuery(StringConvertible, UserList):
             - ind : int - you could set additional indentation for each line of query text.
             But it is rarely used because nested subelements automatically add 2 space indentation.
         """
-        container = SqlContainer(self.__to_text(ind=ind))
+        container = SqlContainer(self.__to_text())
         if wrap is not None:
             container.wrap(wrap)
 
@@ -135,7 +132,6 @@ class SqlQuery(StringConvertible, UserList):
 
     def __to_text(
         self,
-        ind: int = 0,  # indentation
     ) -> str:
         """
         Used in __call__ method.
@@ -150,7 +146,6 @@ class SqlQuery(StringConvertible, UserList):
 
         sections += [section.container for section in self if section]
         query_text = '\n'.join(str(x) for x in sections) if sections else ''
-        query_text = indent_text.indent_lines(query_text, ind=ind)
         return query_text
 
 
