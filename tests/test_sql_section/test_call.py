@@ -32,12 +32,13 @@ def test_inherit_vars_of_containers_in_section_call_method():
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
-def test_call_section_with_positive_ind():
+def test_call_section_with_positive_header_ind_and_body_ind():
     q = SqlQuery()
     q['select'](
         'id',
         'name',
-        ind=2,
+        header_ind=2,
+        body_ind=4,
     )
     container = q()
     assert str(container) == '\n'.join(
@@ -52,12 +53,13 @@ def test_call_section_with_positive_ind():
 @pytest.mark.SqlQuery
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
-def test_call_section_with_negative_ind():
+def test_call_section_with_negative_header_ind_and_body_ind():
     q = SqlQuery()
     q['  select'](
         '    id',
         '    name',
-        ind=-4,
+        header_ind=-2,
+        body_ind=-2,
     )
     container = q()
     assert str(container) == '\n'.join(
@@ -65,5 +67,26 @@ def test_call_section_with_negative_ind():
             'SELECT',
             '  id,',
             '  name',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_call_section_with_negative_header_ind_and_body_ind_beyond_bound():
+    q = SqlQuery()
+    q['  select'](
+        '    id',
+        '    name',
+        header_ind=-4,
+        body_ind=-4,
+    )
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            'id,',
+            'name',
         )
     )

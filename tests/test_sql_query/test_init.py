@@ -275,3 +275,13 @@ def test_init_query_by_dict_with_ctes_in_one_nested_dict(query_dict_with_ctes):
             '  products',
         )
     )
+
+
+@pytest.mark.SqlQuery
+def test_init_with_sections_default_kwargs():
+    q = SqlQuery(header_end=' ', sep=' +', line_end=' ', do_upper_keywords=False)
+    q['select'](
+        'a',
+        'b',
+    )
+    assert str(q()) == 'select a + b'

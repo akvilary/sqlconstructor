@@ -37,6 +37,7 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
         query: Optional[dict] = None,
         *,
         sql_id: Optional[str | uuid.UUID] = '',
+        **sections_default_kwargs,
     ):
         """Create SqlQuery instance.
         Params:
@@ -51,8 +52,12 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
             - sql_id: str - any unique string that will be added at the top of the SQL query
             as comment in format "-- sql_id='your_string_here'". It makes possible to find your
             source code after you encounter query in logs or in debuging tools.
+            - sections_default_kwargs - default kwwargs for all future sections of query such as
+            sep, line_end, section_end, header_ind, body_ind, do_upper_keywords.
         """
         UserList.__init__(self)
+        self.sections_default_kwargs = sections_default_kwargs
+
         self.ctes = SqlCte()
 
         self.sql_id = sql_id or None
@@ -75,7 +80,7 @@ class SqlQuery(StringConvertible, ContainerConvertible, UserList):
             query = SqlQuery()
             query.data = self.data[item]
             return query
-        section = SqlSection(item)
+        section = SqlSection(item, self.sections_default_kwargs)
         self.append(section)
         return section
 
@@ -158,13 +163,27 @@ def add_sections_by_dict(
     """
     Add SqlSections by dict to SqlQuery
     """
-    for section_header, value in data.items():
+    section_data = dict(data)
+    section_kwargs = query.sections_default_kwargs | {
+        x: kwarg
+        for x in (
+            'header_end',
+            'sep',
+            'line_end',
+            'section_end',
+            'header_ind',
+            'body_ind',
+            'do_upper_keywords',
+        )
+        if (kwarg := section_data.pop('__' + x + '__', None)) is not None
+    }
+    for section_header, value in section_data.items():
         if isinstance(value, (list, tuple)):
-            query[section_header](*value).indent(ind)
+            query[section_header](*value, **section_kwargs).indent(ind)
         elif isinstance(value, dict):
             add_section_by_dict(query, value, section_header, ind=ind)
         else:
-            query[section_header](value).indent(ind)
+            query[section_header](value, **section_kwargs).indent(ind)
 
 
 def add_section_by_dict(

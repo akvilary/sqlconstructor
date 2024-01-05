@@ -69,24 +69,35 @@ WHERE
   quality = 'Best'
   AND brand_id = 1
 ```
+
+In release >= 1.4.0 it is possible to add default settings for all future sections by special kwargs in SqlQuery constructor such as **header_end**, **sep**, **line_end**, **section_end**, **body_ind**, **header_ind**, **do_upper_keywords**.
+```python
+from sqlconstructor import SqlQuery
+
+
+q = SqlQuery(do_upper_keywords=False)
+```
+
 ### SqlSection \_\_call\_\_
 It is possible to give special keyword arguments in SqlSection \_\_call\_\_ method:
-- ind - relative indentation of section (can be positive or negative). Default=0.
+- header_ind - relative indentation of section header (can be positive or negative). Default=0.
+- body_ind - relative indentation of section header (can be positive or negative). Default is 2 if section header else 0.
 - sep - separator of statements. Default is ',' for comma separated sections else ''.
 - line_end - end of line of each statement (default='\\n')
 - section_end - end of sql section (default='')
-- upper_keywords - do upper sql keywords (default=True)
+- do_upper_keywords - do upper sql keywords (default=True)
 ```python
 ...
 q['where'](
     "quality = 'Best'",
     'brand_id = 1',
-    ind=4,
+    header_ind=2,
+    body_ind=4,
     # delimeter = sep + line_end
     sep=' AND',
     line_end=' ',
     section_end=';',
-    upper_keywords=False,
+    do_upper_keywords=False,
 )
 ...
 ```
@@ -112,12 +123,11 @@ q = SqlQuery(
 ```
 But it has certain limitation:
 - It is not possible to create query by dict with duplicate headers if headers are strings (because of dict nature).
-- It is not possible to set custom settings for sql section (as ind, line_end and etc.). It is rarely used and not a big deal.
 
 But it is possible: 
-- include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39).
-- include SqlCol, SqlVal, SqlFilter, SqlFilters, SqlPlaceholder in query dict (in release >= 1.1.0)
-- create query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below.
+- include SqlCols, SqlVals and SqlEnum instances in query dict (in release >= 1.0.39);
+- include SqlCol, SqlVal, SqlFilter, SqlFilters, SqlPlaceholder in query dict (in release >= 1.1.0);
+- create query by dict with duplicate headers if headers are SqlSectionHeader class instances (in release >= 1.0.40). See example below;
 - insert nested subqueries (wrapped and with text after wrapper) as nested dict (in release >= 1.1.0). More on this later.
 
 Example of using SqlSectionHeader:
@@ -284,6 +294,45 @@ def get_from_statement() -> SqlQuery:
 
 def get_where_filters() -> SqlQuery:
     ...
+```
+
+### Append sections via dict to query with .add method
+In release >= 1.3.13
+```python
+from sqlconstructor import SqlQuery
+q = SqlQuery()
+q.add(
+    {
+        'select': (
+            'product_id',
+            'price'
+        ),
+        'from': 'prices',
+    }
+)
+```
+
+Add section settings in dict (in release >= 1.4.0)
+```python
+from sqlconstructor import SqlQuery
+
+
+q = SqlQuery()
+q.add(
+    {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__header_end__': ' ',  # default is '\n'
+        '__sep__': ' +',
+        '__line_end__': ' ',  # default is '\n'
+        '__section_end__': ';',  # default is ''
+        '__header_ind__': 2,  # default is 0
+        '__body_ind__': 4,  # default is 2 if is header else 0
+        '__do_upper_keywords__': False,  # default is True
+    }
+)
 ```
 
 ### Build query with placeholders to be replaced by variables later
@@ -626,22 +675,6 @@ q = SqlQuery(
 )
 ```
 
-### Add sections as dict to query by .add method
-In release >= 1.3.13
-```python
-from sqlconstructor import SqlQuery
-q = SqlQuery()
-q.add(
-    {
-        'select': (
-            'product_id',
-            'price'
-        ),
-        'from': 'prices',
-    }
-)
-```
-
 ### Easy ways to handle ctes
 
 #### Create ctes
@@ -740,6 +773,7 @@ def main():
     # q.ctes['bestsellers'] = get_warehouse_cte()
     ...
 ```
+
 ### Build ctes by dict in query construction
 In release >= 1.2.5
 ```python
@@ -811,6 +845,7 @@ q.add(
     },
 )
 ```
+
 ### Enumerate columns, values
 In release >= 1.0.29 you could enumerate columns and values a little bit easier:
 ```python
@@ -940,6 +975,7 @@ q['where'](
     f"and brand_id = {SqlVal(1)}",
 )
 ```
+
 ### SqlContainer
 SqlContainer inherits all vars of another SqlContainer if it provided as argument in construction (in release >= 1.1.8). 
 You could add inline wrap if you provide 'do_multiline=False' argument in 'wrap' method (in release >= 1.1.8). Multiline type of wrapping is default. 
@@ -962,6 +998,21 @@ result is:
   AND
   b=2
 )
+```
+
+### Sql builtin fuctions in python
+In release >= 1.4.0 we add coalesce and nullif in python implementation
+```python
+from sqlconstructor import coalesce, nullif, SqlVal
+
+
+a = coalesce(None, 3, 4, None)  # will be 3
+b = coalesce(None, None)  # will be None
+c = SqlVal(coalesce(None, b))  # will be 'null'
+
+d = nullif(3, 4)  # will be 3
+e = nullif(3, 3)  # will be None
+f = SqlVal(nullif(3, 3))  # will be 'null'
 ```
 
 ### StringConvertible

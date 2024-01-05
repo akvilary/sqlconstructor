@@ -263,3 +263,137 @@ def test_add_dict_with_negative_indetation():
             '  a',
         )
     )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_custom_separator():
+    q = SqlQuery()
+    query_dict = {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__sep__': '\n  +',
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  a',
+            '  +',
+            '  b',
+        )
+    )
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_custom_line_end():
+    q = SqlQuery()
+    query_dict = {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__line_end__': '',
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '  a,b',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_custom_header_ind():
+    q = SqlQuery()
+    query_dict = {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__line_end__': '',
+        '__header_ind__': 1,
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            ' SELECT',
+            '  a,b',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_custom_body_ind():
+    q = SqlQuery()
+    query_dict = {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__line_end__': '',
+        '__body_ind__': 3,
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '   a,b',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_custom_body_ind_with_space_line_end():
+    q = SqlQuery()
+    query_dict = {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__line_end__': ' ',
+        '__body_ind__': 3,
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == '\n'.join(
+        (
+            'SELECT',
+            '   a, b',
+        )
+    )
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_add_dict_with_sep_and_line_end_and_header_end_and_do_not_upper_keywords():
+    q = SqlQuery()
+    query_dict = {
+        'select': (
+            'a',
+            'b',
+        ),
+        '__header_end__': ' ',
+        '__sep__': '+',
+        '__line_end__': '',
+        '__do_upper_keywords__': False,
+    }
+    q.add(query_dict)
+    container = q()
+    assert str(container) == 'select a+b'

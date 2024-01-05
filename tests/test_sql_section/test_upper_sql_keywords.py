@@ -13,6 +13,15 @@ def test_upper_keywords_in_select():
 
 @pytest.mark.SqlSection
 @pytest.mark.SqlContainer
+def test_do_not_upper_keywords_in_select():
+    section = SqlSection('')
+    line = 'select a'
+    section(line, do_upper_keywords=False)
+    assert str(section.container) == 'select a'
+
+
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
 def test_do_not_upper_between_single_quotes():
     section = SqlSection('')
     line = "select 'some'"
