@@ -81,7 +81,7 @@ q = SqlQuery(do_upper_keywords=False)
 ### SqlSection \_\_call\_\_
 It is possible to give special keyword arguments in SqlSection \_\_call\_\_ method:
 - header_ind - relative indentation of section header (can be positive or negative). Default=0.
-- body_ind - relative indentation of section header (can be positive or negative). Default is 2 if section header else 0.
+- body_ind - relative indentation of section body (can be positive or negative). Default is 2 if section header else 0.
 - sep - separator of statements. Default is ',' for comma separated sections else ''.
 - line_end - end of line of each statement (default='\\n')
 - section_end - end of sql section (default='')
