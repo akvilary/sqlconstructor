@@ -16,7 +16,7 @@ from .utils.classes.string_convertible import StringConvertible
 from .utils.classes.container_convertible import ContainerConvertible
 
 
-class SqlQuery(StringConvertible, ContainerConvertible, UserList):
+class SqlQuery(StringConvertible, UserList):
     """SqlQuery is a top-level class for constacting SQL query.
     When you start building query or subquery then you create SqlQuery instance first.
     Second you fill the query out by SQL sections.
