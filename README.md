@@ -1061,6 +1061,7 @@ StringConvertible subclasses:
 - SqlSectionHeader
 - SqlVals
 - SqlWrap
+- SqlCase
 
 ### ContainerConvertible
 You could convert each instance of classes below into SqlContainer and set sql variables in one step by \_\_call\_\_ method (in release >= 1.1.5):
