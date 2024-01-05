@@ -128,7 +128,7 @@ class SqlQuery(StringConvertible, UserList):
         if isinstance(data, dict):
             add_sections_by_dict(self, data, ind=ind)
         else:
-            self[''](data).indent(ind)
+            self[''](data, **self.sections_default_kwargs).indent(ind)
 
     def __to_text(
         self,
