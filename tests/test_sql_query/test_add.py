@@ -397,3 +397,13 @@ def test_add_dict_with_sep_and_line_end_and_header_end_and_do_not_upper_keywords
     q.add(query_dict)
     container = q()
     assert str(container) == 'select a+b'
+
+
+@pytest.mark.SqlQuery
+@pytest.mark.SqlSection
+@pytest.mark.SqlContainer
+def test_set_query_default_and_add_string():
+    q = SqlQuery(section_end=';', do_upper_keywords=False)
+    q.add('select a')
+    container = q()
+    assert str(container) == 'select a;'
